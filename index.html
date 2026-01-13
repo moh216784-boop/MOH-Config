@@ -3,22 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOH-Config | تنزيل مباشر</title>
+    <title>MOH-Config | إرسال وتحميل تلقائي</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // المفتاح العام الخاص بك الذي استخرجناه من الصورة
+            emailjs.init("AvwrnalzJUckmlcEyR");
+        })();
+    </script>
     <style>
         body { background-color: #000; color: white; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #0d1117; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid #30363d; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card { background: #0d1117; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid #30363d; width: 90%; max-width: 400px; }
         h1 { color: #58a6ff; font-size: 20px; }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: white; text-align: center; box-sizing: border-box; }
-        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; background-color: #007bff; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 16px; }
+        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; background-color: #007bff; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; }
         .hidden { display: none; }
-        .download-btn { background-color: #238636; border: 2px solid #2ea043; color: white; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .config-box { border: 2px solid #58a6ff; padding: 20px; border-radius: 12px; margin-top: 15px; background: #161b22; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="card">
         <div id="step1">
-            <h1>سجل بياناتك للتحميل</h1>
+            <h1>أدخل بياناتك لاستلام الملف</h1>
             <input type="text" id="userName" placeholder="الاسم الكامل">
-            <input type="email" id="userEmail" placeholder="البريد الإلكتروني">
-            <button class="btn" onclick="showDownload()">است
+            <input type="email" id="userEmail" placeholder="البريد الإلكتروني (Gmail)">
+            <button class="btn" onclick="goToStep2()">استمرار</button>
+        </div>
+
+        <div id="step2" class="hidden">
+            <h1 id="welcomeTitle"></h1>
+            <p>اضغط على الخانة للتنزيل واستلام نسخة في بريدك:</p>
+            <div class="config-box" id="downloadBox" onclick="processAll()">
+                <h2 style="margin:0; color:#58a6ff;">🌑 خانة DARK</h2>
+                <p id="statusText" style="margin:5px 0 0; font-size:12px; color:#8b949e;">تنزيل + إرسال تلقائي</p>
+            </div>
+        </div>
+
+        <div id="step3" class="hidden">
+            <h1 style="color: #3fb950;">تمت العملية!</h1>
+            <p>تحقق من التحميلات ومن بريدك الإلكتروني الآن.</p>
+            <a href="https://t.me/mohchakour00" class="btn" style="background-color: #0088cc;">قناة التيليجرام</a>
+        </div>
+    </div>
+
+    <script>
+        let uName, uEmail;
+
+        function goToStep2() {
+            uName = document.getElementById('userName').value;
+            uEmail = document.getElementById('userEmail').value;
+            if (uName.trim().length >= 2 && uEmail.includes("@")) {
+                document.getElementById('step1').classList.add('hidden');
+                document.getElementById('step2').classList.remove('hidden');
+                document.getElementById('welcomeTitle').innerText = "مرحباً يا " + uName;
+            } else { alert("يرجى إدخال بيانات صحيحة"); }
+        }
+
+        function processAll() {
+            document.getElementById('statusText').innerText = "جاري الإرسال والتحميل...";
+            document.getElementById('downloadBox').style.opacity = "0.5";
+
+            // 1. إرسال الإيميل تلقائياً عبر EmailJS
+            const templateParams = {
+                to_name: uName,
+                user_email: uEmail,
+                message: "إليك رابط ملف DARK الخاص بك: https://github.com/moh216784-boop/MOH-Config/raw/main/%D9%8A%D9%88%D8%AA%D9%88%D8%A8%20%D9%82%D9%88%D8%A9%20.dark"
+            };
+
+            emailjs.send('service_goh8l3g', 'template_default', templateParams)
+                .then(function() {
+                    console.log('Email Sent!');
+                    startDownload();
+                }, function(error) {
+                    console.log('Email Failed...', error);
+                    startDownload(); // سنبدأ التحميل حتى لو فشل الإيميل لضمان الخدمة
+                });
+        }
+
+        function startDownload() {
+            const fileUrl = "https://github.com/moh216784-boop/MOH-Config/raw/main/%D9%8A%D9%88%D8%AA%D9%88%D8%A8%20%D9%82%D9%88%D8%A9%20.dark";
+            const a = document.createElement('a');
+            a.href = fileUrl;
+            a.download = "يوتوب_قوة.dark";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
