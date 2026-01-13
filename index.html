@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مرحباً بك - Moh Konfig</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل الكونفيجات - Moh Konfig</title>
     <style>
         body {
             background-color: #000;
@@ -11,61 +12,40 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
         }
         .card {
             background: #0d1117;
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
-            border: 1px solid #30363d;
             text-align: center;
-            width: 300px;
+            border: 1px solid #30363d;
+            width: 90%;
+            max-width: 400px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .profile-icon {
-            background: linear-gradient(45deg, #0070f3, #7928ca);
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 20px;
-            font-size: 40px;
-        }
-        h2 { margin-bottom: 10px; }
-        p { color: #8b949e; font-size: 14px; margin-bottom: 20px; }
-        input {
+        h1 { color: #58a6ff; font-size: 24px; margin-bottom: 5px; }
+        p { color: #8b949e; margin-bottom: 25px; font-size: 14px; }
+        .btn {
+            display: block;
             width: 100%;
             padding: 12px;
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 8px;
+            margin: 10px 0;
             color: white;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(90deg, #0070f3, #7928ca);
-            border: none;
+            text-decoration: none;
             border-radius: 8px;
-            color: white;
             font-weight: bold;
-            cursor: pointer;
+            transition: 0.3s;
+            box-sizing: border-box;
         }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <div class="profile-icon">👤</div>
-        <h2>مرحباً بك!</h2>
-        <p>أدخل اسمك لفتح ملفات الكونفيج الخاصة بك</p>
-        <input type="text" placeholder="اسمك...">
-        <button onclick="alert('تم التسجيل! يمكنك الآن تحميل الكونفيجات')">التالي</button>
-    </div>
-</body>
-</html>
+        /* أزرار التحميل */
+        .btn-download { background-color: #238636; }
+        .btn-download:hover { background-color: #2ea043; }
+        
+        /* زر القناة */
+        .btn-channel { background-color: #0088cc; }
+        .btn-channel:hover { background-color: #0099ee; }
+        
+        /* زر المطور */
+
