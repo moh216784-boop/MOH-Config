@@ -3,61 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOH-Config | تحميل مباشر</title>
+    <title>MOH-Config | تحميل الملفات</title>
     <style>
         body { background-color: #000; color: white; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #0d1117; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid #30363d; width: 90%; max-width: 400px; }
+        .card { background: #0d1117; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid #30363d; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         h1 { color: #58a6ff; font-size: 22px; }
-        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: white; text-align: center; box-sizing: border-box; }
-        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; background-color: #007bff; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; }
-        .btn-dev { background-color: #6e7681; font-size: 14px; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: white; text-align: center; box-sizing: border-box; font-size: 16px; }
+        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; background-color: #007bff; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; font-size: 16px; transition: 0.3s; }
+        .btn:hover { background-color: #0056b3; transform: translateY(-2px); }
         .btn-tg { background-color: #0088cc; }
+        .btn-dev { background-color: #238636; margin-top: 20px; }
         .hidden { display: none; }
-        .config-box { border: 2px solid #58a6ff; padding: 15px; border-radius: 10px; margin-top: 15px; background: #161b22; cursor: pointer; transition: 0.3s; }
-        .config-box:hover { background: #1f242c; transform: scale(1.02); }
+        .config-box { border: 2px solid #58a6ff; padding: 20px; border-radius: 12px; margin-top: 15px; background: #161b22; cursor: pointer; transition: 0.3s; }
+        .config-box:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
     <div class="card">
-        <img src="https://github.com/identicons/moh216784-boop.png" width="80" style="border-radius: 50%;">
-        
         <div id="step1">
-            <h1>أدخل اسمك للتحميل</h1>
+            <h1>أهلاً بك في MOH-Config</h1>
+            <p style="color: #8b949e;">أدخل اسمك للبدء</p>
             <input type="text" id="userName" placeholder="اكتب اسمك هنا...">
-            <button class="btn" onclick="showStep2()">دخول</button>
+            <button class="btn" onclick="goToStep2()">استمرار</button>
         </div>
 
         <div id="step2" class="hidden">
-            <h1 id="welcomeMsg"></h1>
-            <p>اختر الملف للتحميل المباشر:</p>
-            <div class="config-box" onclick="showDownload()">
-                <h3>🌑 ملف يوتوب قوة .dark</h3>
-                <small>انقر هنا للتجهيز</small>
+            <h1 id="welcomeTitle"></h1>
+            <p>اختر الخانة لتحضير ملف التحميل:</p>
+            <div class="config-box" onclick="goToStep3()">
+                <h2 style="margin:0; color:#58a6ff;">🌑 DARK</h2>
+                <p style="margin:5px 0 0; font-size:12px; color:#8b949e;">اضغط للتجهيز للتحميل</p>
             </div>
         </div>
 
         <div id="step3" class="hidden">
-            <h1>جاهز للتحميل الآن!</h1>
+            <h1 style="color: #3fb950;">الملف جاهز!</h1>
+            <p>اضغط على الزر الأزرق لبدء التنزيل على هاتفك:</p>
             
-            <a href="https://github.com/moh216784-boop/MOH-Config/raw/main/%D9%8A%D9%88%D8%AA%D9%88%D8%A8%20%D9%82%D9%88%D8%A9%20.dark" download class="btn">📥 اضغط هنا لتحميل الملف</a>
+            <a href="https://raw.githubusercontent.com/moh216784-boop/MOH-Config/main/%D9%8A%D9%88%D8%AA%D9%88%D8%A8%20%D9%82%D9%88%D8%A9%20.dark" download="يوتوب_قوة.dark" class="btn">📥 تحميل الملف الآن</a>
             
-            <a href="https://t.me/mohchakour00" target="_blank" class="btn btn-tg">🚀 قناة التيليجرام</a>
-            <a href="https://t.me/gX8_M" target="_blank" class="btn btn-dev">👨‍💻 المطور</a>
+            <hr style="border: 0; border-top: 1px solid #30363d; margin: 20px 0;">
+            <a href="https://t.me/mohchakour00" target="_blank" class="btn btn-tg">📢 قناة التيليجرام</a>
+            <a href="https://t.me/gX8_M" target="_blank" class="btn btn-dev">👨‍💻 تواصل مع المطور</a>
         </div>
     </div>
 
     <script>
-        function showStep2() {
-            var name = document.getElementById('userName').value;
+        function goToStep2() {
+            const name = document.getElementById('userName').value;
             if (name.trim().length >= 2) {
                 document.getElementById('step1').classList.add('hidden');
                 document.getElementById('step2').classList.remove('hidden');
-                document.getElementById('welcomeMsg').innerText = "مرحباً " + name;
+                document.getElementById('welcomeTitle').innerText = "مرحباً يا " + name;
             } else {
-                alert("يرجى إدخال اسمك");
+                alert("يرجى كتابة اسمك بشكل صحيح");
             }
         }
-        function showDownload() {
+        function goToStep3() {
             document.getElementById('step2').classList.add('hidden');
             document.getElementById('step3').classList.remove('hidden');
         }
