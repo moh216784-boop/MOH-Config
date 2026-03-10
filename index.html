@@ -1,66 +1,197 @@
 <!DOCTYPE html>
-<html dir="rtl">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر التقنية والأناقة | DZ Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #0088cc; --accent: #e67e22; --success: #27ae60; --dark: #2c3e50; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 0; color: var(--dark); }
-        header { background: var(--dark); color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .container { max-width: 1000px; margin: 20px auto; padding: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; position: relative; border: 1px solid #eee; }
-        .product-card:hover { transform: translateY(-5px); }
-        .badge { position: absolute; top: 15px; right: 15px; background: var(--accent); color: white; padding: 5px 15px; border-radius: 50px; font-size: 12px; font-weight: bold; }
-        .product-img { width: 100%; height: 250px; object-fit: cover; background: #fafafa; }
-        .content { padding: 20px; text-align: right; }
-        h2 { font-size: 20px; margin: 0 0 10px; color: var(--dark); }
-        ul { padding: 0; list-style: none; font-size: 14px; color: #666; line-height: 1.8; }
-        li::before { content: "✔️ "; color: var(--success); }
-        .price-tag { font-size: 28px; font-weight: bold; color: var(--success); margin: 15px 0; display: block; }
-        .buy-btn { display: block; background: var(--primary); color: white; text-align: center; padding: 15px; text-decoration: none; border-radius: 12px; font-weight: bold; transition: 0.3s; }
-        .buy-btn:hover { background: #0077b3; }
-        footer { text-align: center; padding: 30px; color: #888; font-size: 14px; }
+        :root {
+            --primary: #0088cc; /* لون التليجرام */
+            --accent: #ff4757; /* لون التخفيضات */
+            --success: #2ed573; /* لون السعر */
+            --dark: #2f3542;
+            --bg: #f1f2f6;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: var(--dark);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--dark) 0%, #1e2124 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header h1 { margin: 0; font-size: 24px; }
+        header p { margin: 10px 0 0; opacity: 0.8; font-size: 14px; }
+
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-bottom: 2px solid #f9f9f9;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: right;
+        }
+
+        h2 {
+            font-size: 19px;
+            margin: 0 0 12px;
+            color: #2c3e50;
+        }
+
+        .features {
+            padding: 0;
+            margin: 0 0 20px;
+            list-style: none;
+            font-size: 13.5px;
+            color: #57606f;
+            line-height: 1.7;
+        }
+
+        .features li::before {
+            content: "✔️";
+            margin-left: 8px;
+            color: var(--success);
+        }
+
+        .price-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #eee;
+        }
+
+        .price-tag {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--success);
+        }
+
+        .buy-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .buy-btn:hover {
+            background: #0077b3;
+            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a4b0be;
+            font-size: 13px;
+        }
+
+        /* تحسينات للهاتف */
+        @media (max-width: 480px) {
+            .container { grid-template-columns: 1fr; }
+            header h1 { font-size: 20px; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>متجر الاختيارات الذكية 🇩🇿</h1>
-    <p>توصيل لـ 58 ولاية | الدفع عند الاستلام</p>
+    <h1>متجر التقنية والجمال 🇩🇿</h1>
+    <p>توصيل سريع لـ 58 ولاية | الدفع عند الاستلام</p>
 </header>
 
 <div class="container">
 
     <div class="product-card">
-        <span class="badge">الأكثر مبيعاً 🎮</span>
-        <img src="https://images.unsplash.com/photo-1605902711622-cfb43c4437b5?auto=format&fit=crop&q=80&w=500" class="product-img" alt="Joystick Covers">
+        <span class="badge">الأكثر طلباً 🎮</span>
+        <img src="https://m.media-amazon.com/images/I/61N+VnN6kCL._AC_SL1500_.jpg" class="product-img" alt="Joystick Covers">
         <div class="content">
-            <h2>أغطية عصا التحكم – حماية وراحة</h2>
-            <ul>
+            <h2>🎮 أغطية عصا التحكم – حماية وراحة</h2>
+            <ul class="features">
                 <li>حماية كاملة من الغبار والخدوش</li>
-                <li>خامة مطاطية متينة مقاومة للانزلاق</li>
-                <li>ملمس ناعم لراحة أكبر أثناء اللعب</li>
-                <li>متوافق مع PS5, Xbox, Switch Pro</li>
+                <li>مطاط قوي مقاوم للانزلاق أثناء اللعب</li>
+                <li>متوافق مع PS5, PS4, Xbox, Switch</li>
+                <li>تحكم أفضل وثبات عالي في الألعاب</li>
             </ul>
-            <span class="price-tag">1200 دج</span>
-            <a href="https://t.me/gX8_M" class="buy-btn">اطلب عبر تليجرام الآن ✅</a>
+            <div class="price-container">
+                <span class="price-tag">1200 دج</span>
+                <a href="https://t.me/gX8_M" class="buy-btn">اطلب الآن ✅</a>
+            </div>
         </div>
     </div>
 
     <div class="product-card">
-        <span class="badge">وصل حديثاً ✨</span>
-        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=500" class="product-img" alt="Hoodie">
+        <span class="badge">تخفيض مؤقت ✨</span>
+        <img src="https://m.media-amazon.com/images/I/71z50p6eclL._AC_UX569_.jpg" class="product-img" alt="Hoodie">
         <div class="content">
-            <h2>سحاب كامل عملي - قصة عصرية</h2>
-            <ul>
-                <li>مثالي لإطلالة ستريت وير أو كاجوال</li>
-                <li>متوفر من S إلى XXL لجميع المقاسات</li>
-                <li>ألوان راقية (أسود كلاسيكي / رمادي)</li>
-                <li>تصميم متين ومريح للاستعمال اليومي</li>
+            <h2>👕 سحاب كامل عملي - قصة عصرية</h2>
+            <ul class="features">
+                <li>قصة مريحة مثالية لإطلالة كاجوال</li>
+                <li>متوفر بجميع المقاسات من S إلى XXL</li>
+                <li>ألوان راقية (أسود / رمادي) سهلة التنسيق</li>
+                <li>خامة متينة تتحمل الغسيل والاستعمال</li>
             </ul>
-            <span class="price-tag">2600 دج</span>
-            <a href="https://t.me/gX8_M" class="buy-btn">اطلب عبر تليجرام الآن ✅</a>
+            <div class="price-container">
+                <span class="price-tag">2600 دج</span>
+                <a href="https://t.me/gX8_M" class="buy-btn">اطلب الآن ✅</a>
+            </div>
         </div>
     </div>
 
@@ -68,6 +199,7 @@
 
 <footer>
     <p>جميع الحقوق محفوظة لمتجر @gX8_M &copy; 2026</p>
+    <p>تواصل معنا عبر تليجرام للحصول على خصومات بالجملة</p>
 </footer>
 
 </body>
