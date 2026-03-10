@@ -1,97 +1,32 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOH-Config | إرسال وتحميل تلقائي</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            // المفتاح العام الخاص بك الذي استخرجناه من الصورة
-            emailjs.init("AvwrnalzJUckmlcEyR");
-        })();
-    </script>
+    <title>متجر CR-111 | شاحن سيارة فائق السرعة</title>
     <style>
-        body { background-color: #000; color: white; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #0d1117; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid #30363d; width: 90%; max-width: 400px; }
-        h1 { color: #58a6ff; font-size: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: white; text-align: center; box-sizing: border-box; }
-        .btn { display: block; width: 100%; padding: 14px; margin: 10px 0; background-color: #007bff; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; }
-        .hidden { display: none; }
-        .config-box { border: 2px solid #58a6ff; padding: 20px; border-radius: 12px; margin-top: 15px; background: #161b22; cursor: pointer; }
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #f8f9fa; margin: 0; padding: 20px; }
+        .card { background: white; max-width: 400px; margin: auto; padding: 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #eee; }
+        img { width: 100%; border-radius: 20px; margin-bottom: 15px; }
+        h1 { color: #2c3e50; font-size: 22px; margin: 10px 0; }
+        .specs { text-align: right; font-size: 14px; color: #7f8c8d; line-height: 1.6; }
+        .price { color: #27ae60; font-size: 32px; font-weight: bold; margin: 20px 0; }
+        .btn { display: block; background: #0088cc; color: white; padding: 18px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 18px; transition: 0.3s; }
+        .btn:hover { background: #0077b3; }
     </style>
 </head>
 <body>
     <div class="card">
-        <div id="step1">
-            <h1>أدخل بياناتك لاستلام الملف</h1>
-            <input type="text" id="userName" placeholder="الاسم الكامل">
-            <input type="email" id="userEmail" placeholder="البريد الإلكتروني (Gmail)">
-            <button class="btn" onclick="goToStep2()">استمرار</button>
+        <img src="https://i.ibb.co/vzVf9kz/charger-car.jpg" alt="Charger CR-111">
+        <h1>شاحن سيارة CR-111 الأصلي (45W) ⚡</h1>
+        <div class="specs">
+            • شحن فائق السرعة 45 واط Max <br>
+            • منفذ مزدوج (Type-C + USB) <br>
+            • يأتي مع كابل 3 في 1 متين <br>
+            • متوافق مع جميع السيارات والشاحنات
         </div>
-
-        <div id="step2" class="hidden">
-            <h1 id="welcomeTitle"></h1>
-            <p>اضغط على الخانة للتنزيل واستلام نسخة في بريدك:</p>
-            <div class="config-box" id="downloadBox" onclick="processAll()">
-                <h2 style="margin:0; color:#58a6ff;">🌑 خانة DARK</h2>
-                <p id="statusText" style="margin:5px 0 0; font-size:12px; color:#8b949e;">تنزيل + إرسال تلقائي</p>
-            </div>
-        </div>
-
-        <div id="step3" class="hidden">
-            <h1 style="color: #3fb950;">تمت العملية!</h1>
-            <p>تحقق من التحميلات ومن بريدك الإلكتروني الآن.</p>
-            <a href="https://t.me/mohchakour00" class="btn" style="background-color: #0088cc;">قناة التيليجرام</a>
-        </div>
+        <div class="price">2300 دج</div>
+        <a href="https://t.me/YOUR_BOT_USERNAME" class="btn">اطلب الآن عبر تليجرام ✅</a>
     </div>
-
-    <script>
-        let uName, uEmail;
-
-        function goToStep2() {
-            uName = document.getElementById('userName').value;
-            uEmail = document.getElementById('userEmail').value;
-            if (uName.trim().length >= 2 && uEmail.includes("@")) {
-                document.getElementById('step1').classList.add('hidden');
-                document.getElementById('step2').classList.remove('hidden');
-                document.getElementById('welcomeTitle').innerText = "مرحباً يا " + uName;
-            } else { alert("يرجى إدخال بيانات صحيحة"); }
-        }
-
-        function processAll() {
-            document.getElementById('statusText').innerText = "جاري الإرسال والتحميل...";
-            document.getElementById('downloadBox').style.opacity = "0.5";
-
-            // 1. إرسال الإيميل تلقائياً عبر EmailJS
-            const templateParams = {
-                to_name: uName,
-                user_email: uEmail,
-                message: "إليك رابط ملف DARK الخاص بك: https://github.com/moh216784-boop/MOH-Config/raw/main/%D9%8A%D9%88%D8%AA%D9%88%D8%A8%20%D9%82%D9%88%D8%A9%20.dark"
-            };
-
-            emailjs.send('service_goh8l3g', 'template_default', templateParams)
-                .then(function() {
-                    console.log('Email Sent!');
-                    startDownload();
-                }, function(error) {
-                    console.log('Email Failed...', error);
-                    startDownload(); // سنبدأ التحميل حتى لو فشل الإيميل لضمان الخدمة
-                });
-        }
-
-        function startDownload() {
-            const fileUrl = "https://github.com/moh216784-boop/MOH-Config/raw/main/%D9%8A%D9%88%D8%AA%D9%88%D8%A8%20%D9%82%D9%88%D8%A9%20.dark";
-            const a = document.createElement('a');
-            a.href = fileUrl;
-            a.download = "يوتوب_قوة.dark";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('step3').classList.remove('hidden');
-        }
-    </script>
 </body>
 </html>
