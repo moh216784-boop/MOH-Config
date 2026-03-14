@@ -3,204 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر التقنية والأناقة | DZ Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <title>مصحف النور - تجربة قراءة فريدة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0088cc; /* لون التليجرام */
-            --accent: #ff4757; /* لون التخفيضات */
-            --success: #2ed573; /* لون السعر */
-            --dark: #2f3542;
-            --bg: #f1f2f6;
+            --glass: rgba(255, 255, 255, 0.95);
+            --gold: #c5a059;
+            --dark-blue: #1a2a3a;
+            --accent: #27ae60;
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg);
             margin: 0;
-            padding: 0;
-            color: var(--dark);
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1584281722572-683f2331592c?q=80&w=2070') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .overlay-glass {
+            background: rgba(26, 42, 58, 0.85);
+            backdrop-filter: blur(10px);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         header {
-            background: linear-gradient(135deg, var(--dark) 0%, #1e2124 100%);
-            color: white;
-            padding: 30px 20px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 30px 0;
         }
 
-        header h1 { margin: 0; font-size: 24px; }
-        header p { margin: 10px 0 0; opacity: 0.8; font-size: 14px; }
-
-        .container {
-            max-width: 1100px;
-            margin: 20px auto;
-            padding: 15px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+        header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 3rem;
+            margin: 0;
+            color: var(--gold);
         }
 
-        .product-card {
-            background: white;
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
-            position: relative;
-            border: 1px solid rgba(0,0,0,0.03);
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--accent);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 10;
-        }
-
-        .product-img {
+        .search-box {
             width: 100%;
-            height: 280px;
-            object-fit: cover;
-            border-bottom: 2px solid #f9f9f9;
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            background: var(--glass);
+            color: var(--dark-blue);
+            font-size: 1.1rem;
+            margin: 20px 0;
+            outline: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .content {
-            padding: 20px;
-            text-align: right;
-        }
-
-        h2 {
-            font-size: 19px;
-            margin: 0 0 12px;
-            color: #2c3e50;
-        }
-
-        .features {
-            padding: 0;
-            margin: 0 0 20px;
-            list-style: none;
-            font-size: 13.5px;
-            color: #57606f;
-            line-height: 1.7;
-        }
-
-        .features li::before {
-            content: "✔️";
-            margin-left: 8px;
-            color: var(--success);
-        }
-
-        .price-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed #eee;
-        }
-
-        .price-tag {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--success);
-        }
-
-        .buy-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--primary);
+        .reciter-select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            background: var(--gold);
             color: white;
-            text-decoration: none;
-            padding: 12px 20px;
-            border-radius: 15px;
+            border: none;
             font-weight: bold;
-            font-size: 15px;
-            transition: 0.3s;
         }
 
-        .buy-btn:hover {
-            background: #0077b3;
-            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.3);
+        .surah-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
         }
 
-        footer {
+        .surah-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 12px;
             text-align: center;
-            padding: 40px 20px;
-            color: #a4b0be;
-            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* تحسينات للهاتف */
-        @media (max-width: 480px) {
-            .container { grid-template-columns: 1fr; }
-            header h1 { font-size: 20px; }
+        .surah-item:hover {
+            background: var(--gold);
+            transform: scale(1.05);
         }
+
+        #reader-section {
+            display: none;
+            background: var(--glass);
+            color: var(--dark-blue);
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .ayah {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            line-height: 2.5;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            cursor: pointer;
+        }
+
+        .ayah.active {
+            color: var(--accent);
+            background: #f0fff4;
+            border-radius: 10px;
+        }
+
+        .controls {
+            position: sticky;
+            bottom: 0;
+            background: var(--dark-blue);
+            padding: 15px;
+            text-align: center;
+            border-top: 2px solid var(--gold);
+        }
+
+        audio { width: 100%; height: 40px; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>متجر التقنية والجمال 🇩🇿</h1>
-    <p>توصيل سريع لـ 58 ولاية | الدفع عند الاستلام</p>
-</header>
+<div class="overlay-glass">
+    <div class="main-container">
+        <header>
+            <h1>مصحف النور</h1>
+            <p>رتل القرآن بجمالية وإتقان</p>
+        </header>
 
-<div class="container">
+        <select id="reciter" class="reciter-select">
+            <option value="ar.alafasy">مشاري العفاسي</option>
+            <option value="ar.minshawi">محمد صديق المنشاوي</option>
+            <option value="ar.husary">محمود خليل الحصري</option>
+            <option value="ar.abdulsamad">عبد الباسط عبد الصمد</option>
+        </select>
 
-    <div class="product-card">
-        <span class="badge">الأكثر طلباً 🎮</span>
-        <img src="https://m.media-amazon.com/images/I/61N+VnN6kCL._AC_SL1500_.jpg" class="product-img" alt="Joystick Covers">
-        <div class="content">
-            <h2>🎮 أغطية عصا التحكم – حماية وراحة</h2>
-            <ul class="features">
-                <li>حماية كاملة من الغبار والخدوش</li>
-                <li>مطاط قوي مقاوم للانزلاق أثناء اللعب</li>
-                <li>متوافق مع PS5, PS4, Xbox, Switch</li>
-                <li>تحكم أفضل وثبات عالي في الألعاب</li>
-            </ul>
-            <div class="price-container">
-                <span class="price-tag">1200 دج</span>
-                <a href="https://t.me/gX8_M" class="buy-btn">اطلب الآن ✅</a>
+        <input type="text" class="search-box" id="search" placeholder="ابحث عن سورة...">
+
+        <div class="surah-list" id="surah-container">
             </div>
+
+        <div id="reader-section">
+            <button onclick="backToList()" style="background:none; border:none; cursor:pointer; color:var(--gold); font-weight:bold;">← العودة للقائمة</button>
+            <h2 id="current-surah-title" style="text-align:center; color:var(--dark-blue);"></h2>
+            <div id="ayahs-container"></div>
         </div>
     </div>
-
-    <div class="product-card">
-        <span class="badge">تخفيض مؤقت ✨</span>
-        <img src="https://m.media-amazon.com/images/I/71z50p6eclL._AC_UX569_.jpg" class="product-img" alt="Hoodie">
-        <div class="content">
-            <h2>👕 سحاب كامل عملي - قصة عصرية</h2>
-            <ul class="features">
-                <li>قصة مريحة مثالية لإطلالة كاجوال</li>
-                <li>متوفر بجميع المقاسات من S إلى XXL</li>
-                <li>ألوان راقية (أسود / رمادي) سهلة التنسيق</li>
-                <li>خامة متينة تتحمل الغسيل والاستعمال</li>
-            </ul>
-            <div class="price-container">
-                <span class="price-tag">2600 دج</span>
-                <a href="https://t.me/gX8_M" class="buy-btn">اطلب الآن ✅</a>
-            </div>
-        </div>
-    </div>
-
 </div>
 
-<footer>
-    <p>جميع الحقوق محفوظة لمتجر @gX8_M &copy; 2026</p>
-    <p>تواصل معنا عبر تليجرام للحصول على خصومات بالجملة</p>
-</footer>
+<div class="controls" id="audio-player-container" style="display:none;">
+    <audio id="main-audio" controls autoplay></audio>
+</div>
+
+<script>
+    let allSurahs = [];
+    let currentAyahs = [];
+    let currentAyahIndex = 0;
+
+    // 1. جلب السور
+    async function init() {
+        const res = await fetch('https://api.quran.com/api/v4/chapters?language=ar');
+        const data = await res.json();
+        allSurahs = data.chapters;
+        renderSurahs(allSurahs);
+    }
+
+    function renderSurahs(chapters) {
+        const container = document.getElementById('surah-container');
+        container.innerHTML = chapters.map(s => `
+            <div class="surah-item" onclick="loadSurah(${s.id}, '${s.name_arabic}')">
+                <div style="font-weight:bold;">${s.name_arabic}</div>
+                <small>${s.verses_count} آية</small>
+            </div>
+        `).join('');
+    }
+
+    // 2. البحث
+    document.getElementById('search').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allSurahs.filter(s => s.name_arabic.includes(term));
+        renderSurahs(filtered);
+    });
+
+    // 3. تحميل السورة والآيات
+    async function loadSurah(id, name) {
+        document.getElementById('surah-container').style.display = 'none';
+        document.getElementById('search').style.display = 'none';
+        const reader = document.getElementById('reader-section');
+        reader.style.display = 'block';
+        document.getElementById('current-surah-title').innerText = name;
+        
+        const res = await fetch(`https://api.alquran.cloud/v1/surah/${id}/${document.getElementById('reciter').value}`);
+        const data = await res.json();
+        currentAyahs = data.data.ayahs;
+        
+        displayAyahs();
+    }
+
+    function displayAyahs() {
+        const container = document.getElementById('ayahs-container');
+        container.innerHTML = currentAyahs.map((a, index) => `
+            <div class="ayah" id="ayah-${index}" onclick="playAyah(${index})">
+                ${a.text} <span style="color:var(--gold); font-size:1.2rem;">(${a.numberInSurah})</span>
+            </div>
+        `).join('');
+    }
+
+    // 4. نظام التشغيل التلقائي
+    const audio = document.getElementById('main-audio');
+
+    function playAyah(index) {
+        currentAyahIndex = index;
+        const ayah = currentAyahs[index];
+        
+        // تحديث الواجهة
+        document.querySelectorAll('.ayah').forEach(el => el.classList.remove('active'));
+        document.getElementById(`ayah-${index}`).classList.add('active');
+        document.getElementById(`ayah-${index}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // تشغيل الصوت
+        document.getElementById('audio-player-container').style.display = 'block';
+        audio.src = ayah.audio;
+        audio.play();
+    }
+
+    audio.onended = () => {
+        if (currentAyahIndex < currentAyahs.length - 1) {
+            playAyah(currentAyahIndex + 1);
+        }
+    };
+
+    function backToList() {
+        document.getElementById('surah-container').style.display = 'grid';
+        document.getElementById('search').style.display = 'block';
+        document.getElementById('reader-section').style.display = 'none';
+        audio.pause();
+    }
+
+    init();
+</script>
 
 </body>
 </html>
