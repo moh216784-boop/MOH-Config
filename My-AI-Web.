@@ -1,0 +1,48 @@
+import streamlit as st
+import requests
+
+# إعدادات واجهة الموقع
+st.set_page_config(page_title="ذكاء محمد الاصطناعي", page_icon="🤖")
+
+st.title("🤖 مساعد محمد الذكي")
+st.markdown("---")
+
+# إنشاء ذاكرة بسيطة للدردشة
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# عرض الرسائل السابقة
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# منطقة إدخال المستخدم
+if prompt := st.chat_input("اسألني أي شيء..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    # الاتصال بسيرفر الذكاء الاصطناعي
+    with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        message_placeholder.markdown("جاري التفكير... 🧠")
+        
+        try:
+            # سنستخدم سيرفر Blackbox لأنه مستقر للمواقع
+            url = "https://api.blackbox.ai/api/chat"
+            payload = {
+                "messages": [{"role": "user", "content": prompt}],
+                "model": "gpt-3.5-turbo"
+            }
+            response = requests.post(url, json=payload)
+            
+            if response.status_code == 200:
+                full_response = response.text # السيرفر يرسل نص مباشر أحياناً
+                message_placeholder.markdown(full_response)
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+            else:
+                message_placeholder.markdown("عذراً، السيرفر مشغول حالياً. حاول ثانية.")
+        except Exception as e:
+            message_placeholder.markdown(f"خطأ في الاتصال: {str(e)}")
+
+
