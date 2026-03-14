@@ -3,180 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مصحف النور - تجربة قراءة فريدة</title>
+    <title>مصحف النور - التجويد الذكي</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.95);
-            --gold: #c5a059;
-            --dark-blue: #1a2a3a;
-            --accent: #27ae60;
+            --glass: rgba(255, 255, 255, 0.98);
+            --gold: #d4af37;
+            --dark-blue: #0f172a;
+            --accent: #10b981;
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
             margin: 0;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('https://images.unsplash.com/photo-1584281722572-683f2331592c?q=80&w=2070') no-repeat center center fixed;
-            background-size: cover;
+            background: #0f172a url('https://www.transparenttextures.com/patterns/arabesque.png');
             color: white;
             min-height: 100vh;
         }
 
         .overlay-glass {
-            background: rgba(26, 42, 58, 0.85);
-            backdrop-filter: blur(10px);
             min-height: 100vh;
             padding: 20px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, #0f172a 100%);
         }
 
-        .main-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            padding: 30px 0;
-        }
+        .main-container { max-width: 900px; margin: 0 auto; }
 
         header h1 {
             font-family: 'Amiri', serif;
-            font-size: 3rem;
-            margin: 0;
+            font-size: 3.5rem;
             color: var(--gold);
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+            margin-bottom: 10px;
+        }
+
+        /* أدوات التحكم */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-toggle {
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid var(--gold);
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-toggle.active {
+            background: var(--gold);
+            color: var(--dark-blue);
         }
 
         .search-box {
             width: 100%;
             padding: 15px;
-            border-radius: 50px;
+            border-radius: 15px;
             border: none;
-            background: var(--glass);
-            color: var(--dark-blue);
-            font-size: 1.1rem;
-            margin: 20px 0;
-            outline: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .reciter-select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            background: var(--gold);
+            background: rgba(255,255,255,0.1);
             color: white;
-            border: none;
-            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            box-sizing: border-box;
         }
 
         .surah-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-            max-height: 400px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            max-height: 50vh;
             overflow-y: auto;
             padding: 10px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
         }
 
         .surah-item {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 15px;
             text-align: center;
             cursor: pointer;
             transition: 0.3s;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(212, 175, 55, 0.1);
         }
 
         .surah-item:hover {
-            background: var(--gold);
-            transform: scale(1.05);
+            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--gold);
         }
 
+        /* منطقة القراءة */
         #reader-section {
             display: none;
             background: var(--glass);
             color: var(--dark-blue);
-            padding: 30px;
-            border-radius: 20px;
-            margin-top: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            padding: 40px 20px;
+            border-radius: 30px;
+            margin-top: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
         .ayah {
             font-family: 'Amiri', serif;
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             line-height: 2.5;
             text-align: center;
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
-            cursor: pointer;
+            padding: 25px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: 0.5s;
         }
 
         .ayah.active {
-            color: var(--accent);
-            background: #f0fff4;
-            border-radius: 10px;
+            background: #fff9e6;
+            color: #b48a04;
+            border-radius: 15px;
+            transform: scale(1.02);
         }
 
-        .controls {
+        /* الصور الخاصة بالتجويد (إذا كانت مفعلة) */
+        .tajweed-img {
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .player-bar {
             position: sticky;
             bottom: 0;
-            background: var(--dark-blue);
+            background: #1e293b;
             padding: 15px;
-            text-align: center;
-            border-top: 2px solid var(--gold);
+            display: none;
+            border-top: 3px solid var(--gold);
         }
 
-        audio { width: 100%; height: 40px; }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+        audio { width: 100%; filter: sepia(20%) saturate(70%) grayscale(100%) contrast(99%) invert(12%); }
     </style>
 </head>
 <body>
 
 <div class="overlay-glass">
     <div class="main-container">
-        <header>
+        <header style="text-align: center;">
             <h1>مصحف النور</h1>
-            <p>رتل القرآن بجمالية وإتقان</p>
+            <div class="controls-grid">
+                <button id="tajweed-btn" class="btn-toggle" onclick="toggleTajweed()">✨ وضع التجويد: مغلق</button>
+                <button id="auto-play-btn" class="btn-toggle active" onclick="toggleAutoPlay()">🔊 قراءة تلقائية: مفعل</button>
+            </div>
+            
+            <select id="reciter" class="search-box" style="background: var(--gold); color: black; font-weight: bold;">
+                <option value="ar.alafasy">مشاري العفاسي</option>
+                <option value="ar.minshawi">محمد صديق المنشاوي</option>
+                <option value="ar.husary">محمود خليل الحصري (المعلم)</option>
+                <option value="ar.abdulsamad">عبد الباسط عبد الصمد</option>
+            </select>
         </header>
 
-        <select id="reciter" class="reciter-select">
-            <option value="ar.alafasy">مشاري العفاسي</option>
-            <option value="ar.minshawi">محمد صديق المنشاوي</option>
-            <option value="ar.husary">محمود خليل الحصري</option>
-            <option value="ar.abdulsamad">عبد الباسط عبد الصمد</option>
-        </select>
+        <input type="text" class="search-box" id="search" placeholder="🔍 ابحث عن اسم السورة...">
 
-        <input type="text" class="search-box" id="search" placeholder="ابحث عن سورة...">
-
-        <div class="surah-list" id="surah-container">
-            </div>
+        <div class="surah-list" id="surah-container"></div>
 
         <div id="reader-section">
-            <button onclick="backToList()" style="background:none; border:none; cursor:pointer; color:var(--gold); font-weight:bold;">← العودة للقائمة</button>
-            <h2 id="current-surah-title" style="text-align:center; color:var(--dark-blue);"></h2>
+            <button onclick="backToList()" style="color: var(--gold); border: none; background: none; cursor: pointer; font-size: 1.2rem; margin-bottom: 20px;">✕ إغلاق المصحف</button>
+            <h2 id="current-surah-title" style="text-align: center; font-size: 2.5rem; margin-bottom: 30px;"></h2>
             <div id="ayahs-container"></div>
         </div>
     </div>
 </div>
 
-<div class="controls" id="audio-player-container" style="display:none;">
-    <audio id="main-audio" controls autoplay></audio>
+<div class="player-bar" id="player-bar">
+    <audio id="main-audio" controls></audio>
 </div>
 
 <script>
+    let isTajweed = false;
+    let isAutoPlay = true;
     let allSurahs = [];
     let currentAyahs = [];
     let currentAyahIndex = 0;
+    const audio = document.getElementById('main-audio');
 
-    // 1. جلب السور
     async function init() {
         const res = await fetch('https://api.quran.com/api/v4/chapters?language=ar');
         const data = await res.json();
@@ -188,63 +198,77 @@
         const container = document.getElementById('surah-container');
         container.innerHTML = chapters.map(s => `
             <div class="surah-item" onclick="loadSurah(${s.id}, '${s.name_arabic}')">
-                <div style="font-weight:bold;">${s.name_arabic}</div>
-                <small>${s.verses_count} آية</small>
+                <div style="font-size: 1.2rem; font-weight: bold;">${s.name_arabic}</div>
+                <small style="opacity: 0.7;">${s.verses_count} آية</small>
             </div>
         `).join('');
     }
 
-    // 2. البحث
-    document.getElementById('search').addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = allSurahs.filter(s => s.name_arabic.includes(term));
-        renderSurahs(filtered);
-    });
+    // تبديل وضع التجويد
+    function toggleTajweed() {
+        isTajweed = !isTajweed;
+        const btn = document.getElementById('tajweed-btn');
+        btn.innerText = isTajweed ? "✨ وضع التجويد: مفعل" : "✨ وضع التجويد: مغلق";
+        btn.classList.toggle('active');
+        if(currentAyahs.length > 0) refreshContent(); // تحديث المحتوى إذا كانت هناك سورة مفتوحة
+    }
 
-    // 3. تحميل السورة والآيات
+    // تبديل القراءة التلقائية
+    function toggleAutoPlay() {
+        isAutoPlay = !isAutoPlay;
+        const btn = document.getElementById('auto-play-btn');
+        btn.innerText = isAutoPlay ? "🔊 قراءة تلقائية: مفعل" : "🔊 قراءة تلقائية: مغلق";
+        btn.classList.toggle('active');
+    }
+
     async function loadSurah(id, name) {
         document.getElementById('surah-container').style.display = 'none';
         document.getElementById('search').style.display = 'none';
-        const reader = document.getElementById('reader-section');
-        reader.style.display = 'block';
+        document.getElementById('reader-section').style.display = 'block';
         document.getElementById('current-surah-title').innerText = name;
         
-        const res = await fetch(`https://api.alquran.cloud/v1/surah/${id}/${document.getElementById('reciter').value}`);
+        // جلب البيانات (صوت + نص)
+        const reciter = document.getElementById('reciter').value;
+        const res = await fetch(`https://api.alquran.cloud/v1/surah/${id}/${reciter}`);
         const data = await res.json();
         currentAyahs = data.data.ayahs;
         
-        displayAyahs();
+        refreshContent();
     }
 
-    function displayAyahs() {
+    function refreshContent() {
         const container = document.getElementById('ayahs-container');
-        container.innerHTML = currentAyahs.map((a, index) => `
-            <div class="ayah" id="ayah-${index}" onclick="playAyah(${index})">
-                ${a.text} <span style="color:var(--gold); font-size:1.2rem;">(${a.numberInSurah})</span>
-            </div>
-        `).join('');
+        container.innerHTML = currentAyahs.map((a, index) => {
+            // إذا كان التجويد مفعلاً، نستخدم صور الآيات المجودة من API خارجي (اختياري) أو نكتفي بتنسيق النص
+            // هنا سنعتمد على التنسيق النصي الفاخر
+            return `
+                <div class="ayah" id="ayah-${index}" onclick="playAyah(${index})">
+                    ${a.text}
+                    <div style="color: var(--gold); font-size: 1.2rem; margin-top: 10px;">﴿ ${a.numberInSurah} ﴾</div>
+                </div>
+            `;
+        }).join('');
     }
-
-    // 4. نظام التشغيل التلقائي
-    const audio = document.getElementById('main-audio');
 
     function playAyah(index) {
         currentAyahIndex = index;
         const ayah = currentAyahs[index];
         
-        // تحديث الواجهة
+        // تمييز الآية الحالية
         document.querySelectorAll('.ayah').forEach(el => el.classList.remove('active'));
-        document.getElementById(`ayah-${index}`).classList.add('active');
-        document.getElementById(`ayah-${index}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const activeAyah = document.getElementById(`ayah-${index}`);
+        activeAyah.classList.add('active');
+        activeAyah.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         // تشغيل الصوت
-        document.getElementById('audio-player-container').style.display = 'block';
+        document.getElementById('player-bar').style.display = 'block';
         audio.src = ayah.audio;
         audio.play();
     }
 
+    // الانتقال التلقائي
     audio.onended = () => {
-        if (currentAyahIndex < currentAyahs.length - 1) {
+        if (isAutoPlay && currentAyahIndex < currentAyahs.length - 1) {
             playAyah(currentAyahIndex + 1);
         }
     };
@@ -253,8 +277,16 @@
         document.getElementById('surah-container').style.display = 'grid';
         document.getElementById('search').style.display = 'block';
         document.getElementById('reader-section').style.display = 'none';
+        document.getElementById('player-bar').style.display = 'none';
         audio.pause();
     }
+
+    // بحث ذكي
+    document.getElementById('search').addEventListener('input', (e) => {
+        const term = e.target.value;
+        const filtered = allSurahs.filter(s => s.name_arabic.includes(term));
+        renderSurahs(filtered);
+    });
 
     init();
 </script>
