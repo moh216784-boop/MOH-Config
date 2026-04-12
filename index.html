@@ -5,30 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ثانوية عبد الحميد بن باديس</title>
     <style>
+        /* تعريف حركة الألوان */
+        @keyframes spaceGlow {
+            0% { background: linear-gradient(45deg, #1e90ff, #00c6ff); }
+            50% { background: linear-gradient(45deg, #ff00ff, #7000ff); }
+            100% { background: linear-gradient(45deg, #1e90ff, #00c6ff); }
+        }
+
         body {
-            background: linear-gradient(to right, #1e90ff, #00c6ff);
+            animation: spaceGlow 5s infinite alternate; /* تفعيل الحركة */
             text-align: center;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        h1 {
-            margin-top: 30px;
-            font-size: 28px;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
+
+        .card {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
             margin-top: 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
+
+        h1 { font-size: 32px; text-shadow: 0 0 10px #fff; }
+        
         img {
             margin-top: 20px;
-            width: 90%; /* عرض الصورة ليكون مناسباً لشاشة الهاتف */
-            max-width: 400px; /* لا تتجاوز هذا العرض */
+            width: 100%;
             border-radius: 15px;
-            border: 3px solid white;
+            border: 3px solid #fff;
+            box-shadow: 0 0 15px #00c6ff;
         }
     </style>
 </head>
@@ -36,10 +52,9 @@
 
     <h1>ثانوية عبد الحميد بن باديس</h1>
 
-    <div class="container">
-        <p>مرحباً بكم في الموقع</p>
+    <div class="card">
+        <p>مرحباً بكم في الموقع الرسمي للثانوية</p>
         <img src="images.jpeg" alt="صورة الثانوية">
-
     </div>
 
 </body>
