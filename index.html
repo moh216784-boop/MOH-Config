@@ -5,17 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ثانوية عبد الحميد بن باديس</title>
     <style>
-        /* تعريف حركة الألوان */
+        /* تعريف حركة تغيير الألوان (قوس قزح للخلفية) */
         @keyframes spaceGlow {
-            0% { background: linear-gradient(45deg, #1e90ff, #00c6ff); }
-            50% { background: linear-gradient(45deg, #ff00ff, #7000ff); }
-            100% { background: linear-gradient(45deg, #1e90ff, #00c6ff); }
+            0%   { background: linear-gradient(45deg, #1e90ff, #00c6ff); } /* أزرق */
+            15%  { background: linear-gradient(45deg, #00e600, #b3ffb3); } /* أخضر فاتح */
+            30%  { background: linear-gradient(45deg, #ffff00, #ffffe0); } /* أصفر */
+            45%  { background: linear-gradient(45deg, #ff8c00, #ffdab9); } /* برتقالي */
+            60%  { background: linear-gradient(45deg, #ff0000, #ffcccc); } /* أحمر */
+            75%  { background: linear-gradient(45deg, #ff00ff, #f3d1f3); } /* بنفسجي */
+            90%  { background: linear-gradient(45deg, #7000ff, #d9b3ff); } /* بنفسجي داكن */
+            100% { background: linear-gradient(45deg, #1e90ff, #00c6ff); } /* أزرق */
+        }
+
+        /* تعريف حركة النبض (Glow) للعنوان */
+        @keyframes glowingText {
+            0% { text-shadow: 0 0 5px #fff, 0 0 10px #00c6ff, 0 0 20px #00c6ff; opacity: 1; }
+            50% { text-shadow: 0 0 10px #fff, 0 0 30px #00c6ff, 0 0 40px #00c6ff; opacity: 0.8; }
+            100% { text-shadow: 0 0 5px #fff, 0 0 10px #00c6ff, 0 0 20px #00c6ff; opacity: 1; }
         }
 
         body {
-            animation: spaceGlow 5s infinite alternate; /* تفعيل الحركة */
+            /* تعديل الخلفية لتكون بلون عادي ثابت (أزرق فاتح مريح) */
+            background-color: #f0f8ff; 
             text-align: center;
-            color: white;
+            /* اللون الافتراضي للنصوص العادية */
+            color: #333; 
             font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0;
             padding: 20px;
@@ -25,32 +39,52 @@
             align-items: center;
         }
 
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff; /* لون باقي النص */
+            /* تفعيل حركة النبض هنا */
+            animation: glowingText 3s infinite; 
+            padding: 10px;
+            /* تطبيق تدرج الألوان على النص */
+            display: inline-block;
+        }
+
+        /* كود خاص لتلوين الاسم باللون الأخضر */
+        h1 span.name {
+            color: #00ff00; /* اللون الأخضر الصارخ */
+            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; /* توهج أخضر */
+        }
+
         .card {
-            background: rgba(0, 0, 0, 0.4);
+            background: #ffffff; /* بطاقة بيضاء سادة */
             padding: 25px;
             border-radius: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            border: 1px solid #ddd;
             margin-top: 20px;
             width: 90%;
             max-width: 450px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-
-        h1 { font-size: 32px; text-shadow: 0 0 10px #fff; }
+        
+        /* اللون الداكن للنص داخل البطاقة */
+        .card p {
+            color: #555;
+            font-size: 1.1em;
+        }
         
         img {
             margin-top: 20px;
             width: 100%;
             border-radius: 15px;
-            border: 3px solid #fff;
-            box-shadow: 0 0 15px #00c6ff;
+            border: 2px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
 
-    <h1>ثانوية عبد الحميد بن باديس</h1>
+    <h1>ثانوية عبد الحميد بن باديس - <span class="name">MOH CHAKOUR</span></h1>
 
     <div class="card">
         <p>مرحباً بكم في الموقع الرسمي للثانوية</p>
