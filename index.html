@@ -5,31 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ثانوية عبد الحميد بن باديس</title>
     <style>
-        /* تعريف حركة تغيير الألوان (قوس قزح للخلفية) */
-        @keyframes spaceGlow {
-            0%   { background: linear-gradient(45deg, #1e90ff, #00c6ff); } /* أزرق */
-            15%  { background: linear-gradient(45deg, #00e600, #b3ffb3); } /* أخضر فاتح */
-            30%  { background: linear-gradient(45deg, #ffff00, #ffffe0); } /* أصفر */
-            45%  { background: linear-gradient(45deg, #ff8c00, #ffdab9); } /* برتقالي */
-            60%  { background: linear-gradient(45deg, #ff0000, #ffcccc); } /* أحمر */
-            75%  { background: linear-gradient(45deg, #ff00ff, #f3d1f3); } /* بنفسجي */
-            90%  { background: linear-gradient(45deg, #7000ff, #d9b3ff); } /* بنفسجي داكن */
-            100% { background: linear-gradient(45deg, #1e90ff, #00c6ff); } /* أزرق */
-        }
-
-        /* تعريف حركة النبض (Glow) للعنوان */
-        @keyframes glowingText {
-            0% { text-shadow: 0 0 5px #fff, 0 0 10px #00c6ff, 0 0 20px #00c6ff; opacity: 1; }
-            50% { text-shadow: 0 0 10px #fff, 0 0 30px #00c6ff, 0 0 40px #00c6ff; opacity: 0.8; }
-            100% { text-shadow: 0 0 5px #fff, 0 0 10px #00c6ff, 0 0 20px #00c6ff; opacity: 1; }
+        /* تعريف حركة تغيير الخلفية لجميع الألوان (تدرج سلس) */
+        @keyframes rainbowBackground {
+            0%   { background: linear-gradient(45deg, #ff0000, #ff7f00); } /* أحمر -> برتقالي */
+            16%  { background: linear-gradient(45deg, #ff7f00, #ffff00); } /* برتقالي -> أصفر */
+            33%  { background: linear-gradient(45deg, #ffff00, #00ff00); } /* أصفر -> أخضر */
+            50%  { background: linear-gradient(45deg, #00ff00, #0000ff); } /* أخضر -> أزرق */
+            66%  { background: linear-gradient(45deg, #0000ff, #4b0082); } /* أزرق -> نيلي */
+            83%  { background: linear-gradient(45deg, #4b0082, #9400d3); } /* نيلي -> بنفسجي */
+            100% { background: linear-gradient(45deg, #9400d3, #ff0000); } /* بنفسجي -> أحمر */
         }
 
         body {
-            /* تعديل الخلفية لتكون بلون عادي ثابت (أزرق فاتح مريح) */
-            background-color: #f0f8ff; 
+            /* تفعيل حركة الخلفية المتغيرة لجميع الألوان */
+            animation: rainbowBackground 10s infinite alternate; 
             text-align: center;
-            /* اللون الافتراضي للنصوص العادية */
-            color: #333; 
+            color: white;
             font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0;
             padding: 20px;
@@ -39,56 +30,59 @@
             align-items: center;
         }
 
-        h1 {
-            font-size: 32px;
-            font-weight: bold;
-            color: #fff; /* لون باقي النص */
-            /* تفعيل حركة النبض هنا */
-            animation: glowingText 3s infinite; 
-            padding: 10px;
-            /* تطبيق تدرج الألوان على النص */
-            display: inline-block;
-        }
-
-        /* كود خاص لتلوين الاسم باللون الأخضر */
-        h1 span.name {
-            color: #00ff00; /* اللون الأخضر الصارخ */
-            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; /* توهج أخضر */
-        }
-
         .card {
-            background: #ffffff; /* بطاقة بيضاء سادة */
+            background: rgba(0, 0, 0, 0.6); /* بطاقة سوداء شفافة */
             padding: 25px;
             border-radius: 20px;
-            border: 1px solid #ddd;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
             margin-top: 20px;
             width: 90%;
             max-width: 450px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 { 
+            font-size: 28px; 
+            text-shadow: 0 0 10px #fff; 
+            margin-bottom: 10px;
         }
         
-        /* اللون الداكن للنص داخل البطاقة */
         .card p {
-            color: #555;
+            margin: 0;
             font-size: 1.1em;
+            color: #ccc;
         }
         
         img {
             margin-top: 20px;
             width: 100%;
             border-radius: 15px;
-            border: 2px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 3px solid #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* كود خاص لتلوين الاسم باللون الأخضر تحت الصورة */
+        .signature {
+            margin-top: 25px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ff00; /* اللون الأخضر الثابت */
+            text-shadow: 0 0 5px #00ff00; /* توهج أخضر بسيط */
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <h1>ثانوية عبد الحميد بن باديس - <span class="name">MOH CHAKOUR</span></h1>
+    <h1>ثانوية عبد الحميد بن باديس</h1>
 
     <div class="card">
         <p>مرحباً بكم في الموقع الرسمي للثانوية</p>
+        
         <img src="images.jpeg" alt="صورة الثانوية">
+        
+        <div class="signature">MOH CHAKOUR</div>
     </div>
 
 </body>
