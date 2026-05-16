@@ -1,23 +1,18 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Dark Lab - SQLi Test</title>
-    <style>
-        body { background-color: #0b0b0b; color: #00ff00; font-family: 'Courier New', monospace; text-align: center; padding-top: 50px; }
-        input { background: #1a1a1a; border: 1px solid #00ff00; color: #00ff00; padding: 10px; width: 300px; }
-        button { background: #00ff00; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
-        .container { border: 2px solid #00ff00; display: inline-block; padding: 20px; border-radius: 10px; box-shadow: 0 0 15px #00ff00; }
-    </style>
+    <title>موقع اختبار XSS</title>
 </head>
 <body>
-    <div class="container">
-        <h1>💀 مختبر سيد الظلام 💀</h1>
-        <p>ابحث عن مستخدم برقم المعرف (ID):</p>
-        <form action="search.php" method="GET">
-            <input type="text" name="id" placeholder="أدخل ID هنا (مثلاً: 1)">
-            <button type="submit">بحث</button>
-        </form>
+    <h1>لوحة الضيف</h1>
+    <form method="GET">
+        <input type="text" name="comment" placeholder="اكتب تعليقك" size="50">
+        <button type="submit">إرسال</button>
+    </form>
+
+    <div>
+        <h3>تعليقك:</h3>
+        <p><?php echo $_GET['comment']; ?></p>
     </div>
 </body>
 </html>
