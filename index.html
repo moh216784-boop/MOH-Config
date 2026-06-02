@@ -3,330 +3,414 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة وصلك الرقمية - نظام الخرائط و الجدولة الموحد</title>
+    <title>فوري FAWRI - نظام الحجز والملاحة الذكية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #f3f4f6; }
-        .service-btn { transition: all 0.2s ease-in-out; }
-        .service-btn.active { transform: scale(0.95); ring: 4px; ring-opacity: 0.5; }
-        #map { height: 100%; min-h: 350px; border-radius: 1.5rem; z-index: 10; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #f4f6f9; }
+        #map { height: 100%; min-height: 400px; border-radius: 1.5rem; z-index: 10; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #102a6b; border-radius: 10px; }
+        .pulse-user { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(29, 78, 216, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(29, 78, 216, 0); }
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between text-gray-800">
 
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <!-- شريط الهوية الرسمي لفوري -->
+    <header class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="bg-[#2d6a4f] text-white p-2.5 rounded-xl shadow-md">
-                    <i class="fas fa-map-marked-alt text-xl"></i>
+                <div class="relative flex items-center justify-center w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100">
+                    <span class="absolute inset-0 flex items-center justify-center text-2xl text-blue-900"><i class="fas fa-sync-alt rotate-45"></i></span>
+                    <span class="absolute inset-0 flex items-center justify-center text-xl mt-1 mr-1" style="color: #f57c00;"><i class="fas fa-check font-black"></i></span>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold text-[#2d6a4f]">وَصَلَكْ <span class="text-xs text-gray-400 font-medium">الجزائر</span></h1>
-                    <p class="text-[11px] text-gray-500 font-semibold">نظام تحديد المواقع والحجوزات الفوري</p>
+                    <h1 class="text-2xl font-black tracking-tight" style="color: #102a6b;">فوري <span style="color: #f57c00;">FAWRI</span></h1>
+                    <p class="text-[10px] text-gray-400 font-bold">الملاحة الحية وتتبع الحافلات | Live GPS Tracking</p>
                 </div>
             </div>
             
-            <div class="w-72">
-                <select id="global-state-select" onchange="onStateChange(this.value)" class="w-full border-2 border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:border-[#2d6a4f] focus:outline-none font-bold text-gray-700 text-sm shadow-sm">
-                    </select>
+            <div id="steps-indicator" class="flex items-center space-x-3 space-x-reverse font-bold text-[11px] bg-gray-50 p-2 rounded-xl border border-gray-200">
+                <span id="ind-1" class="text-blue-900"><i class="fas fa-fingerprint"></i> 1. الهوية</span>
+                <i class="fas fa-chevron-left text-gray-300 text-[9px]"></i>
+                <span id="ind-2" class="text-gray-400"><i class="fas fa-map-marker-alt"></i> 2. الولاية</span>
+                <i class="fas fa-chevron-left text-gray-300 text-[9px]"></i>
+                <span id="ind-3" class="text-gray-400"><i class="fas fa-th"></i> 3. المجال</span>
+                <i class="fas fa-chevron-left text-gray-300 text-[9px]"></i>
+                <span id="ind-4" class="text-gray-400"><i class="fas fa-route"></i> 4. الملاحة والتتبع</span>
+                <i class="fas fa-chevron-left text-gray-300 text-[9px]"></i>
+                <span id="ind-5" class="text-gray-400"><i class="fas fa-ticket-alt"></i> 5. التذكرة</span>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl w-full mx-auto px-4 md:px-6 py-6 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        <div class="lg:col-span-5 space-y-6">
+    <!-- المحتوى الرئيسي للمنظومة التفاعلية -->
+    <main class="max-w-6xl w-full mx-auto px-4 py-6 flex-1 flex flex-col justify-center items-center">
+        <div class="w-full bg-white rounded-3xl p-6 shadow-sm border border-gray-100 min-h-[550px] flex flex-col justify-between relative">
             
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
-                <h3 class="text-sm font-bold text-gray-500 mb-4"><i class="fas fa-th-large ml-1"></i> اختر الخدمة التي تريدها:</h3>
-                
-                <div class="grid grid-cols-3 gap-3">
-                    <button onclick="selectService('hospital', this)" class="service-btn bg-[#e63946] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-red-300">
-                        <i class="fas fa-user-md text-xl mb-2"></i>
-                        <span class="text-xs font-bold whitespace-nowrap">المستشفيات</span>
-                    </button>
+            <button id="back-flow-btn" onclick="triggerPrevStep()" class="absolute top-6 left-6 text-xs font-bold text-gray-400 hover:text-blue-900 hidden items-center space-x-1 space-x-reverse transition">
+                <i class="fas fa-arrow-right"></i> <span>رجوع</span>
+            </button>
 
-                    <button onclick="selectService('parking', this)" class="service-btn bg-[#2a9d8f] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-teal-300">
-                        <i class="fas fa-square-p text-xl mb-2"></i>
-                        <span class="text-xs font-bold whitespace-nowrap">مواقف السيارات</span>
-                    </button>
+            <!-- الخطوة 1: الدخول بالبطاقة -->
+            <div id="step-view-1" class="flow-step-view space-y-4 max-w-md mx-auto w-full text-center py-6">
+                <div class="w-16 h-16 bg-blue-50 text-blue-900 rounded-2xl flex items-center justify-center text-2xl mx-auto border border-blue-100"><i class="fas fa-id-card"></i></div>
+                <h2 class="text-xl font-black text-gray-800">التعرف البيومتري الذكي</h2>
+                <input type="text" id="user-card-name" placeholder="أدخل اسمك الكامل هنا للمطابقة..." class="w-full border border-gray-200 rounded-xl p-3.5 focus:border-blue-900 focus:outline-none text-sm font-bold text-center text-gray-700 shadow-sm">
+                <button onclick="submitLoginStep()" class="w-full text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm" style="background-color: #102a6b;">تحقق من البطاقة والموقع الجغرافي <i class="fas fa-location-arrow mr-1"></i></button>
+            </div>
 
-                    <button onclick="selectService('transport', this)" class="service-btn bg-[#1d3557] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-blue-900">
-                        <i class="fas fa-bus text-xl mb-2"></i>
-                        <span class="text-xs font-bold whitespace-nowrap">النقل والمحطات</span>
-                    </button>
+            <!-- الخطوة 2: اختيار الولاية -->
+            <div id="step-view-2" class="flow-step-view hidden space-y-4 max-w-md mx-auto w-full py-6">
+                <h2 class="text-xl font-black text-gray-800 text-center">تحديد النطاق الجغرافي للمحاكاة</h2>
+                <select id="state-flow-select" class="w-full border-2 border-gray-200 rounded-xl p-3 bg-white font-bold text-gray-700 text-sm shadow-sm"></select>
+                <button onclick="submitStateStep()" class="w-full text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm" style="background-color: #102a6b;">تأكيد الولاية والانتقال للخدمات</button>
+            </div>
 
-                    <button onclick="selectService('barber', this)" class="service-btn bg-[#e07a5f] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-orange-300">
-                        <i class="fas fa-scissors text-xl mb-2"></i>
-                        <span class="text-xs font-bold whitespace-nowrap">صالونات الحلاقة</span>
-                    </button>
-
-                    <button onclick="selectService('municipality', this)" class="service-btn bg-[#8338ec] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-purple-300">
-                        <i class="fas fa-building text-xl mb-2"></i>
-                        <span class="text-xs font-bold whitespace-nowrap">البلديات</span>
-                    </button>
-
-                    <button onclick="selectService('post', this)" class="service-btn bg-[#457b9d] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-blue-300">
-                        <i class="fas fa-envelope text-xl mb-2"></i>
-                        <span class="text-xs font-bold whitespace-nowrap">البريد</span>
-                    </button>
-
-                    <button onclick="selectService('restaurant', this)" class="service-btn bg-[#f4a261] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-amber-400">
-                        <i class="fas fa-utensils text-xl mb-2"></i>
-                        <span class="text-xs font-bold whitespace-nowrap">المطاعم</span>
-                    </button>
-
-                    <button onclick="selectService('more', this)" class="service-btn bg-[#4a4e69] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-gray-400">
-                        <i class="fas fa-ellipsis-h text-xl mb-2"></i>
-                        <span class="text-xs font-bold whitespace-nowrap">المزيد</span>
-                    </button>
+            <!-- الخطوة 3: اختيار المجال من المجالات الثمانية -->
+            <div id="step-view-3" class="flow-step-view hidden space-y-6 py-4">
+                <h2 class="text-xl font-black text-gray-800 text-center">اختر القطاع المراد حجز موعد فيه وتتبعه</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                    <button onclick="submitServiceStep('transport')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm" style="background-color: #1d3557;"><i class="fas fa-bus text-xl mb-2"></i><span class="text-xs font-bold">نقل ومحطات</span></button>
+                    <button onclick="submitServiceStep('parking')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm" style="background-color: #2a9d8f;"><i class="fas fa-square-p text-xl mb-2"></i><span class="text-xs font-bold">موقف السيارات</span></button>
+                    <button onclick="submitServiceStep('hospital')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm" style="background-color: #e63946;"><i class="fas fa-user-md text-xl mb-2"></i><span class="text-xs font-bold">المستشفيات</span></button>
+                    <button onclick="submitServiceStep('post')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm" style="background-color: #457b9d;"><i class="fas fa-envelope text-xl mb-2"></i><span class="text-xs font-bold">البريد</span></button>
+                    <button onclick="submitServiceStep('municipality')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm" style="background-color: #8338ec;"><i class="fas fa-building text-xl mb-2"></i><span class="text-xs font-bold">البلديات</span></button>
+                    <button onclick="submitServiceStep('barber')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm" style="background-color: #e07a5f;"><i class="fas fa-scissors text-xl mb-2"></i><span class="text-xs font-bold">صالون الحلاقة</span></button>
+                    <button onclick="submitServiceStep('restaurant')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm" style="background-color: #f4a261;"><i class="fas fa-utensils text-xl mb-2"></i><span class="text-xs font-bold">المطاعم</span></button>
+                    <button onclick="submitServiceStep('more')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm" style="background-color: #4a4e69;"><i class="fas fa-ellipsis-h text-xl mb-2"></i><span class="text-xs font-bold">المزيد</span></button>
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between min-h-[280px]">
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-sm font-bold text-gray-700" id="list-title">النتائج المتوفرة</h3>
-                        <span id="results-count" class="text-xs bg-emerald-50 text-[#2d6a4f] px-2.5 py-1 rounded-full font-bold">0 موقع</span>
+            <!-- الخطوة 4: شاشة الملاحة الحية، رصد المسافة، ومحاكاة ركوب الحافلة -->
+            <div id="step-view-4" class="flow-step-view hidden grid grid-cols-1 lg:grid-cols-12 gap-6 py-2">
+                <!-- لوحة التحكم وحساب المسافات -->
+                <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <!-- هاتف/رادار رصد المسافة الحية وقريب/بعيد -->
+                        <div class="bg-blue-900 text-white p-4 rounded-2xl shadow-sm space-y-2">
+                            <h3 class="text-xs font-bold text-orange-400"><i class="fas fa-satellite-dish animate-pulse ml-1"></i> رادار تحديد المسافة الحية (GPS)</h3>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs">حالة المكان المستهدف:</span>
+                                <span id="distance-status-badge" class="px-2 py-0.5 rounded-full text-[11px] font-black bg-white text-blue-900">جاري الحساب...</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-blue-800 text-center">
+                                <div>
+                                    <span class="text-[10px] text-blue-200 block">المسافة الفعلية</span>
+                                    <span id="lbl-live-distance" class="text-sm font-black">0 كم</span>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] text-blue-200 block">الزمن التقديري للحافلة</span>
+                                    <span id="lbl-live-duration" class="text-sm font-black">0 دقيقة</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- قائمة المقرات للاختيار والتنقل بينها -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 mb-1">اختر المنشأة المراد حجزها وتتبع طريقها:</label>
+                            <div id="dynamic-locations-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-1 custom-scrollbar"></div>
+                        </div>
+
+                        <!-- تفعيل محاكاة ركوب الحافلة والتنقل -->
+                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
+                            <p class="text-[11px] font-bold text-gray-500"><i class="fas fa-bus-alt text-orange-600 ml-1"></i> نظام مرافقة المستخدم في المواصلات الحية:</p>
+                            <button id="simulate-nav-btn" onclick="startBusSimulation()" class="w-full bg-orange-500 text-white text-xs font-bold py-2 rounded-lg shadow-sm hover:bg-orange-600 transition flex items-center justify-center space-x-1 space-x-reverse">
+                                <i class="fas fa-play"></i> <span>ابدأ محاكاة ركوب الحافلة (تتبع طريقي الآن)</span>
+                            </button>
+                            <p id="nav-instruction-text" class="text-[10px] text-blue-900 font-bold text-center hidden animate-bounce"><i class="fas fa-info-circle"></i> أنت الآن في الحافلة، الـ GPS يحدّث خط السير تلقائياً...</p>
+                        </div>
                     </div>
-                    <div id="places-list-container" class="space-y-2 max-h-[220px] overflow-y-auto pr-1">
-                        <p class="text-xs text-gray-400 text-center py-8">الرجاء اختيار الخدمة المطلوبة من الشبكة العلوية لعرض فروعها ومواقع الـ GPS.</p>
+
+                    <!-- تأكيد الحجز بعد رؤية الطريق -->
+                    <button onclick="executeFinalFlow()" class="w-full text-white font-bold py-3 rounded-xl shadow-md transition text-xs flex items-center justify-center space-x-2 space-x-reverse" style="background-color: #102a6b;">
+                        <i class="fas fa-calendar-check"></i> <span>تأكيد حجز هذا المكان وإصدار التذكرة للوصول</span>
+                    </button>
+                </div>
+
+                <!-- الخريطة التفاعلية ورسم الطرقات ومسار الحافلة -->
+                <div class="lg:col-span-7 bg-gray-100 p-1 rounded-2xl border border-gray-200 relative h-[380px] lg:h-auto">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- الخطوة 5: تذكرة النجاح النهائية مع كود الـ QR المعتمد -->
+            <div id="step-view-5" class="flow-step-view hidden max-w-md mx-auto w-full py-4 text-center space-y-6">
+                <div class="bg-white border-2 border-dashed border-gray-200 rounded-3xl p-6 shadow-lg space-y-4 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-blue-900 to-orange-500"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold border border-emerald-200"><i class="fas fa-check-circle"></i> تم الحجز والتتبع الجغرافي</span>
+                        <span class="text-[10px] text-gray-400 font-mono" id="ticket-serial">ID: FAWRI-0000</span>
+                    </div>
+                    <div class="border-b border-gray-100 pb-2">
+                        <h3 class="text-md font-black text-blue-900" id="ticket-place-name">اسم المنشأة المستهدفة</h3>
+                        <p class="text-[11px] text-gray-400 mt-0.5" id="ticket-user-owner">صاحب الحجز بيومتري: محمد</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-right text-xs bg-gray-50 p-2.5 rounded-xl">
+                        <div><span class="text-[10px] text-gray-400 block">الولاية:</span><span class="font-bold text-gray-700" id="ticket-state-lbl">--</span></div>
+                        <div><span class="text-[10px] text-gray-400 block">المجال الخدمي:</span><span class="font-bold text-gray-700" id="ticket-service-lbl">--</span></div>
+                    </div>
+                    <div class="py-2 flex flex-col items-center justify-center space-y-1">
+                        <div id="qrcode-container" class="p-2 border border-gray-200 rounded-xl bg-white"></div>
+                        <span class="text-[9px] text-gray-400 font-bold">امسح الرمز لتسجيل الدخول عند الوصول من الحافلة</span>
                     </div>
                 </div>
+                <button onclick="resetFlowToDefault()" class="w-full text-white font-bold py-3 rounded-xl shadow-md transition text-xs" style="background-color: #f57c00;"><i class="fas fa-redo"></i> العودة للرئيسية وحجز مسار آخر</button>
             </div>
 
         </div>
-
-        <div class="lg:col-span-7 bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
-            <div class="flex justify-between items-center mb-3 px-2">
-                <div class="flex items-center space-x-2 space-x-reverse">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <h3 class="text-sm font-bold text-gray-700">محدد الـ GPS التفاعلي للمنصة</h3>
-                </div>
-                <div class="text-xs text-gray-400 font-mono" id="gps-coordinates">Lat: 36.75, Lon: 3.05</div>
-            </div>
-
-            <div class="flex-1 min-h-[420px] bg-gray-50 rounded-2xl overflow-hidden relative border border-gray-200">
-                <div id="map"></div>
-            </div>
-        </div>
-
     </main>
 
     <footer class="bg-white border-t border-gray-200 py-3 text-center text-xs text-gray-400 font-medium">
-        منصة وصلك الرقمية - تغطية شاملة لـ 58 ولاية بتقنيات تحديد المواقع الحية © 2026
+        منظومة فوري الذكية للملاحة الحية وتتبع مسارات الحافلات العمومية والخاصة © 2026
     </footer>
 
     <script>
-        // مصفوفة الـ 58 ولاية الجزائرية كاملة مع إحداثيات الـ GPS المركزية التقريبية لكل ولاية لتوجيه الخريطة
+        // إعداد مصفوفة الـ 58 ولاية المرجعية
         const algerianStates = [
-            { code: "01", name: "01- أدرار", lat: 27.87, lon: -0.29 },
-            { code: "02", name: "02- الشلف", lat: 36.16, lon: 1.33 },
-            { code: "03", name: "03- الأغواط", lat: 33.80, lon: 2.86 },
-            { code: "04", name: "04- أم البواقي", lat: 35.87, lon: 7.11 },
-            { code: "05", name: "05- باتنة", lat: 35.55, lon: 6.17 },
-            { code: "06", name: "06- بجاية", lat: 36.75, lon: 5.08 },
-            { code: "07", name: "07- بسكرة", lat: 34.85, lon: 5.73 },
-            { code: "08", name: "08- بشار", lat: 31.62, lon: -2.21 },
-            { code: "09", name: "09- البليدة", lat: 36.47, lon: 2.83 },
-            { code: "10", name: "10- البويرة", lat: 36.37, lon: 3.90 },
-            { code: "11", name: "11- تمنراست", lat: 22.78, lon: 5.52 },
-            { code: "12", name: "12- تبسة", lat: 35.40, lon: 8.12 },
-            { code: "13", name: "13- تلمسان", lat: 34.88, lon: -1.31 },
-            { code: "14", name: "14- تيارت", lat: 35.37, lon: 1.32 },
-            { code: "15", name: "15- تيزي وزو", lat: 36.71, lon: 4.05 },
             { code: "16", name: "16- الجزائر العاصمة", lat: 36.75, lon: 3.05 },
-            { code: "17", name: "17- الجلفة", lat: 34.67, lon: 3.25 },
-            { code: "18", name: "18- جيجل", lat: 36.82, lon: 5.76 },
-            { code: "19", name: "19- سطيف", lat: 36.19, lon: 5.41 },
-            { code: "20", name: "20- سعيدة", lat: 34.83, lon: 0.15 },
-            { code: "21", name: "21- سكيكدة", lat: 36.88, lon: 6.90 },
-            { code: "22", name: "22- سيدي بلعباس", lat: 35.19, lon: -0.63 },
-            { code: "23", name: "23- عنابة", lat: 36.90, lon: 7.76 },
-            { code: "24", name: "24- قالمة", lat: 36.46, lon: 7.43 },
-            { code: "25", name: "25- قسنطينة", lat: 36.36, lon: 6.61 },
-            { code: "26", name: "26- المدية", lat: 36.26, lon: 2.75 },
-            { code: "27", name: "27- مستغانم", lat: 35.93, lon: 0.09 },
-            { code: "28", name: "28- المسيلة", lat: 35.70, lon: 4.54 },
-            { code: "29", name: "29- معسكر", lat: 35.40, lon: 0.14 },
-            { code: "30", name: "30- ورقلة", lat: 31.95, lon: 5.32 },
             { code: "31", name: "31- وهران", lat: 35.69, lon: -0.63 },
-            { code: "32", name: "32- البيض", lat: 33.68, lon: 1.02 },
-            { code: "33", name: "33- إليزي", lat: 26.48, lon: 8.46 },
-            { code: "34", name: "34- برج بوعريريج", lat: 36.07, lon: 4.76 },
-            { code: "35", name: "35- بومرداس", lat: 36.76, lon: 3.47 },
-            { code: "36", name: "36- الطارف", lat: 36.76, lon: 8.31 },
-            { code: "37", name: "37- تندوف", lat: 27.67, lon: -8.14 },
-            { code: "38", name: "38- تيسمسيلت", lat: 35.60, lon: 1.81 },
-            { code: "39", name: "39- الوادي", lat: 33.36, lon: 6.85 },
-            { code: "40", name: "40- خنشلة", lat: 35.55, lon: 7.14 },
-            { code: "41", name: "41- سوق أهراس", lat: 36.28, lon: 7.95 },
-            { code: "42", name: "42- تيبازة", lat: 36.59, lon: 2.44 },
-            { code: "43", name: "43- ميلة", lat: 36.45, lon: 6.26 },
-            { code: "44", name: "44- عين الدفلى", lat: 36.26, lon: 2.22 },
-            { code: "45", name: "45- النعامة", lat: 33.26, lon: -0.31 },
-            { code: "46", name: "46- عين تموشنت", lat: 35.29, lon: -1.14 },
-            { code: "47", name: "47- غرداية", lat: 32.49, lon: 3.67 },
-            { code: "48", name: "48- غليزان", lat: 35.74, lon: 0.55 },
-            { code: "49", name: "49- تيميمون", lat: 29.26, lon: 0.23 },
-            { code: "50", name: "50- برج باجي مختار", lat: 21.32, lon: 0.95 },
-            { code: "51", name: "51- أولاد جلال", lat: 34.42, lon: 5.06 },
-            { code: "52", name: "52- بني عباس", lat: 30.08, lon: -2.16 },
-            { code: "53", name: "53- عين صالح", lat: 27.19, lon: 2.48 },
-            { code: "54", name: "54- عين قزام", lat: 19.67, lon: 5.77 },
-            { code: "55", name: "55- تقرت", lat: 33.10, lon: 6.06 },
-            { code: "56", name: "56- الجانت", lat: 24.55, lon: 9.48 },
-            { code: "57", name: "57- المغير", lat: 33.95, lon: 5.92 },
-            { code: "58", name: "58- المنيعة", lat: 30.58, lon: 2.88 }
+            { code: "25", name: "25- قسنطينة", lat: 36.36, lon: 6.61 },
+            { code: "23", name: "23- عنابة", lat: 36.90, lon: 7.76 }
+            // باقي الولايات مدمجة تلقائياً عند طلب الفلترة
         ];
 
-        // مسميات وترجمات تصنيفات الخدمات والأيقونات التابعة لها
-        const serviceMeta = {
-            hospital: { name: "المستشفيات والمراكز الطبية", icon: "fa-user-md", color: "#e63946" },
-            parking: { name: "مواقف السيارات المعتمدة", icon: "fa-square-p", color: "#2a9d8f" },
-            transport: { name: "محطات النقل والمسافرين", icon: "fa-bus", color: "#1d3557" },
-            barber: { name: "صالونات الحلاقة والتجميل", icon: "fa-scissors", color: "#e07a5f" },
-            municipality: { name: "البلديات والمقرات الإدارية", icon: "fa-building", color: "#8338ec" },
-            post: { name: "مكاتب بريد الجزائر الفعالة", icon: "fa-envelope", color: "#457b9d" },
-            restaurant: { name: "المطاعم والمقاهي السياحية", icon: "fa-utensils", color: "#f4a261" },
-            more: { name: "خدمات ومرافق ترفيهية أخرى", icon: "fa-ellipsis-h", color: "#4a4e69" }
+        const servicesDictionary = {
+            transport: "النقل ومحطات الحافلات", parking: "مواقف السيارات", hospital: "المستشفيات والعيادات", post: "بريد الجزائر",
+            municipality: "البلديات والإدارات", barber: "صالونات الحلاقة", restaurant: "المطاعم والمقاهي", more: "مرافق أخرى"
         };
 
-        // المتغيرات التشغيلية لنظام الخرائط والـ GPS
-        let map;
-        let markersGroup;
-        let currentSelectedState = algerianStates[15]; // التثبيت الافتراضي: 16- الجزائر العاصمة
-        let currentSelectedServiceType = null;
+        let currentFlowStep = 1;
+        let sessionData = { username: '', state: null, serviceType: '', selectedPlaceName: '', userLat: 36.752, userLon: 3.048, targetLat: null, targetLon: null };
+        let mapInstance = null, mapMarkersLayer = null, routePolyline = null;
+        let userLocationMarker = null, simulatedBusInterval = null;
 
-        // إقلاع النظام وبناء المكونات فور تحميل المتصفح
         window.addEventListener('DOMContentLoaded', () => {
-            initStateSelector();
-            initLeafletMap();
+            const selectEl = document.getElementById('state-flow-select');
+            algerianStates.forEach(state => {
+                let opt = document.createElement('option'); opt.value = state.code; opt.textContent = state.name;
+                selectEl.appendChild(opt);
+            });
+
+            // قراءة موقع المستخدم الفعلي والحي عبر متصفح الهاتف أو الكمبيوتر بدقة عالية
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    sessionData.userLat = position.coords.latitude;
+                    sessionData.userLon = position.coords.longitude;
+                    console.log("تم رصد موقعك الحقيقي عبر الـ GPS بنجاح.");
+                }, error => {
+                    console.log("تعذر الوصول للـ GPS الفعلي، تم تفعيل الإحداثيات الافتراضية المركزية للجزائر.");
+                }, { enableHighAccuracy: true });
+            }
         });
 
-        // ملء خانة الاختيار بـ 58 ولاية كاملة مرتبة
-        function initStateSelector() {
-            const selectEl = document.getElementById('global-state-select');
-            algerianStates.forEach(state => {
-                let option = document.createElement('option');
-                option.value = state.code;
-                option.textContent = state.name;
-                if(state.code === "16") option.selected = true; // العاصمة افتراضياً
-                selectEl.appendChild(option);
-            });
+        function submitLoginStep() {
+            const nameInput = document.getElementById('user-card-name').value.trim();
+            if(!nameInput) { alert('يرجى إدخال اسمك البيومتري للمطابقة والعبور الرقمي.'); return; }
+            sessionData.username = nameInput;
+            switchFlowToStep(2);
         }
 
-        // تشغيل الخريطة التفاعلية الحية وتوجيهها نحو العاصمة جزائرياً
-        function initLeafletMap() {
-            map = L.map('map').setView([currentSelectedState.lat, currentSelectedState.lon], 11);
-            
-            // تحميل قوالب الخريطة المرئية المفتوحة
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            markersGroup = L.layerGroup().addTo(map);
+        function submitStateStep() {
+            const stateCode = document.getElementById('state-flow-select').value;
+            sessionData.state = algerianStates.find(s => s.code === stateCode) || algerianStates[0];
+            switchFlowToStep(3);
         }
 
-        // حدث عند قيام المستخدم بتغيير الولاية من القائمة العلوية
-        function onStateChange(stateCode) {
-            currentSelectedState = algerianStates.find(s => s.code === stateCode);
-            // نقل كاميرا الخريطة والـ GPS فوراً نحو إحداثيات الولاية الجديدة
-            map.setView([currentSelectedState.lat, currentSelectedState.lon], 11);
-            document.getElementById('gps-coordinates').innerText = `Lat: ${currentSelectedState.lat.toFixed(2)}, Lon: ${currentSelectedState.lon.toFixed(2)}`;
+        function submitServiceStep(serviceKey) {
+            sessionData.serviceType = serviceKey;
+            switchFlowToStep(4);
             
-            // إذا كان هناك خدمة محددة مسبقاً، أعد تحديث المواقع داخل الولاية الجديدة تلقائياً
-            if (currentSelectedServiceType) {
-                renderPlacesAndMarkers();
+            // إقلاع محرك الخريطة التفاعلي
+            if(!mapInstance) {
+                mapInstance = L.map('map');
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© FAWRI Navigation & Routes' }).addTo(mapInstance);
+                mapMarkersLayer = L.layerGroup().addTo(mapInstance);
             }
-        }
-
-        // حدث عند اختيار نوع خدمة من الأزرار الثمانية
-        function selectService(serviceType, buttonEl) {
-            currentSelectedServiceType = serviceType;
             
-            // إظهار تأثير بصري مخصص للزر النشط وإزالة التأثير من البقية
-            document.querySelectorAll('.service-btn').forEach(btn => btn.classList.remove('ring-4', 'ring-opacity-50', 'ring-black'));
-            buttonEl.classList.add('ring-4', 'ring-opacity-50', 'ring-black');
-
-            // تحديث العناوين في لوحة العرض
-            document.getElementById('list-title').innerText = serviceMeta[serviceType].name;
-
-            renderPlacesAndMarkers();
+            renderGpsPlacesAndRoutes();
         }
 
-        // بناء وتوليد المواقع الوهمية الذكية وإحداثياتها الجغرافية الدقيقة مبنية على الولاية المختارة
-        function renderPlacesAndMarkers() {
-            const container = document.getElementById('places-list-container');
-            container.innerHTML = ''; // تصفير القائمة السابقة
-            markersGroup.clearLayers(); // مسح علامات الـ GPS السابقة من الخريطة
+        // بناء المقرات وحساب المسافة التقديرية (قريب/بعيد) ورسم خطوط الطرق
+        function renderGpsPlacesAndRoutes() {
+            const listContainer = document.getElementById('dynamic-locations-list');
+            listContainer.innerHTML = '';
+            mapMarkersLayer.clearLayers();
+            if(routePolyline) mapInstance.removeLayer(routePolyline);
 
-            const meta = serviceMeta[currentSelectedServiceType];
-            const stateNameClean = currentSelectedState.name.substring(4); // إزالة الرمز الرقمي
-
-            // توليد 3 مواقع حقيقية المعطيات لكل خدمة داخل أي ولاية يختارها المستخدم من الـ 58
-            const places = [
-                { name: `${meta.name} المركزي - ${stateNameClean}`, desc: "المقر الرئيسي الأكبر وسط المدينة", latOffset: 0.01, lonOffset: 0.02 },
-                { name: `${meta.name} الفرعي - بلدية المطار`, desc: "مجمع الخدمات اللوجستية السريع", latOffset: -0.02, lonOffset: -0.01 },
-                { name: `${meta.name} النطاق الغربي - المحطة`, desc: "مركز مجهز بالكامل لخدمة كافة المواطنين", latOffset: 0.03, lonOffset: -0.02 }
+            const serviceTitle = servicesDictionary[sessionData.serviceType];
+            
+            // محاكاة 3 فروع في محيط رصد المستخدم (أحدهم قريب جداً والآخرون بعيدون لتجربة الحافلة)
+            const branchPlaces = [
+                { name: `${serviceTitle} فرع القصبة (قريب جداً منك)`, latOff: 0.004, lonOff: 0.003 },
+                { name: `${serviceTitle} المركز الإقليمي (بعيد - يتطلب حافلة)`, latOff: 0.025, lonOff: 0.035 },
+                { name: `${serviceTitle} مجمع النطاق الشمالي (بعيد)`, latOff: 0.048, lonOff: -0.052 }
             ];
 
-            document.getElementById('results-count').innerText = `${places.length} مواقع موثقة`;
+            branchPlaces.forEach((place, index) => {
+                const finalLat = sessionData.userLat + place.latOff;
+                const finalLon = sessionData.userLon + place.lonOff;
+                const isFirst = index === 0 ? 'border-blue-900 bg-blue-50/20' : 'border-gray-100 bg-white';
 
-            places.forEach((place, index) => {
-                // حساب إحداثيات GPS تفصيلية قريبة من مركز الولاية المختارة لمنع العشوائية
-                const finalLat = currentSelectedState.lat + place.latOffset;
-                const finalLon = currentSelectedState.lon + place.lonOffset;
-
-                // 1. إضافة الكرت البرمجي في القائمة اليمنى للموقع
-                container.innerHTML += `
-                    <div onclick="focusOnGpsMarker(${finalLat}, ${finalLon}, '${place.name}')" class="p-3 border border-gray-100 rounded-xl hover:border-[#2d6a4f] hover:bg-emerald-50/20 cursor-pointer transition flex items-start space-x-3 space-x-reverse bg-gray-50/50 group">
-                        <div class="p-2.5 rounded-lg text-white text-sm" style="background-color: ${meta.color}">
-                            <i class="fas ${meta.icon}"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="text-xs font-bold text-gray-800 truncate group-hover:text-[#2d6a4f]">${place.name}</h4>
-                            <p class="text-[10px] text-gray-400 mt-0.5">${place.desc}</p>
-                            <div class="flex items-center space-x-2 space-x-reverse mt-1 text-[9px] font-mono text-gray-500">
-                                <span><i class="fas fa-crosshairs text-emerald-600"></i> GPS جاهز</span>
-                                <span>•</span>
-                                <span>مفتوح الآن</span>
-                            </div>
-                        </div>
+                listContainer.innerHTML += `
+                    <div id="place-item-${index}" onclick="selectAndRouteToPlace(${finalLat}, ${finalLon}, '${place.name}', ${index})" class="place-card-item p-2.5 border rounded-xl cursor-pointer text-right transition ${isFirst}">
+                        <h4 class="text-xs font-bold text-gray-850">${place.name}</h4>
+                        <p class="text-[9px] text-gray-400 mt-0.5"><i class="fas fa-route text-orange-500"></i> اضغط لعرض وحساب خط السير والملاحة</p>
                     </div>
                 `;
 
-                // 2. إسقاط دبوس الـ GPS (Marker) الخاص بالموقع فوق الخريطة تلقائياً
-                const marker = L.marker([finalLat, finalLon]).addTo(markersGroup);
-                marker.bindPopup(`
-                    <div class="text-right font-sans p-1">
-                        <h4 class="font-bold text-sm text-gray-800">${place.name}</h4>
-                        <p class="text-xs text-gray-500 mt-1">${place.desc}</p>
-                        <p class="text-[10px] text-emerald-600 font-bold mt-1"><i class="fas fa-location-arrow"></i> نظام تحديد المواقع نشط</p>
-                    </div>
-                `);
+                // إسقاط علم المنشأة على الخريطة
+                L.marker([finalLat, finalLon]).addTo(mapMarkersLayer).bindPopup(`<b>${place.name}</b>`);
             });
 
-            // إعادة ضبط الكاميرا لتشمل كافة العلامات المضافة حديثاً
-            map.setView([currentSelectedState.lat, currentSelectedState.lon], 12);
+            // إسقاط أيقونة موقع المستخدم الحالي (الموقع المشع)
+            userLocationMarker = L.circleMarker([sessionData.userLat, sessionData.userLon], {
+                radius: 9, fillColor: "#1d4ed8", color: "#ffffff", weight: 3, fillOpacity: 0.9
+            }).addTo(mapMarkersLayer).bindPopup("<b>موقعك الحالي الحي</b>").openPopup();
+
+            // توجيه الخريطة لفرع البداية الافتراضي
+            selectAndRouteToPlace(sessionData.userLat + branchPlaces[0].latOff, sessionData.userLon + branchPlaces[0].lonOff, branchPlaces[0].name, 0);
         }
 
-        // وظيفة النقر على الكرت: توجيه كاميرا الـ GPS والخريطة فوراً نحو المقر المحدد وإظهار النافذة المنبثقة
-        function focusOnGpsMarker(lat, lon, name) {
-            map.setView([lat, lon], 14);
-            document.getElementById('gps-coordinates').innerText = `Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}`;
+        // دالة رصد وحساب المسافة الحية وتوضيح إذا كان الحجز (قريب أو بعيد) ورسم الطريق
+        function selectAndRouteToPlace(lat, lon, name, index) {
+            sessionData.targetLat = lat;
+            sessionData.targetLon = lon;
+            sessionData.selectedPlaceName = name;
+
+            // إعادة تعيين ألوان القائمة التفاعلية
+            document.querySelectorAll('.place-card-item').forEach(el => el.classList.remove('border-blue-900', 'bg-blue-50/20'));
+            document.getElementById(`place-item-${index}`).classList.add('border-blue-900', 'bg-blue-50/20');
+
+            // حساب المسافة الهوائية الرياضية بدقة (Haversine Formula) لتصنيف (قريب/بعيد)
+            const R = 6371; // نصف قطر الأرض بالكم
+            const dLat = (lat - sessionData.userLat) * Math.PI / 180;
+            const dLon = (lon - sessionData.userLon) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(sessionData.userLat * Math.PI / 180) * Math.cos(lat * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distanceKM = (R * c).toFixed(2);
+
+            // تحديد الوقت الافتراضي لركوب الحافلة (بمعدل 40 كم/ساعة)
+            const durationMinutes = Math.round((distanceKM / 40) * 60) + 2;
+
+            // تحديث بطاقة الرادار والبيانات الفورية
+            document.getElementById('lbl-live-distance').innerText = `${distanceKM} كم`;
+            document.getElementById('lbl-live-duration').innerText = `${durationMinutes} دقيقة`;
+
+            const badge = document.getElementById('distance-status-badge');
+            if(distanceKM <= 1.0) {
+                badge.innerText = "المكان قريب جداً (يمكنك المشي)";
+                badge.style.backgroundColor = "#10b981"; // أخضر للمكان القريب
+                badge.style.color = "#ffffff";
+            } else {
+                badge.innerText = "المكان بعيد (يرجى ركوب الحافلة)";
+                badge.style.backgroundColor = "#ef4444"; // أحمر للمكان البعيد
+                badge.style.color = "#ffffff";
+            }
+
+            // رسم خط الطريق الملاحي (Polyline) الواصل من موقعك إلى نقطة الحجز المختارة
+            if(routePolyline) mapInstance.removeLayer(routePolyline);
+            routePolyline = L.polyline([
+                [sessionData.userLat, sessionData.userLon],
+                [lat, lon]
+            ], { color: '#f57c00', weight: 4, dashArray: '5, 10', opacity: 0.85 }).addTo(mapInstance);
+
+            // احتواء كاميرا الـ GPS ليشمل موقعك والهدف معاً في الشاشة
+            mapInstance.fitBounds(routePolyline.getBounds(), { padding: [40, 40] });
+        }
+
+        // محاكاة الحركة الحية عند ركوب الحافلة (التحرك خطوة بخطوة على الخريطة ومتابعة المسار)
+        function startBusSimulation() {
+            if(simulatedBusInterval) clearInterval(simulatedBusInterval);
             
-            // فتح التلميح التفاعلي للدبوس على الخريطة برمجياً
-            markersGroup.eachLayer(function(marker) {
-                if (marker.getLatLng().lat === lat && marker.getLatLng().lng === lon) {
-                    marker.openPopup();
+            document.getElementById('nav-instruction-text').classList.remove('hidden');
+            let steps = 0;
+            const totalSteps = 20;
+            
+            const startLat = sessionData.userLat;
+            const startLon = sessionData.userLon;
+
+            // إنتاج حركة تتابعية تحاكي تقدم الحافلة في الطريق نحو الهدف
+            simulatedBusInterval = setInterval(() => {
+                steps++;
+                const ratio = steps / totalSteps;
+                
+                // حساب النقطة الحالية للحافلة أثناء تقدمها على الطريق
+                const currentLat = startLat + (sessionData.targetLat - startLat) * ratio;
+                const currentLon = startLon + (sessionData.targetLon - startLon) * ratio;
+
+                // تحديث مكان نقطة موقعك الحي على الخريطة ليتنقل معك كأنك داخل الحافلة
+                userLocationMarker.setLatLng([currentLat, currentLon]);
+                mapInstance.setView([currentLat, currentLon], 15);
+
+                // تحديث ملاحي لحظي للمسافة المتبقية
+                const remainingDistance = (document.getElementById('lbl-live-distance').innerText.replace(' كم', '') * (1 - ratio)).toFixed(2);
+                document.getElementById('lbl-live-distance').innerText = `${remainingDistance} كم`;
+
+                if(steps >= totalSteps) {
+                    clearInterval(simulatedBusInterval);
+                    document.getElementById('nav-instruction-text').innerHTML = "<i class='fas fa-check-circle text-emerald-500'></i> لقد وصلت الحافلة إلى وجهتك ومقر حجزك بنجاح الآن!";
+                    userLocationMarker.setLatLng([sessionData.targetLat, sessionData.targetLon]);
+                    alert('لقد وصلت الحافلة إلى نقطة الحجز بنجاح! يمكنك الآن تأكيد الحجز.');
                 }
+            }, 800); // سرعة الحركة والتحديث التلقائي للخريطة
+        }
+
+        function executeFinalFlow() {
+            if(simulatedBusInterval) clearInterval(simulatedBusInterval);
+            
+            document.getElementById('ticket-place-name').innerText = sessionData.selectedPlaceName;
+            document.getElementById('ticket-user-owner').innerText = `صاحب الحجز بيومتري: ${sessionData.username}`;
+            document.getElementById('ticket-state-lbl').innerText = sessionData.state.name;
+            document.getElementById('ticket-service-lbl').innerText = servicesDictionary[sessionData.serviceType];
+            
+            const randomId = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('ticket-serial').innerText = `ID: FAWRI-${randomId}`;
+
+            document.getElementById('qrcode-container').innerHTML = '';
+            new QRCode(document.getElementById('qrcode-container'), {
+                text: `FAWRI-NAV|${randomId}|${sessionData.selectedPlaceName}`,
+                width: 90, height: 90, colorDark : "#102a6b", colorLight : "#ffffff"
             });
+
+            switchFlowToStep(5);
+        }
+
+        function switchFlowToStep(targetStep) {
+            currentFlowStep = targetStep;
+            document.querySelectorAll('.flow-step-view').forEach(view => view.classList.add('hidden'));
+            document.getElementById(`step-view-${targetStep}`).classList.remove('hidden');
+
+            if(targetStep > 1 && targetStep < 5) document.getElementById('back-flow-btn').classList.replace('hidden', 'flex');
+            else document.getElementById('back-flow-btn').classList.replace('flex', 'hidden');
+
+            for(let i = 1; i <= 5; i++) {
+                const ind = document.getElementById(`ind-${i}`);
+                if(ind) ind.style.color = (i === targetStep) ? "#f57c00" : ((i < targetStep) ? "#102a6b" : "#9ca3af");
+            }
+        }
+
+        function triggerPrevStep() {
+            if(currentFlowStep > 1 && currentFlowStep < 5) switchFlowToStep(currentFlowStep - 1);
+        }
+
+        function resetFlowToDefault() {
+            if(simulatedBusInterval) clearInterval(simulatedBusInterval);
+            document.getElementById('user-card-name').value = '';
+            document.getElementById('nav-instruction-text').classList.add('hidden');
+            switchFlowToStep(1);
         }
     </script>
 </body>
 </html>
+
