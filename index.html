@@ -3,115 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موعدي الجزائر</title>
+    <title>نظام حجز المستشفيات - موعدي الجزائر</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #f3f4f6;
+            background-color: #f8f9fa;
+        }
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        .step-card.active {
+            border-color: #2d6a4f;
+            background-color: #f1f8f5;
         }
     </style>
 </head>
-<body class="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+<body class="min-h-screen flex flex-col justify-between">
 
-    <div class="w-full max-w-md bg-white rounded-[40px] shadow-2xl overflow-hidden border-8 border-gray-800 relative aspect-[9/19] flex flex-col justify-between">
+    <header class="bg-white shadow-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="bg-[#2d6a4f] text-white p-2 rounded-xl shadow-md">
+                    <i class="fas fa-hospital text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold text-[#2d6a4f]">موعدي الجزائر <span class="text-sm font-semibold text-gray-500">| بوابة المستشفيات</span></span>
+            </div>
+            <nav class="hidden md:flex space-x-8 space-x-reverse text-gray-600 font-semibold">
+                <a href="#" class="text-[#2d6a4f] border-b-2 border-[#2d6a4f] pb-1">الرئيسية</a>
+                <a href="#" class="hover:text-[#2d6a4f] transition">حجوزاتي</a>
+                <a href="#" class="hover:text-[#2d6a4f] transition">عن المنصة</a>
+                <a href="#" class="hover:text-[#2d6a4f] transition">اتصل بنا</a>
+            </nav>
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <button class="text-gray-600 hover:text-[#2d6a4f] transition"><i class="fas fa-bell text-xl"></i></button>
+                <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-bold border border-gray-300">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl w-full mx-auto px-6 py-10 flex-1">
         
-        <div class="px-6 pt-3 flex justify-between items-center text-xs text-gray-700 font-bold z-10">
-            <div>9:41</div>
-            <div class="flex items-center space-x-1 space-x-reverse">
-                <i class="fas fa-signal"></i>
-                <i class="fas fa-wifi"></i>
-                <i class="fas fa-battery-full text-lg"></i>
-            </div>
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">نظام الحجز الإلكتروني السريع</h2>
+            <p class="text-gray-500">قم بتنفيذ خطوات الحجز الموضحة أدناه لتأكيد موعدك الطبي بكل سهولة</p>
         </div>
 
-        <div class="px-6 pt-4 flex-1 overflow-y-auto pb-20">
+        <div class="flex items-center justify-center max-w-3xl mx-auto mb-12">
+            <div id="step-dot-1" class="w-8 h-8 rounded-full bg-[#2d6a4f] text-white flex items-center justify-center font-bold text-sm shadow">1</div>
+            <div id="step-line-1" class="flex-1 h-1 bg-gray-200 mx-2 transition-all duration-300"></div>
+            <div id="step-dot-2" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-sm">2</div>
+            <div id="step-line-2" class="flex-1 h-1 bg-gray-200 mx-2 transition-all duration-300"></div>
+            <div id="step-dot-3" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-sm">3</div>
+            <div id="step-line-3" class="flex-1 h-1 bg-gray-200 mx-2 transition-all duration-300"></div>
+            <div id="step-dot-4" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-sm">4</div>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100 min-h-[400px] flex flex-col justify-between">
             
-            <div class="text-center my-4">
-                <h1 class="text-[#2d6a4f] text-2xl font-bold mb-1">موعدي الجزائر</h1>
-                <p class="text-gray-800 font-semibold text-base">مرحباً بك</p>
-                <p class="text-gray-500 text-sm mt-1">اختر الخدمة التي تريدها</p>
+            <div id="step-1" class="booking-step">
+                <h3 class="text-xl font-bold text-gray-800 mb-6"><i class="fas fa-map-marker-alt text-[#2d6a4f] ml-2"></i> الخطوة الأولى: حدد الولاية أو المدينة</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div onclick="selectCity('الجزائر العاصمة')" class="step-card border-2 border-gray-200 rounded-2xl p-6 flex items-center justify-between cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
+                        <div class="flex items-center space-x-4 space-x-reverse">
+                            <div class="bg-gray-100 p-4 rounded-xl text-gray-700 text-2xl"><i class="fas fa-city"></i></div>
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-800">الجزائر العاصمة</h4>
+                                <p class="text-sm text-gray-500">المستشفيات والمراكز الجامعية الكبرى</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-left text-gray-400"></i>
+                    </div>
+
+                    <div onclick="selectCity('بومرداس')" class="step-card border-2 border-gray-200 rounded-2xl p-6 flex items-center justify-between cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
+                        <div class="flex items-center space-x-4 space-x-reverse">
+                            <div class="bg-gray-100 p-4 rounded-xl text-gray-700 text-2xl"><i class="fas fa-tree"></i></div>
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-800">بومرداس</h4>
+                                <p class="text-sm text-gray-500">المستشفيات الإقليمية والمصحات المتخصصة</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-left text-gray-400"></i>
+                    </div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-3 my-6">
+            <div id="step-2" class="booking-step hidden">
+                <h3 class="text-xl font-bold text-gray-800 mb-2"><i class="fas fa-hospital-user text-[#2d6a4f] ml-2"></i> الخطوة الثانية: اختر المستشفى المناسب</h3>
+                <p class="text-sm text-gray-500 mb-6">المستشفيات المتاحة في: <span id="selected-city-badge" class="bg-emerald-100 text-[#2d6a4f] px-3 py-1 rounded-full font-bold text-xs"></span></p>
                 
-                <button class="bg-[#e63946] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 transition">
-                    <i class="fas fa-user-md text-xl mb-2"></i>
-                    <span class="text-xs font-bold whitespace-nowrap">المستشفيات</span>
-                </button>
-
-                <button class="bg-[#2a9d8f] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 transition">
-                    <i class="fas fa-square-p text-xl mb-2"></i>
-                    <span class="text-xs font-bold whitespace-nowrap">مواقف السيارات</span>
-                </button>
-
-                <button class="bg-[#1d3557] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 transition">
-                    <i class="fas fa-bus text-xl mb-2"></i>
-                    <span class="text-xs font-bold whitespace-nowrap">النقل والمحطات</span>
-                </button>
-
-                <button class="bg-[#e07a5f] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 transition">
-                    <i class="fas fa-scissors text-xl mb-2"></i>
-                    <span class="text-xs font-bold whitespace-nowrap">صالونات الحلاقة</span>
-                </button>
-
-                <button class="bg-[#8338ec] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 transition">
-                    <i class="fas fa-building text-xl mb-2"></i>
-                    <span class="text-xs font-bold whitespace-nowrap">البلديات</span>
-                </button>
-
-                <button class="bg-[#457b9d] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 transition">
-                    <i class="fas fa-envelope text-xl mb-2"></i>
-                    <span class="text-xs font-bold whitespace-nowrap">البريد</span>
-                </button>
-
-                <button class="bg-[#4a4e69] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 transition">
-                    <i class="fas fa-ellipsis-h text-xl mb-2"></i>
-                    <span class="text-xs font-bold whitespace-nowrap">المزيد</span>
-                </button>
-
-                <button class="bg-[#f4a261] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 transition">
-                    <i class="fas fa-utensils text-xl mb-2"></i>
-                    <span class="text-xs font-bold whitespace-nowrap">المطاعم</span>
-                </button>
-
+                <div id="hospitals-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    </div>
             </div>
 
-            <div class="bg-[#e9ecef] rounded-2xl p-4 flex justify-between items-center mt-6 shadow-inner">
-                <div class="space-y-1">
-                    <h3 class="text-gray-800 font-bold text-sm">حجز سريع</h3>
-                    <p class="text-gray-600 text-xs font-semibold">احجز موعدك أو دورك الآن</p>
-                    <p class="text-gray-500 text-[11px]">بسهولة وسرعة</p>
-                </div>
-                <div class="text-[#1d3557] bg-white p-3 rounded-xl shadow-sm">
-                    <i class="fas fa-calendar-check text-2xl"></i>
+            <div id="step-3" class="booking-step hidden">
+                <h3 class="text-xl font-bold text-gray-800 mb-2"><i class="fas fa-stethoscope text-[#2d6a4f] ml-2"></i> الخطوة الثالثة: اختر التخصص والطبيب المعالج</h3>
+                <p class="text-sm text-gray-500 mb-6">المستشفى المحدد: <span id="selected-hospital-badge" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-bold text-xs"></span></p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="selectDoctor('د. أحمد بن زينة (أمراض القلب)')" class="step-card border-2 border-gray-200 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
+                        <div class="w-16 h-16 bg-emerald-50 text-[#2d6a4f] rounded-full flex items-center justify-center text-2xl mb-3"><i class="fas fa-user-md"></i></div>
+                        <h4 class="font-bold text-gray-800">د. أحمد بن زينة</h4>
+                        <p class="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md mt-1">تخصص أمراض القلب</p>
+                        <p class="text-xs text-gray-400 mt-2"><i class="fas fa-star text-amber-400 ml-1"></i> 4.9 (120 تقييم)</p>
+                    </div>
+
+                    <div onclick="selectDoctor('د. مريم بوعبد الله (طب الأطفال)')" class="step-card border-2 border-gray-200 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
+                        <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center text-2xl mb-3"><i class="fas fa-user-md"></i></div>
+                        <h4 class="font-bold text-gray-800">د. مريم بوعبد الله</h4>
+                        <p class="text-xs text-purple-600 font-semibold bg-purple-50 px-2 py-0.5 rounded-md mt-1">تخصص طب الأطفال</p>
+                        <p class="text-xs text-gray-400 mt-2"><i class="fas fa-star text-amber-400 ml-1"></i> 4.8 (95 تقييم)</p>
+                    </div>
+
+                    <div onclick="selectDoctor('د. مراد ساحلي (جراحة العظام)')" class="step-card border-2 border-gray-200 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
+                        <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-3"><i class="fas fa-user-md"></i></div>
+                        <h4 class="font-bold text-gray-800">د. مراد ساحلي</h4>
+                        <p class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded-md mt-1">تخصص جراحة العظام</p>
+                        <p class="text-xs text-gray-400 mt-2"><i class="fas fa-star text-amber-400 ml-1"></i> 4.7 (140 تقييم)</p>
+                    </div>
                 </div>
             </div>
 
+            <div id="step-4" class="booking-step hidden">
+                <div id="datetime-picker-section">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6"><i class="fas fa-calendar-alt text-[#2d6a4f] ml-2"></i> الخطوة الرابعة: حدد التاريخ والوقت المناسب</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2 text-sm">اختر تاريخ الموعد:</label>
+                            <input type="date" id="booking-date" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-[#2d6a4f] focus:outline-none font-semibold text-gray-700">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-bold mb-2 text-sm">اختر التوقيت المتوفر:</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="selectTime('09:00 صباحاً', this)" class="time-btn border border-gray-200 py-2 rounded-xl font-semibold text-sm hover:border-[#2d6a4f] text-gray-700">09:00 ص</button>
+                                <button onclick="selectTime('11:00 صباحاً', this)" class="time-btn border border-gray-200 py-2 rounded-xl font-semibold text-sm hover:border-[#2d6a4f] text-gray-700">11:00 ص</button>
+                                <button onclick="selectTime('02:00 مساءً', this)" class="time-btn border border-gray-200 py-2 rounded-xl font-semibold text-sm hover:border-[#2d6a4f] text-gray-700">02:00 م</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center mt-8">
+                        <button onclick="confirmFinalBooking()" class="bg-[#2d6a4f] text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-[#1f4a37] transition-all flex items-center space-x-2 space-x-reverse">
+                            <i class="fas fa-check-circle"></i>
+                            <span>تأكيد الحجز النهائي</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="success-screen" class="hidden text-center py-8 space-y-4">
+                    <div class="w-20 h-20 bg-emerald-100 text-[#2d6a4f] rounded-full flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-emerald-600">تم الحجز بنجاح!</h3>
+                    <p class="text-gray-600 max-w-md mx-auto">لقد تم تسجيل موعدك في النظام بنجاح. يمكنك طباعة التذكرة أو إظهار كود الحجز عند وصولك للمستشفى.</p>
+                    
+                    <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 max-w-md mx-auto text-right space-y-2 mt-4 shadow-sm">
+                        <p class="text-sm text-gray-700"><strong>المدينة:</strong> <span id="summary-city"></span></p>
+                        <p class="text-sm text-gray-700"><strong>المستشفى:</strong> <span id="summary-hospital"></span></p>
+                        <p class="text-sm text-gray-700"><strong>الطبيب/التخصص:</strong> <span id="summary-doctor"></span></p>
+                        <p class="text-sm text-gray-700"><strong>الموعد:</strong> <span id="summary-datetime"></span></p>
+                        <p class="text-xs text-center text-gray-400 pt-3 border-t border-dashed border-gray-300">رقم الحجز الفوري: #MOU-2026</p>
+                    </div>
+
+                    <div class="pt-4">
+                        <button onclick="resetFlow()" class="text-[#2d6a4f] font-bold text-sm underline hover:text-[#1f4a37]">العودة للرئيسية وحجز موعد آخر</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="back-button-container" class="mt-8 pt-4 border-t border-gray-100 hidden">
+                <button onclick="goToPrevStep()" class="text-gray-500 hover:text-gray-800 font-semibold text-sm flex items-center space-x-1 space-x-reverse">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>الرجوع للخطوة السابقة</span>
+                </button>
+            </div>
+
         </div>
+    </main>
 
-        <div class="absolute bottom-0 inset-x-0 bg-white border-t border-gray-100 px-6 py-2 flex justify-between items-center text-gray-400 z-10">
-            <button class="flex flex-col items-center space-y-0.5 text-[#2d6a4f]">
-                <i class="fas fa-home text-lg"></i>
-                <span class="text-[10px] font-bold">الرئيسية</span>
-            </button>
-            <button class="flex flex-col items-center space-y-0.5 hover:text-[#2d6a4f] transition">
-                <i class="fas fa-bell text-lg"></i>
-                <span class="text-[10px] font-bold">الإشعارات</span>
-            </button>
-            <button class="flex flex-col items-center space-y-0.5 hover:text-[#2d6a4f] transition">
-                <i class="fas fa-calendar-alt text-lg"></i>
-                <span class="text-[10px] font-bold">حجوزاتي</span>
-            </button>
-            <button class="flex flex-col items-center space-y-0.5 hover:text-[#2d6a4f] transition">
-                <i class="fas fa-user text-lg"></i>
-                <span class="text-[10px] font-bold">الحساب</span>
-            </button>
-        </div>
+    <footer class="bg-gray-800 text-gray-400 text-center py-4 text-xs">
+        <p>&copy; 2026 منصة موعدي الجزائر الإلكترونية - جميع الحقوق محفوظة لتطوير البرمجيات الصحية.</p>
+    </footer>
 
-    </div>
+    <script>
+        // كائن لتخزين بيانات رحلة الحجز الحالية للمستخدم
+        let bookingData = {
+            city: '',
+            hospital: '',
+            doctor: '',
+            date: '',
+            time: ''
+        };
 
+        let currentStep = 1;
+
+        // دالة تحديد المدينة والانتقال للخطوة 2
+        function selectCity(city) {
+            bookingData.city = city;
+            document.getElementById('selected-city-badge').innerText = city;
+            
+            // تخصيص قائمة المستشفيات ديناميكياً بناءً على المدينة المدخلة
+            const hospitalsList = document.getElementById('hospitals-list');
+            hospitalsList.innerHTML = ''; // تفريغ القائمة أولاً
+
+            let hospitals = [];
+            if (city === 'الجزائر العاصمة') {
+                hospitals = ['مستشفى مصطفى باشا الجامعي', 'المستشفى الجامعي باب الواد (محمد لمين دباغين)'];
+            } else if (city === 'بومرداس') {
+                hospitals = ['مستشفى الثنية (إصبع محمد)', 'مستشفى برج منايل الإقليمي'];
+            }
+
+            hospitals.forEach(hospital => {
+                hospitalsList.innerHTML += `
+                    <div onclick="selectHospital('${hospital}')" class="step-card border-2 border-gray-200 rounded-2xl p-6 flex items-center justify-between cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
+                        <div class="flex items-center space-x-4 space-x-reverse">
+                            <div class="bg-emerald-50 text-[#2d6a4f] p-4 rounded-xl text-2xl"><i class="fas fa-clinic-medical"></i></div>
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-800">${hospital}</h4>
+                                <p class="text-sm text-gray-500">مفتوح - يستقبل الحجوزات الإلكترونية الآن</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-left text-gray-400"></i>
+                    </div>
+                `;
+            });
+
+            goToStep(2);
+        }
+
+        // دالة تحديد المستشفى والانتقال للخطوة 3
+        function selectHospital(hospital) {
+            bookingData.hospital = hospital;
+            document.getElementById('selected-hospital-badge').innerText = hospital;
+            goToStep(3);
+        }
+
+        // دالة تحديد الطبيب والانتقال للخطوة 4
+        function selectDoctor(doctor) {
+            bookingData.doctor = doctor;
+            goToStep(4);
+        }
+
+        // دالة تحديد التوقيت داخل الخطوة 4
+        function selectTime(time, element) {
+            bookingData.time = time;
+            // إلغاء تحديد الأزرار الأخرى
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('bg-[#2d6a4f]', 'text-white', 'border-[#2d6a4f]');
+                btn.classList.add('border-gray-200', 'text-gray-700');
+            });
+            // تلوين الزر المحدد بلون التطبيق
+            element.classList.remove('border-gray-200', 'text-gray-700');
+            element.classList.add('bg-[#2d6a4f]', 'text-white', 'border-[#2d6a4f]');
+        }
+
+        // تأكيد الحجز النهائي وإظهار شاشة النجاح المذكورة بالسيناريو
+        function confirmFinalBooking() {
+            const dateInput = document.getElementById('booking-date').value;
+            if (!dateInput) {
+                alert('الرجاء تحديد تاريخ الموعد أولاً!');
+                return;
+            }
+            if (!bookingData.time) {
+                alert('الرجاء اختيار التوقيت المناسب!');
+                return;
+            }
+            bookingData.date = dateInput;
+
+            // حقن البيانات في كرت تفاصيل الحجز النهائي المكتمل
+            document.getElementById('summary-city').innerText = bookingData.city;
+            document.getElementById('summary-hospital').innerText = bookingData.hospital;
+            document.getElementById('summary-doctor').innerText = bookingData.doctor;
+            document.getElementById('summary-datetime').innerText = `${bookingData.date} في تمام الساعة ${bookingData.time}`;
+
+            // إخفاء واجهة الإدخال وإظهار رسالة النجاح داخل الخطوة الرابعة
+            document.getElementById('datetime-picker-section').classList.add('hidden');
+            document.getElementById('success-screen').classList.remove('hidden');
+            document.getElementById('back-button-container').classList.add('hidden'); // إخفاء زر العودة عند النجاح
+        }
+
+        // دالة عامة لإدارة الانتقال والتحكم في ظهور الشاشات والخطوات وتحديث شريط التقدم
+        function goToStep(step) {
+            currentStep = step;
+            // إخفاء جميع الخطوات
+            document.querySelectorAll('.booking-step').forEach(el => el.classList.add('hidden'));
+            // إظهار الخطوة المطلوبة فقط
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+
+            // إظهار أو إخفاء زر الرجوع الخلفي
+            if (step > 1) {
+                document.getElementById('back-button-container').classList.remove('hidden');
+            } else {
+                document.getElementById('back-button-container').classList.add('hidden');
+            }
+
+            // تحديث رسومات شريط تتبع التقدم العلوي
+            for (let i = 1; i <= 4; i++) {
+                const dot = document.getElementById(`step-dot-${i}`);
+                const line = document.getElementById(`step-line-${i}`);
+
+                if (i <= step) {
+                    dot.classList.remove('bg-gray-200', 'text-gray-500');
+                    dot.classList.add('bg-[#2d6a4f]', 'text-white', 'shadow');
+                    if (line && i < step) line.classList.replace('bg-gray-200', 'bg-[#2d6a4f]');
+                } else {
+                    dot.classList.remove('bg-[#2d6a4f]', 'text-white', 'shadow');
+                    dot.classList.add('bg-gray-200', 'text-gray-500');
+                    if (line) line.classList.replace('bg-[#2d6a4f]', 'bg-gray-200');
+                }
+            }
+        }
+
+        // وظيفة زر التراجع خطوة للخلف
+        function goToPrevStep() {
+            if (currentStep > 1) {
+                goToStep(currentStep - 1);
+            }
+        }
+
+        // إعادة تصفير النظام بالكامل للبدء من جديد
+        function resetFlow() {
+            bookingData = { city: '', hospital: '', doctor: '', date: '', time: '' };
+            document.getElementById('booking-date').value = '';
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('bg-[#2d6a4f]', 'text-white', 'border-[#2d6a4f]');
+                btn.classList.add('border-gray-200', 'text-gray-700');
+            });
+            document.getElementById('datetime-picker-section').classList.remove('hidden');
+            document.getElementById('success-screen').classList.add('hidden');
+            goToStep(1);
+        }
+    </script>
 </body>
 </html>
