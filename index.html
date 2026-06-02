@@ -30,7 +30,7 @@
             <div class="flex items-center space-x-3 space-x-reverse">
                 <div class="relative flex items-center justify-center w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100">
                     <span class="absolute inset-0 flex items-center justify-center text-2xl text-blue-900"><i class="fas fa-sync-alt rotate-45"></i></span>
-                    <span class="absolute inset-0 flex items-center justify-center text-xl text-orange-550 mt-1 mr-1" style="color: #f57c00;"><i class="fas fa-check font-black"></i></span>
+                    <span class="absolute inset-0 flex items-center justify-center text-xl mt-1 mr-1" style="color: #f57c00;"><i class="fas fa-check font-black"></i></span>
                 </div>
                 <div>
                     <h1 class="text-2xl font-black tracking-tight" style="color: #102a6b;">فوري <span style="color: #f57c00;">FAWRI</span></h1>
@@ -45,7 +45,7 @@
                 <i class="fas fa-chevron-left text-gray-300 text-[9px]"></i>
                 <span id="ind-3" class="text-gray-400 whitespace-nowrap"><i class="fas fa-th"></i> 3. اختيار الخدمة</span>
                 <i class="fas fa-chevron-left text-gray-300 text-[9px]"></i>
-                <span id="ind-4" class="text-gray-400 whitespace-nowrap"><i class="fas fa-map-marked-alt"></i> 4 & 5. الخريطة والجدولة</span>
+                <span id="ind-4" class="text-gray-400 whitespace-nowrap"><i class="fas fa-map-marked-alt"></i> 4 & 5. الخريطة والتتبع</span>
                 <i class="fas fa-chevron-left text-gray-300 text-[9px]"></i>
                 <span id="ind-5" class="text-gray-400 whitespace-nowrap"><i class="fas fa-ticket-alt"></i> 6 & 7. تأكيد الحجز والتذكرة</span>
             </div>
@@ -66,7 +66,7 @@
                         <i class="fas fa-fingerprint animate-pulse text-blue-800"></i>
                     </div>
                     <h2 class="text-2xl font-black text-gray-800">تسجيل الدخول الرقمي</h2>
-                    <p class="text-xs text-gray-400 leading-relaxed">لأن التطبيق يعمل بالبطاقة الشخصية البيومترية، يرجى وضع الهوية الوطنية فوق سكانر الجهاز أو إدخال إسمك الكامل يدوياً.</p>
+                    <p class="text-xs text-gray-400 leading-relaxed">يرجى إدخال إسمك الكامل لتفعيل نظام الملاحة والتتبع الفوري لجهازك.</p>
                 </div>
 
                 <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 text-right space-y-4">
@@ -76,24 +76,23 @@
                     </div>
                 </div>
 
-                <button onclick="submitLoginStep()" class="w-full text-white font-bold py-3.5 rounded-xl shadow-md hover:opacity-90 transition text-sm flex items-center justify-center space-x-2 space-x-reverse" style="background-color: #102a6b;">
-                    <span>تحقق عبر السكانر البيومتري</span> <i class="fas fa-arrow-left text-xs"></i>
+                <button onclick="submitLoginStep()" class="w-full text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex items-center justify-center space-x-2 space-x-reverse" style="background-color: #102a6b;">
+                    <span>تحقق عبر السكانر البيومتري والـ GPS</span> <i class="fas fa-arrow-left text-xs"></i>
                 </button>
             </div>
 
             <div id="step-view-2" class="flow-step-view hidden space-y-6 max-w-xl mx-auto w-full py-4">
                 <div class="text-center">
                     <h2 class="text-2xl font-black text-gray-800 mb-1">اختيار النطاق الجغرافي</h2>
-                    <p class="text-xs text-gray-400">مرحباً بك، يرجى تحديد الولاية أو المدينة التي تود البحث عن خدمات الـ GPS فيها.</p>
+                    <p class="text-xs text-gray-400">مرحباً بك، يرجى تحديد الولاية التي تود البحث عن خدمات الـ GPS فيها.</p>
                 </div>
 
                 <div class="space-y-3">
                     <label class="block text-xs font-bold text-gray-600"><i class="fas fa-map-marked ml-1"></i> اختر الولاية المستهدفة:</label>
-                    <select id="state-flow-select" class="w-full border-2 border-gray-200 rounded-xl p-3.5 bg-white focus:border-blue-900 focus:outline-none font-bold text-gray-700 text-sm shadow-sm">
-                        </select>
+                    <select id="state-flow-select" class="w-full border-2 border-gray-200 rounded-xl p-3.5 bg-white focus:border-blue-900 focus:outline-none font-bold text-gray-700 text-sm shadow-sm"></select>
                 </div>
 
-                <button onclick="submitStateStep()" class="w-full text-white font-bold py-3.5 rounded-xl shadow-md hover:opacity-90 transition text-sm flex items-center justify-center space-x-2 space-x-reverse" style="background-color: #102a6b;">
+                <button onclick="submitStateStep()" class="w-full text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm flex items-center justify-center space-x-2 space-x-reverse" style="background-color: #102a6b;">
                     <span>متابعة لتحديد الخدمة والمجال</span> <i class="fas fa-arrow-left text-xs"></i>
                 </button>
             </div>
@@ -101,124 +100,118 @@
             <div id="step-view-3" class="flow-step-view hidden space-y-6 py-2">
                 <div class="text-center">
                     <h2 class="text-2xl font-black text-gray-800 mb-1">اختيار الخدمة والمجال</h2>
-                    <p class="text-xs text-gray-400">الولايات المتاحة تم فلترتها بنجاح. يرجى اختيار أحد المجالات الثمانية التالية المتاحة في: <span id="badge-selected-state" class="bg-orange-50 text-orange-700 border border-orange-200 px-3 py-1 rounded-full font-bold"></span></p>
+                    <p class="text-xs text-gray-400">يرجى اختيار أحد المجالات المتاحة في: <span id="badge-selected-state" class="bg-orange-50 text-orange-700 border border-orange-200 px-3 py-1 rounded-full font-bold"></span></p>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                    <button onclick="submitServiceStep('transport')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-95 transition" style="background-color: #1d3557;">
-                        <i class="fas fa-bus text-2xl mb-3"></i>
-                        <span class="text-xs font-bold">نقل ومحطات</span>
-                    </button>
-                    <button onclick="submitServiceStep('parking')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-95 transition" style="background-color: #2a9d8f;">
-                        <i class="fas fa-square-p text-2xl mb-3"></i>
-                        <span class="text-xs font-bold">موقف السيارات</span>
-                    </button>
-                    <button onclick="submitServiceStep('hospital')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-95 transition" style="background-color: #e63946;">
-                        <i class="fas fa-user-md text-2xl mb-3"></i>
-                        <span class="text-xs font-bold">المستشفيات</span>
-                    </button>
-                    <button onclick="submitServiceStep('post')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-95 transition" style="background-color: #457b9d;">
-                        <i class="fas fa-envelope text-2xl mb-3"></i>
-                        <span class="text-xs font-bold">البريد</span>
-                    </button>
-                    <button onclick="submitServiceStep('municipality')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-95 transition" style="background-color: #8338ec;">
-                        <i class="fas fa-building text-2xl mb-3"></i>
-                        <span class="text-xs font-bold">البلديات</span>
-                    </button>
-                    <button onclick="submitServiceStep('barber')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-95 transition" style="background-color: #e07a5f;">
-                        <i class="fas fa-scissors text-2xl mb-3"></i>
-                        <span class="text-xs font-bold">صالون الحلاقة</span>
-                    </button>
-                    <button onclick="submitServiceStep('restaurant')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-95 transition" style="background-color: #f4a261;">
-                        <i class="fas fa-utensils text-2xl mb-3"></i>
-                        <span class="text-xs font-bold">المطاعم</span>
-                    </button>
-                    <button onclick="submitServiceStep('more')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-95 transition" style="background-color: #4a4e69;">
-                        <i class="fas fa-ellipsis-h text-2xl mb-3"></i>
-                        <span class="text-xs font-bold">المزيد</span>
-                    </button>
+                    <button onclick="submitServiceStep('transport')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm transition" style="background-color: #1d3557;"><i class="fas fa-bus text-2xl mb-3"></i><span class="text-xs font-bold">نقل ومحطات</span></button>
+                    <button onclick="submitServiceStep('parking')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm transition" style="background-color: #2a9d8f;"><i class="fas fa-square-p text-2xl mb-3"></i><span class="text-xs font-bold">موقف السيارات</span></button>
+                    <button onclick="submitServiceStep('hospital')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm transition" style="background-color: #e63946;"><i class="fas fa-user-md text-2xl mb-3"></i><span class="text-xs font-bold">المستشفيات</span></button>
+                    <button onclick="submitServiceStep('post')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm transition" style="background-color: #457b9d;"><i class="fas fa-envelope text-2xl mb-3"></i><span class="text-xs font-bold">البريد</span></button>
+                    <button onclick="submitServiceStep('municipality')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm transition" style="background-color: #8338ec;"><i class="fas fa-building text-2xl mb-3"></i><span class="text-xs font-bold">البلديات</span></button>
+                    <button onclick="submitServiceStep('barber')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm transition" style="background-color: #e07a5f;"><i class="fas fa-scissors text-2xl mb-3"></i><span class="text-xs font-bold">صالون الحلاقة</span></button>
+                    <button onclick="submitServiceStep('restaurant')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm transition" style="background-color: #f4a261;"><i class="fas fa-utensils text-2xl mb-3"></i><span class="text-xs font-bold">المطاعم</span></button>
+                    <button onclick="submitServiceStep('more')" class="p-4 text-white rounded-2xl flex flex-col items-center justify-center shadow-sm transition" style="background-color: #4a4e69;"><i class="fas fa-ellipsis-h text-2xl mb-3"></i><span class="text-xs font-bold">المزيد</span></button>
                 </div>
             </div>
 
             <div id="step-view-4" class="flow-step-view hidden grid grid-cols-1 lg:grid-cols-12 gap-6 py-2">
                 
                 <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
-                    <div class="space-y-4">
-                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 text-xs space-y-1">
-                            <p class="font-bold text-gray-500">الملخص الجغرافي النشط:</p>
-                            <p class="font-bold text-gray-800"><i class="fas fa-map-marker-alt text-blue-900 ml-1"></i> الولاية: <span id="summary-lbl-state" class="text-blue-900">--</span></p>
-                            <p class="font-bold text-gray-800"><i class="fas fa-hashtag text-blue-900 ml-1"></i> المجال: <span id="summary-lbl-service" class="text-blue-900">--</span></p>
+                    <div class="space-y-3">
+                        
+                        <div class="bg-blue-900 text-white p-4 rounded-2xl shadow-md space-y-3">
+                            <h3 class="text-xs font-bold text-orange-400 border-b border-blue-800 pb-1.5"><i class="fas fa-route animate-pulse ml-1"></i> تفاصيل خط السير والتنقل المباشر</h3>
+                            
+                            <div class="space-y-2 text-xs">
+                                <div class="flex items-start space-x-2 space-x-reverse">
+                                    <span class="bg-blue-700 text-[10px] px-1.5 py-0.5 rounded font-bold text-emerald-400 whitespace-nowrap">مِن:</span>
+                                    <span id="nav-from-lbl" class="font-bold text-gray-100">جاري رصد موقعك...</span>
+                                </div>
+                                <div class="flex items-start space-x-2 space-x-reverse">
+                                    <span class="bg-blue-700 text-[10px] px-1.5 py-0.5 rounded font-bold text-orange-400 whitespace-nowrap">إلَى:</span>
+                                    <span id="nav-to-lbl" class="font-bold text-gray-100">--</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-blue-800 text-center text-[11px]">
+                                <div class="bg-blue-950/40 p-1 rounded">
+                                    <span class="text-[9px] text-blue-300 block">المسافة</span>
+                                    <span id="lbl-live-distance" class="font-black text-white">0 كم</span>
+                                </div>
+                                <div class="bg-blue-950/40 p-1 rounded">
+                                    <span class="text-[9px] text-blue-300 block">زمن الحافلة</span>
+                                    <span id="lbl-live-duration" class="font-black text-white">0 د</span>
+                                </div>
+                                <div class="bg-blue-950/40 p-1 rounded flex items-center justify-center">
+                                    <span id="distance-status-badge" class="text-[9px] font-bold px-1 rounded bg-orange-500 text-white">حساب...</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="space-y-2">
-                            <label class="block text-xs font-bold text-gray-600">اختر المنشأة المراد تحديد موقعها وجدولتها عبر الـ GPS:</label>
-                            <div id="dynamic-locations-list" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
-                                </div>
+                        <div class="bg-orange-50 border border-orange-200 p-2.5 rounded-xl space-y-1.5">
+                            <p class="text-[11px] font-bold text-orange-800"><i class="fas fa-bus-alt ml-1"></i> دليل تتبع خط سير الحافلة العمومية:</p>
+                            <button id="simulate-nav-btn" onclick="startBusSimulation()" class="w-full bg-orange-600 text-white text-xs font-bold py-2 rounded-lg shadow hover:bg-orange-700 transition flex items-center justify-center space-x-1 space-x-reverse">
+                                <i class="fas fa-play-circle"></i> <span>اركب الحافلة الآن (أرني طريقي وتنقّلي)</span>
+                            </button>
+                            <p id="nav-instruction-text" class="text-[10px] text-blue-900 font-bold text-center hidden animate-bounce"><i class="fas fa-sync alt fa-spin ml-1"></i> أنت داخل الحافلة الآن.. الـ GPS يحدّث تقدمك على الطريق حياً...</p>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-gray-600">اختر المقر المستهدف لربطه بمسار الرحلة:</label>
+                            <div id="dynamic-locations-list" class="space-y-1.5 max-h-[110px] overflow-y-auto pr-1 custom-scrollbar"></div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-2">
                             <div>
-                                <label class="block text-[11px] font-bold text-gray-500 mb-1">تاريخ الحجز الفوري:</label>
-                                <input type="date" id="final-booking-date" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs font-bold text-gray-700 focus:outline-none focus:border-blue-900 bg-white">
+                                <label class="block text-[11px] font-bold text-gray-500 mb-1">تاريخ الحجز:</label>
+                                <input type="date" id="final-booking-date" class="w-full border border-gray-200 rounded-xl p-2 text-xs font-bold text-gray-700 focus:outline-none focus:border-blue-900 bg-white">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-bold text-gray-500 mb-1">توقيت الحجز الفوري:</label>
-                                <input type="time" id="final-booking-time" value="09:00" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs font-bold text-gray-700 focus:outline-none focus:border-blue-900 bg-white">
+                                <label class="block text-[11px] font-bold text-gray-500 mb-1">توقيت الحضور:</label>
+                                <input type="time" id="final-booking-time" value="09:00" class="w-full border border-gray-200 rounded-xl p-2 text-xs font-bold text-gray-700 focus:outline-none focus:border-blue-900 bg-white">
                             </div>
                         </div>
                     </div>
 
-                    <button onclick="executeFinalFlow()" class="w-full text-white font-bold py-3.5 rounded-xl shadow-md hover:opacity-90 transition text-xs flex items-center justify-center space-x-2 space-x-reverse" style="background-color: #102a6b;">
-                        <i class="fas fa-calendar-check"></i> <span>تأكيد الحجز المباشر وإصدار التذكرة</span>
+                    <button onclick="executeFinalFlow()" class="w-full text-white font-bold py-3 rounded-xl shadow-md transition text-xs flex items-center justify-center space-x-2 space-x-reverse" style="background-color: #102a6b;">
+                        <i class="fas fa-calendar-check"></i> <span>تأكيد الحجز النهائي وإصدار التذكرة</span>
                     </button>
                 </div>
 
-                <div class="lg:col-span-7 bg-gray-50 p-2 rounded-2xl border border-gray-200 relative">
+                <div class="lg:col-span-7 bg-gray-50 p-1 rounded-2xl border border-gray-200 relative h-[360px] lg:h-auto">
                     <div id="map"></div>
                 </div>
             </div>
 
             <div id="step-view-5" class="flow-step-view hidden max-w-md mx-auto w-full py-4 text-center space-y-6">
-                
                 <div class="bg-white border-2 border-dashed border-gray-200 rounded-3xl p-6 shadow-lg space-y-4 relative overflow-hidden">
                     <div class="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-blue-900 to-orange-500"></div>
                     
                     <div class="flex justify-between items-center pt-2">
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold border border-emerald-200"><i class="fas fa-check-circle"></i> تم تأكيد الحجز</span>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold border border-emerald-200"><i class="fas fa-check-circle"></i> تم تأكيد الحجز والوصول</span>
                         <span class="text-[10px] text-gray-400 font-mono" id="ticket-serial">ID: FAWRI-984322</span>
                     </div>
 
                     <div class="border-b border-gray-100 pb-3">
-                        <h3 class="text-lg font-black text-blue-900" id="ticket-place-name">مستشفى مصطفى باشا الجامعي</h3>
-                        <p class="text-[11px] text-gray-400 mt-0.5" id="ticket-user-owner">صاحب الحجز بيومتري: محمد بن علي</p>
+                        <h3 class="text-lg font-black text-blue-900" id="ticket-place-name">--</h3>
+                        <p class="text-[11px] text-gray-400 mt-0.5" id="ticket-user-owner">--</p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3 text-right text-xs bg-gray-50 p-3 rounded-xl border border-gray-100">
-                        <div>
-                            <span class="text-[10px] text-gray-400 block">النطاق الجغرافي:</span>
-                            <span class="font-bold text-gray-700" id="ticket-state-lbl">الجزائر العاصمة</span>
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-gray-400 block">المجال الخدمي:</span>
-                            <span class="font-bold text-gray-700" id="ticket-service-lbl">المستشفيات</span>
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-gray-400 block">تاريخ الموعد:</span>
-                            <span class="font-bold text-blue-900" id="ticket-date-lbl">2026-06-15</span>
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-gray-400 block">توقيت الحضور اليومي:</span>
-                            <span class="font-bold text-blue-900" id="ticket-time-lbl">09:30 صباحاً</span>
-                        </div>
+                        <div><span class="text-[10px] text-gray-400 block">النطاق الجغرافي:</span><span class="font-bold text-gray-700" id="ticket-state-lbl">--</span></div>
+                        <div><span class="text-[10px] text-gray-400 block">المجال الخدمي:</span><span class="font-bold text-gray-700" id="ticket-service-lbl">--</span></div>
+                        <div><span class="text-[10px] text-gray-400 block">تاريخ الموعد:</span><span class="font-bold text-blue-900" id="ticket-date-lbl">--</span></div>
+                        <div><span class="text-[10px] text-gray-400 block">توقيت الحضور:</span><span class="font-bold text-blue-900" id="ticket-time-lbl">--</span></div>
                     </div>
 
                     <div class="py-2 flex flex-col items-center justify-center space-y-2">
                         <div id="qrcode-container" class="p-2 border border-gray-200 rounded-xl bg-white"></div>
-                        <span class="text-[9px] text-gray-400 font-bold font-mono">امسح الرمز السريع للتحقق عند الوصول من البطاقة الشخصية</span>
+                        <span class="text-[9px] text-gray-400 font-bold font-mono">امسح الرمز السريع للتحقق البيومتري الفوري</span>
                     </div>
                 </div>
 
-                <button onclick="resetFlowToDefault()" class="w-full text-white font-bold py-3 rounded-xl shadow-md hover:opacity-90 transition text-xs flex items-center justify-center space-x-2 space-x-reverse" style="background-color: #f57c00;">
+                <button onclick="resetFlowToDefault()" class="w-full text-white font-bold py-3 rounded-xl shadow-md transition text-xs flex items-center justify-center space-x-2 space-x-reverse" style="background-color: #f57c00;">
                     <i class="fas fa-redo"></i> <span>العودة للبداية وحجز تذكرة أخرى</span>
                 </button>
             </div>
@@ -227,11 +220,10 @@
     </main>
 
     <footer class="bg-white border-t border-gray-200 py-3 text-center text-xs text-gray-400 font-medium">
-        نظام فوري FAWRI للحجوزات الإلكترونية الوطنية الفورية وعلاقات الـ GPS الذكية لـ 58 ولاية جزارية © 2026
+        نظام فوري FAWRI للحجوزات الإلكترونية الوطنية الفورية وعلاقات الـ GPS الذكية لـ 58 ولاية جزائرية © 2026
     </footer>
 
     <script>
-        // مصفوفة الـ 58 ولاية الجزائرية كاملة مدمجة مع إحداثيات مركزية دقيقة لتغذية محرك الخرائط والـ GPS بالبيانات الحية
         const algerianStates = [
             { code: "01", name: "01- أدرار", lat: 27.87, lon: -0.29 }, { code: "02", name: "02- الشلف", lat: 36.16, lon: 1.33 },
             { code: "03", name: "03- الأغواط", lat: 33.80, lon: 2.86 }, { code: "04", name: "04- أم البواقي", lat: 35.87, lon: 7.11 },
@@ -264,7 +256,6 @@
             { code: "57", name: "57- المغير", lat: 33.95, lon: 5.92 }, { code: "58", name: "58- المنيعة", lat: 30.58, lon: 2.88 }
         ];
 
-        // مسميات حقول ومجالات الحجز الإلكترونية الثمانية المتوافقة تماماً
         const servicesDictionary = {
             transport: "النقل والمحطات العامة", parking: "مواقف السيارات المعتمدة",
             hospital: "المستشفيات والقطاعات الطبية", post: "مكاتب بريد الجزائر",
@@ -272,137 +263,197 @@
             restaurant: "المطاعم والمنشآت الغذائية", more: "خدمات ومرافق إضافية"
         };
 
-        // متغيرات تتبع جلسة تدفق المخطط الورقي الجاري
         let currentFlowStep = 1;
-        let sessionData = { username: '', state: null, serviceType: '', selectedPlaceName: '' };
-        let mapInstance = null;
-        let mapMarkersLayer = null;
-        let qrCodeInstance = null;
+        let sessionData = { username: '', state: null, serviceType: '', selectedPlaceName: '', userLat: null, userLon: null, targetLat: null, targetLon: null };
+        let mapInstance = null, mapMarkersLayer = null, routePolyline = null;
+        let userMarker = null, simulatedBusInterval = null;
 
-        // ملء خانة الولايات فور الإقلاع
         window.addEventListener('DOMContentLoaded', () => {
             const selectEl = document.getElementById('state-flow-select');
             algerianStates.forEach(state => {
                 let opt = document.createElement('option');
-                opt.value = state.code;
-                opt.textContent = state.name;
-                if(state.code === "16") opt.selected = true; // تعيين العاصمة كافتراض مرن للفلترة
+                opt.value = state.code; opt.textContent = state.name;
+                if(state.code === "16") opt.selected = true;
                 selectEl.appendChild(opt);
             });
             
-            // وضع تاريخ اليوم كقيمة افتراضية في خانة التاريخ للسرعة
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('final-booking-date').value = today;
+            document.getElementById('final-booking-date').value = new Date().toISOString().split('T')[0];
+
+            // محاولة جلب إحداثيات الـ GPS الفعلية للمستخدم عبر المتصفح فور الإقلاع
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    sessionData.userLat = position.coords.latitude;
+                    sessionData.userLon = position.coords.longitude;
+                    document.getElementById('nav-from-lbl').innerText = "موقعك الحالي الفعلي (متصل بالـ GPS)";
+                }, () => {
+                    console.log("استخدام الإحداثيات الافتراضية المحددة للولاية.");
+                }, { enableHighAccuracy: true });
+            }
         });
 
-        // خطوة 1: التحقق من الدخول بالبطاقة الشخصية والمحاكاة عبر جهاز السكانر
         function submitLoginStep() {
             const nameInput = document.getElementById('user-card-name').value.trim();
-            if(!nameInput) {
-                alert('يرجى كتابة اسم المستخدم أو وضع بطاقتك الشخصية فوق السكانر لتمرير تسجيل الدخول.');
-                return;
-            }
+            if(!nameInput) { alert('يرجى كتابة اسم المستخدم لتمرير تسجيل الدخول.'); return; }
             sessionData.username = nameInput;
             switchFlowToStep(2);
         }
 
-        // خطوة 2: تثبيت نطاق المدينة أو الولاية الجزائرية المختارة
         function submitStateStep() {
             const stateCode = document.getElementById('state-flow-select').value;
             sessionData.state = algerianStates.find(s => s.code === stateCode);
+            
+            // إذا لم يتم جلب الـ GPS الفعلي للمستخدم، يتم تثبيت مركز الولاية كنقطة انطلاق
+            if (!sessionData.userLat) {
+                sessionData.userLat = sessionData.state.lat;
+                sessionData.userLon = sessionData.state.lon;
+            }
+            document.getElementById('nav-from-lbl').innerText = `موقعك في (وسط ${sessionData.state.name.substring(4)})`;
             document.getElementById('badge-selected-state').innerText = sessionData.state.name.substring(4);
             switchFlowToStep(3);
         }
 
-        // خطوة 3: معالجة اختيار أحد المجالات والبدء برسم الخرائط وربط الـ GPS
         function submitServiceStep(serviceKey) {
             sessionData.serviceType = serviceKey;
-            
             document.getElementById('summary-lbl-state').innerText = sessionData.state.name;
             document.getElementById('summary-lbl-service').innerText = servicesDictionary[serviceKey];
 
             switchFlowToStep(4);
             
-            // بناء محرك الخريطة التفاعلي إذا لم يكن جاهزاً
             if(!mapInstance) {
                 mapInstance = L.map('map');
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© FAWRI GPS'
-                }).addTo(mapInstance);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© FAWRI GPS' }).addTo(mapInstance);
                 mapMarkersLayer = L.layerGroup().addTo(mapInstance);
             }
 
-            // نقل الكاميرا فوراً لإحداثيات الـ GPS للولاية
-            mapInstance.setView([sessionData.state.lat, sessionData.state.lon], 12);
+            mapInstance.setView([sessionData.userLat, sessionData.userLon], 13);
             renderDynamicGpsPlaces();
         }
 
-        // خطوات 4 و 5: توليد المقرات للـ 58 ولاية تلقائياً وإسقاط علامات دبابيس الـ GPS في محيطها
         function renderDynamicGpsPlaces() {
             const listContainer = document.getElementById('dynamic-locations-list');
             listContainer.innerHTML = '';
             mapMarkersLayer.clearLayers();
+            if(routePolyline) mapInstance.removeLayer(routePolyline);
 
             const serviceTitle = servicesDictionary[sessionData.serviceType];
             const cleanStateName = sessionData.state.name.substring(4);
 
-            // مصفوفة إنتاج فروع حقيقية الحسابات الجغرافية
+            // إنشاء 3 فروع حول موقع المستخدم لاختبار الملاحة من وإلى
             const simulatedPlaces = [
-                { name: `${serviceTitle} الرئيسي - وسط ${cleanStateName}`, latOff: 0.012, lonOff: 0.015 },
-                { name: `${serviceTitle} الإقليمي - المجمع الإداري الجديد`, latOff: -0.01, lonOff: -0.012 },
-                { name: `${serviceTitle} - دائرة الخدمات والبلدية`, latOff: 0.018, lonOff: -0.02 }
+                { name: `${serviceTitle} - فرع وسط المدينة الأصلي`, latOff: 0.015, lonOff: 0.018 },
+                { name: `${serviceTitle} - المجمع الإداري الشرقي (بعيد)`, latOff: 0.035, lonOff: -0.042 },
+                { name: `${serviceTitle} - الضاحية الشمالية للمدينة`, latOff: -0.028, lonOff: 0.032 }
             ];
 
-            // اختيار المقر الأول تلقائياً كبداية مرنة
-            sessionData.selectedPlaceName = simulatedPlaces[0].name;
+            // إسقاط نقطة انطلاق المستخدم المشعة حياً
+            userMarker = L.circleMarker([sessionData.userLat, sessionData.userLon], {
+                radius: 8, fillColor: "#102a6b", color: "#fff", weight: 3, fillOpacity: 1
+            }).addTo(mapMarkersLayer).bindPopup("<b>موقع انطلاقك الحالي (مِن)</b>").openPopup();
 
             simulatedPlaces.forEach((place, index) => {
-                const finalLat = sessionData.state.lat + place.latOff;
-                const finalLon = sessionData.state.lon + place.lonOff;
-
+                const finalLat = sessionData.userLat + place.latOff;
+                const finalLon = sessionData.userLon + place.lonOff;
                 const isFirst = index === 0 ? 'border-blue-900 bg-blue-50/20' : 'border-gray-100 bg-white';
 
-                // إضافة المقر للقائمة التفاعلية الجانبية للجدولة
                 listContainer.innerHTML += `
-                    <div id="place-item-${index}" onclick="focusGpsCoordinates(${finalLat}, ${finalLon}, '${place.name}', ${index})" class="place-card-item p-2.5 border rounded-xl cursor-pointer text-right transition ${isFirst}">
+                    <div id="place-item-${index}" onclick="focusGpsCoordinates(${finalLat}, ${finalLon}, '${place.name}', ${index})" class="place-card-item p-2 border rounded-xl cursor-pointer text-right transition ${isFirst}">
                         <h4 class="text-xs font-bold text-gray-850">${place.name}</h4>
-                        <p class="text-[9px] text-gray-400 mt-0.5"><i class="fas fa-location-crosshairs text-orange-600"></i> الـ GPS متصل ونشط حالياً</p>
+                        <p class="text-[9px] text-gray-400 mt-0.5"><i class="fas fa-location-crosshairs text-orange-600"></i> اضغط لتحديث خط سير الحافلة</p>
                     </div>
                 `;
 
-                // إسقاط دبوس الحجز في الخريطة التفاعلية
-                const marker = L.marker([finalLat, finalLon]).addTo(mapMarkersLayer);
-                marker.bindPopup(`<div class="text-right font-sans text-xs font-bold text-gray-800">${place.name}<br><span class="text-[9px] text-orange-600 font-normal">انقر لتأكيد الجدولة</span></div>`);
-                
-                if(index === 0) marker.openPopup();
+                L.marker([finalLat, finalLon]).addTo(mapMarkersLayer).bindPopup(`<b class="text-xs">${place.name}</b>`);
             });
+
+            // تفعيل المقر الأول تلقائياً كوجهة أولى
+            focusGpsCoordinates(sessionData.userLat + simulatedPlaces[0].latOff, sessionData.userLon + simulatedPlaces[0].lonOff, simulatedPlaces[0].name, 0);
         }
 
-        // توجيه الخريطة لفرع محدد وتثبيته في الذاكرة عبر النقر على القائمة
         function focusGpsCoordinates(lat, lon, name, index) {
+            sessionData.targetLat = lat;
+            sessionData.targetLon = lon;
             sessionData.selectedPlaceName = name;
-            mapInstance.setView([lat, lon], 14);
-            
-            // تعديل النمط البصري للمقر المختار
+
+            // تحديث بطاقة "من وإلى" نصياً حياً
+            document.getElementById('nav-to-lbl').innerText = name;
+
             document.querySelectorAll('.place-card-item').forEach(el => el.classList.remove('border-blue-900', 'bg-blue-50/20'));
             document.getElementById(`place-item-${index}`).classList.add('border-blue-900', 'bg-blue-50/20');
 
-            mapMarkersLayer.eachLayer(m => {
-                if(m.getLatLng().lat === lat && m.getLatLng().lng === lon) m.openPopup();
-            });
+            // حساب مسافة الـ GPS الفورية رياضياً بالكيلومترات (معادلة هافرسين)
+            const R = 6371;
+            const dLat = (lat - sessionData.userLat) * Math.PI / 180;
+            const dLon = (lon - sessionData.userLon) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(sessionData.userLat * Math.PI / 180) * Math.cos(lat * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distanceKM = (R * c).toFixed(2);
+            const durationMin = Math.round((distanceKM / 35) * 60) + 3;
+
+            document.getElementById('lbl-live-distance').innerText = `${distanceKM} كم`;
+            document.getElementById('lbl-live-duration').innerText = `${durationMin} د`;
+
+            const badge = document.getElementById('distance-status-badge');
+            if(distanceKM < 1.2) {
+                badge.innerText = "قريب جداً"; badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-600 text-white";
+            } else {
+                badge.innerText = "يتطلب حافلة"; badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-orange-600 text-white";
+            }
+
+            // رسم خط مسار الملاحة المنقط من موقع المستخدم إلى الهدف
+            if(routePolyline) mapInstance.removeLayer(routePolyline);
+            routePolyline = L.polyline([[sessionData.userLat, sessionData.userLon], [lat, lon]], {
+                color: '#f57c00', weight: 4, dashArray: '6, 10', opacity: 0.9
+            }).addTo(mapInstance);
+
+            mapInstance.fitBounds(routePolyline.getBounds(), { padding: [30, 30] });
         }
 
-        // خطوات 6 و 7: تنفيذ تدفق تأكيد الحجز وإصدار تذكرة فوري الرقمية مع الـ QR Code
+        // محاكاة حركة المستخدم خطوة بخطوة عند ركوب الحافلة لرؤية مسار التنقل حياً
+        function startBusSimulation() {
+            if(simulatedBusInterval) clearInterval(simulatedBusInterval);
+            
+            const instructionText = document.getElementById('nav-instruction-text');
+            instructionText.classList.remove('hidden');
+            
+            let currentStep = 0;
+            const totalSteps = 20;
+            const startLat = sessionData.userLat;
+            const startLon = sessionData.userLon;
+
+            simulatedBusInterval = setInterval(() => {
+                currentStep++;
+                const ratio = currentStep / totalSteps;
+
+                // نقل موقع المستخدم بالتتابع الرياضي على طول الخط المنقط
+                const tempLat = startLat + (sessionData.targetLat - startLat) * ratio;
+                const tempLon = startLon + (sessionData.targetLon - startLon) * ratio;
+
+                userMarker.setLatLng([tempLat, tempLon]);
+                mapInstance.setView([tempLat, tempLon], 14);
+
+                // إنقاص المسافة التقديرية تدريجياً لإظهار اقتراب الحافلة من الهدف
+                const initialDist = parseFloat(document.getElementById('lbl-live-distance').innerText);
+                if (initialDist > 0) {
+                    const remaining = (initialDist * (1 - ratio)).toFixed(2);
+                    document.getElementById('lbl-live-distance').innerText = `${remaining} كم`;
+                }
+
+                if(currentStep >= totalSteps) {
+                    clearInterval(simulatedBusInterval);
+                    instructionText.innerHTML = "<i class='fas fa-check-circle text-emerald-600'></i> وصلت الحافلة إلى المنشأة المستهدفة (إلى) بنجاح!";
+                    userMarker.setLatLng([sessionData.targetLat, sessionData.targetLon]);
+                    alert('وصلت الحافلة إلى وجهتك! يمكنك الآن تأكيد موعدك وطباعة التذكرة.');
+                }
+            }, 700); 
+        }
+
         function executeFinalFlow() {
+            if(simulatedBusInterval) clearInterval(simulatedBusInterval);
             const dateVal = document.getElementById('final-booking-date').value;
             const timeVal = document.getElementById('final-booking-time').value;
 
-            if(!dateVal || !timeVal) {
-                alert('يرجى تحديد تاريخ ووقت الموعد لاستكمال إنتاج تذكرة الحجز النهائية.');
-                return;
-            }
+            if(!dateVal || !timeVal) { alert('يرجى تحديد تاريخ ووقت الموعد.'); return; }
 
-            // حقن وتحديث بيانات التذكرة المصدرة نهائياً
             document.getElementById('ticket-place-name').innerText = sessionData.selectedPlaceName;
             document.getElementById('ticket-user-owner').innerText = `صاحب الحجز بيومتري: ${sessionData.username}`;
             document.getElementById('ticket-state-lbl').innerText = sessionData.state.name;
@@ -410,68 +461,42 @@
             document.getElementById('ticket-date-lbl').innerText = dateVal;
             document.getElementById('ticket-time-lbl').innerText = timeVal;
             
-            // توليد كود تسلسلي عشوائي فريد للتذكرة الحالية
             const randomId = Math.floor(100000 + Math.random() * 900000);
             document.getElementById('ticket-serial').innerText = `ID: FAWRI-${randomId}`;
 
-            // مسح كود الـ QR السابق وتوليد كود جديد تماماً يحمل تفاصيل الموعد للتحقق عبر الهواتف أو أجهزة الكشف للبلدية
             document.getElementById('qrcode-container').innerHTML = '';
-            const qrText = `FAWRI-${randomId}|${sessionData.username}|${sessionData.selectedPlaceName}|${dateVal}|${timeVal}`;
-            
             new QRCode(document.getElementById('qrcode-container'), {
-                text: qrText,
-                width: 100,
-                height: 100,
-                colorDark : "#102a6b",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                text: `FAWRI-${randomId}|${sessionData.selectedPlaceName}`,
+                width: 100, height: 100, colorDark : "#102a6b", colorLight : "#ffffff"
             });
 
             switchFlowToStep(5);
         }
 
-        // دالة التحكم في تبديل الشاشات والمؤشرات العلوية وفق مسارك المرسوم
         function switchFlowToStep(targetStep) {
             currentFlowStep = targetStep;
-            
             document.querySelectorAll('.flow-step-view').forEach(view => view.classList.add('hidden'));
             document.getElementById(`step-view-${targetStep}`).classList.remove('hidden');
 
-            // التحكم بزر الرجوع لتسهيل تتبع المسار
-            if(targetStep > 1 && targetStep < 5) {
-                document.getElementById('back-flow-btn').classList.replace('hidden', 'flex');
-            } else {
-                document.getElementById('back-flow-btn').classList.replace('flex', 'hidden');
-            }
+            if(targetStep > 1 && targetStep < 5) document.getElementById('back-flow-btn').classList.replace('hidden', 'flex');
+            else document.getElementById('back-flow-btn').classList.replace('flex', 'hidden');
 
-            // تحديث إضاءة مؤشر الخطوات العلوي للموقع
             for(let i = 1; i <= 5; i++) {
                 const ind = document.getElementById(`ind-${i}`);
-                if(ind) {
-                    if(i === targetStep) {
-                        ind.style.color = "#f57c00"; // تلوين الخطوة الحالية بالبرتقالي لـ فوري
-                    } else if (i < targetStep) {
-                        ind.style.color = "#102a6b"; // الخطوة السابقة بالأزرق فوري
-                    } else {
-                        ind.style.color = "#9ca3af"; // غير النشط رمادي
-                    }
-                }
+                if(ind) ind.style.color = (i === targetStep) ? "#f57c00" : ((i < targetStep) ? "#102a6b" : "#9ca3af");
             }
         }
 
-        // التراجع خطوة واحدة للخلف عبر زر الدفع
         function triggerPrevStep() {
-            if(currentFlowStep > 1 && currentFlowStep < 5) {
-                switchFlowToStep(currentFlowStep - 1);
-            }
+            if(currentFlowStep > 1 && currentFlowStep < 5) switchFlowToStep(currentFlowStep - 1);
         }
 
-        // تصفير الجلسة لإجراء عملية حجز وجدولة جديدة بالكامل
         function resetFlowToDefault() {
+            if(simulatedBusInterval) clearInterval(simulatedBusInterval);
             document.getElementById('user-card-name').value = '';
+            document.getElementById('nav-instruction-text').classList.add('hidden');
             switchFlowToStep(1);
         }
     </script>
 </body>
 </html>
-
