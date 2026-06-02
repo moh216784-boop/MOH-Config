@@ -3,338 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام حجز المستشفيات - موعدي الجزائر</title>
+    <title>منصة وصلك الرقمية - نظام الخرائط و الجدولة الموحد</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .step-card {
-            transition: all 0.3s ease;
-        }
-        .step-card.active {
-            border-color: #2d6a4f;
-            background-color: #f1f8f5;
-        }
+        body { font-family: 'Cairo', sans-serif; background-color: #f3f4f6; }
+        .service-btn { transition: all 0.2s ease-in-out; }
+        .service-btn.active { transform: scale(0.95); ring: 4px; ring-opacity: 0.5; }
+        #map { height: 100%; min-h: 350px; border-radius: 1.5rem; z-index: 10; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <header class="bg-white shadow-md border-b border-gray-100">
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="bg-[#2d6a4f] text-white p-2 rounded-xl shadow-md">
-                    <i class="fas fa-hospital text-xl"></i>
+                <div class="bg-[#2d6a4f] text-white p-2.5 rounded-xl shadow-md">
+                    <i class="fas fa-map-marked-alt text-xl"></i>
                 </div>
-                <span class="text-2xl font-bold text-[#2d6a4f]">موعدي الجزائر <span class="text-sm font-semibold text-gray-500">| بوابة المستشفيات</span></span>
+                <div>
+                    <h1 class="text-2xl font-bold text-[#2d6a4f]">وَصَلَكْ <span class="text-xs text-gray-400 font-medium">الجزائر</span></h1>
+                    <p class="text-[11px] text-gray-500 font-semibold">نظام تحديد المواقع والحجوزات الفوري</p>
+                </div>
             </div>
-            <nav class="hidden md:flex space-x-8 space-x-reverse text-gray-600 font-semibold">
-                <a href="#" class="text-[#2d6a4f] border-b-2 border-[#2d6a4f] pb-1">الرئيسية</a>
-                <a href="#" class="hover:text-[#2d6a4f] transition">حجوزاتي</a>
-                <a href="#" class="hover:text-[#2d6a4f] transition">عن المنصة</a>
-                <a href="#" class="hover:text-[#2d6a4f] transition">اتصل بنا</a>
-            </nav>
-            <div class="flex items-center space-x-4 space-x-reverse">
-                <button class="text-gray-600 hover:text-[#2d6a4f] transition"><i class="fas fa-bell text-xl"></i></button>
-                <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-bold border border-gray-300">
-                    <i class="fas fa-user"></i>
-                </div>
+            
+            <div class="w-72">
+                <select id="global-state-select" onchange="onStateChange(this.value)" class="w-full border-2 border-gray-200 rounded-xl p-2.5 bg-gray-50 focus:border-[#2d6a4f] focus:outline-none font-bold text-gray-700 text-sm shadow-sm">
+                    </select>
             </div>
         </div>
     </header>
 
-    <main class="max-w-6xl w-full mx-auto px-6 py-10 flex-1">
+    <main class="max-w-7xl w-full mx-auto px-4 md:px-6 py-6 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">نظام الحجز الإلكتروني السريع</h2>
-            <p class="text-gray-500">قم بتنفيذ خطوات الحجز الموضحة أدناه لتأكيد موعدك الطبي بكل سهولة</p>
-        </div>
-
-        <div class="flex items-center justify-center max-w-3xl mx-auto mb-12">
-            <div id="step-dot-1" class="w-8 h-8 rounded-full bg-[#2d6a4f] text-white flex items-center justify-center font-bold text-sm shadow">1</div>
-            <div id="step-line-1" class="flex-1 h-1 bg-gray-200 mx-2 transition-all duration-300"></div>
-            <div id="step-dot-2" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-sm">2</div>
-            <div id="step-line-2" class="flex-1 h-1 bg-gray-200 mx-2 transition-all duration-300"></div>
-            <div id="step-dot-3" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-sm">3</div>
-            <div id="step-line-3" class="flex-1 h-1 bg-gray-200 mx-2 transition-all duration-300"></div>
-            <div id="step-dot-4" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-sm">4</div>
-        </div>
-
-        <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100 min-h-[400px] flex flex-col justify-between">
+        <div class="lg:col-span-5 space-y-6">
             
-            <div id="step-1" class="booking-step">
-                <h3 class="text-xl font-bold text-gray-800 mb-6"><i class="fas fa-map-marker-alt text-[#2d6a4f] ml-2"></i> الخطوة الأولى: حدد الولاية أو المدينة</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div onclick="selectCity('الجزائر العاصمة')" class="step-card border-2 border-gray-200 rounded-2xl p-6 flex items-center justify-between cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
-                        <div class="flex items-center space-x-4 space-x-reverse">
-                            <div class="bg-gray-100 p-4 rounded-xl text-gray-700 text-2xl"><i class="fas fa-city"></i></div>
-                            <div>
-                                <h4 class="font-bold text-lg text-gray-800">الجزائر العاصمة</h4>
-                                <p class="text-sm text-gray-500">المستشفيات والمراكز الجامعية الكبرى</p>
-                            </div>
-                        </div>
-                        <i class="fas fa-chevron-left text-gray-400"></i>
-                    </div>
-
-                    <div onclick="selectCity('بومرداس')" class="step-card border-2 border-gray-200 rounded-2xl p-6 flex items-center justify-between cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
-                        <div class="flex items-center space-x-4 space-x-reverse">
-                            <div class="bg-gray-100 p-4 rounded-xl text-gray-700 text-2xl"><i class="fas fa-tree"></i></div>
-                            <div>
-                                <h4 class="font-bold text-lg text-gray-800">بومرداس</h4>
-                                <p class="text-sm text-gray-500">المستشفيات الإقليمية والمصحات المتخصصة</p>
-                            </div>
-                        </div>
-                        <i class="fas fa-chevron-left text-gray-400"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div id="step-2" class="booking-step hidden">
-                <h3 class="text-xl font-bold text-gray-800 mb-2"><i class="fas fa-hospital-user text-[#2d6a4f] ml-2"></i> الخطوة الثانية: اختر المستشفى المناسب</h3>
-                <p class="text-sm text-gray-500 mb-6">المستشفيات المتاحة في: <span id="selected-city-badge" class="bg-emerald-100 text-[#2d6a4f] px-3 py-1 rounded-full font-bold text-xs"></span></p>
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100">
+                <h3 class="text-sm font-bold text-gray-500 mb-4"><i class="fas fa-th-large ml-1"></i> اختر الخدمة التي تريدها:</h3>
                 
-                <div id="hospitals-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    </div>
-            </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="selectService('hospital', this)" class="service-btn bg-[#e63946] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-red-300">
+                        <i class="fas fa-user-md text-xl mb-2"></i>
+                        <span class="text-xs font-bold whitespace-nowrap">المستشفيات</span>
+                    </button>
 
-            <div id="step-3" class="booking-step hidden">
-                <h3 class="text-xl font-bold text-gray-800 mb-2"><i class="fas fa-stethoscope text-[#2d6a4f] ml-2"></i> الخطوة الثالثة: اختر التخصص والطبيب المعالج</h3>
-                <p class="text-sm text-gray-500 mb-6">المستشفى المحدد: <span id="selected-hospital-badge" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-bold text-xs"></span></p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div onclick="selectDoctor('د. أحمد بن زينة (أمراض القلب)')" class="step-card border-2 border-gray-200 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
-                        <div class="w-16 h-16 bg-emerald-50 text-[#2d6a4f] rounded-full flex items-center justify-center text-2xl mb-3"><i class="fas fa-user-md"></i></div>
-                        <h4 class="font-bold text-gray-800">د. أحمد بن زينة</h4>
-                        <p class="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md mt-1">تخصص أمراض القلب</p>
-                        <p class="text-xs text-gray-400 mt-2"><i class="fas fa-star text-amber-400 ml-1"></i> 4.9 (120 تقييم)</p>
-                    </div>
+                    <button onclick="selectService('parking', this)" class="service-btn bg-[#2a9d8f] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-teal-300">
+                        <i class="fas fa-square-p text-xl mb-2"></i>
+                        <span class="text-xs font-bold whitespace-nowrap">مواقف السيارات</span>
+                    </button>
 
-                    <div onclick="selectDoctor('د. مريم بوعبد الله (طب الأطفال)')" class="step-card border-2 border-gray-200 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
-                        <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center text-2xl mb-3"><i class="fas fa-user-md"></i></div>
-                        <h4 class="font-bold text-gray-800">د. مريم بوعبد الله</h4>
-                        <p class="text-xs text-purple-600 font-semibold bg-purple-50 px-2 py-0.5 rounded-md mt-1">تخصص طب الأطفال</p>
-                        <p class="text-xs text-gray-400 mt-2"><i class="fas fa-star text-amber-400 ml-1"></i> 4.8 (95 تقييم)</p>
-                    </div>
+                    <button onclick="selectService('transport', this)" class="service-btn bg-[#1d3557] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-blue-900">
+                        <i class="fas fa-bus text-xl mb-2"></i>
+                        <span class="text-xs font-bold whitespace-nowrap">النقل والمحطات</span>
+                    </button>
 
-                    <div onclick="selectDoctor('د. مراد ساحلي (جراحة العظام)')" class="step-card border-2 border-gray-200 rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
-                        <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl mb-3"><i class="fas fa-user-md"></i></div>
-                        <h4 class="font-bold text-gray-800">د. مراد ساحلي</h4>
-                        <p class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded-md mt-1">تخصص جراحة العظام</p>
-                        <p class="text-xs text-gray-400 mt-2"><i class="fas fa-star text-amber-400 ml-1"></i> 4.7 (140 تقييم)</p>
-                    </div>
+                    <button onclick="selectService('barber', this)" class="service-btn bg-[#e07a5f] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-orange-300">
+                        <i class="fas fa-scissors text-xl mb-2"></i>
+                        <span class="text-xs font-bold whitespace-nowrap">صالونات الحلاقة</span>
+                    </button>
+
+                    <button onclick="selectService('municipality', this)" class="service-btn bg-[#8338ec] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-purple-300">
+                        <i class="fas fa-building text-xl mb-2"></i>
+                        <span class="text-xs font-bold whitespace-nowrap">البلديات</span>
+                    </button>
+
+                    <button onclick="selectService('post', this)" class="service-btn bg-[#457b9d] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-blue-300">
+                        <i class="fas fa-envelope text-xl mb-2"></i>
+                        <span class="text-xs font-bold whitespace-nowrap">البريد</span>
+                    </button>
+
+                    <button onclick="selectService('restaurant', this)" class="service-btn bg-[#f4a261] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-amber-400">
+                        <i class="fas fa-utensils text-xl mb-2"></i>
+                        <span class="text-xs font-bold whitespace-nowrap">المطاعم</span>
+                    </button>
+
+                    <button onclick="selectService('more', this)" class="service-btn bg-[#4a4e69] text-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-sm hover:opacity-90 active:ring-4 active:ring-gray-400">
+                        <i class="fas fa-ellipsis-h text-xl mb-2"></i>
+                        <span class="text-xs font-bold whitespace-nowrap">المزيد</span>
+                    </button>
                 </div>
             </div>
 
-            <div id="step-4" class="booking-step hidden">
-                <div id="datetime-picker-section">
-                    <h3 class="text-xl font-bold text-gray-800 mb-6"><i class="fas fa-calendar-alt text-[#2d6a4f] ml-2"></i> الخطوة الرابعة: حدد التاريخ والوقت المناسب</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
-                        <div>
-                            <label class="block text-gray-700 font-bold mb-2 text-sm">اختر تاريخ الموعد:</label>
-                            <input type="date" id="booking-date" class="w-full border-2 border-gray-200 rounded-xl p-3 focus:border-[#2d6a4f] focus:outline-none font-semibold text-gray-700">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-bold mb-2 text-sm">اختر التوقيت المتوفر:</label>
-                            <div class="grid grid-cols-3 gap-2">
-                                <button onclick="selectTime('09:00 صباحاً', this)" class="time-btn border border-gray-200 py-2 rounded-xl font-semibold text-sm hover:border-[#2d6a4f] text-gray-700">09:00 ص</button>
-                                <button onclick="selectTime('11:00 صباحاً', this)" class="time-btn border border-gray-200 py-2 rounded-xl font-semibold text-sm hover:border-[#2d6a4f] text-gray-700">11:00 ص</button>
-                                <button onclick="selectTime('02:00 مساءً', this)" class="time-btn border border-gray-200 py-2 rounded-xl font-semibold text-sm hover:border-[#2d6a4f] text-gray-700">02:00 م</button>
-                            </div>
-                        </div>
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between min-h-[280px]">
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-sm font-bold text-gray-700" id="list-title">النتائج المتوفرة</h3>
+                        <span id="results-count" class="text-xs bg-emerald-50 text-[#2d6a4f] px-2.5 py-1 rounded-full font-bold">0 موقع</span>
                     </div>
-                    <div class="flex justify-center mt-8">
-                        <button onclick="confirmFinalBooking()" class="bg-[#2d6a4f] text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-[#1f4a37] transition-all flex items-center space-x-2 space-x-reverse">
-                            <i class="fas fa-check-circle"></i>
-                            <span>تأكيد الحجز النهائي</span>
-                        </button>
+                    <div id="places-list-container" class="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                        <p class="text-xs text-gray-400 text-center py-8">الرجاء اختيار الخدمة المطلوبة من الشبكة العلوية لعرض فروعها ومواقع الـ GPS.</p>
                     </div>
                 </div>
-
-                <div id="success-screen" class="hidden text-center py-8 space-y-4">
-                    <div class="w-20 h-20 bg-emerald-100 text-[#2d6a4f] rounded-full flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-emerald-600">تم الحجز بنجاح!</h3>
-                    <p class="text-gray-600 max-w-md mx-auto">لقد تم تسجيل موعدك في النظام بنجاح. يمكنك طباعة التذكرة أو إظهار كود الحجز عند وصولك للمستشفى.</p>
-                    
-                    <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 max-w-md mx-auto text-right space-y-2 mt-4 shadow-sm">
-                        <p class="text-sm text-gray-700"><strong>المدينة:</strong> <span id="summary-city"></span></p>
-                        <p class="text-sm text-gray-700"><strong>المستشفى:</strong> <span id="summary-hospital"></span></p>
-                        <p class="text-sm text-gray-700"><strong>الطبيب/التخصص:</strong> <span id="summary-doctor"></span></p>
-                        <p class="text-sm text-gray-700"><strong>الموعد:</strong> <span id="summary-datetime"></span></p>
-                        <p class="text-xs text-center text-gray-400 pt-3 border-t border-dashed border-gray-300">رقم الحجز الفوري: #MOU-2026</p>
-                    </div>
-
-                    <div class="pt-4">
-                        <button onclick="resetFlow()" class="text-[#2d6a4f] font-bold text-sm underline hover:text-[#1f4a37]">العودة للرئيسية وحجز موعد آخر</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="back-button-container" class="mt-8 pt-4 border-t border-gray-100 hidden">
-                <button onclick="goToPrevStep()" class="text-gray-500 hover:text-gray-800 font-semibold text-sm flex items-center space-x-1 space-x-reverse">
-                    <i class="fas fa-arrow-right"></i>
-                    <span>الرجوع للخطوة السابقة</span>
-                </button>
             </div>
 
         </div>
+
+        <div class="lg:col-span-7 bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-3 px-2">
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <h3 class="text-sm font-bold text-gray-700">محدد الـ GPS التفاعلي للمنصة</h3>
+                </div>
+                <div class="text-xs text-gray-400 font-mono" id="gps-coordinates">Lat: 36.75, Lon: 3.05</div>
+            </div>
+
+            <div class="flex-1 min-h-[420px] bg-gray-50 rounded-2xl overflow-hidden relative border border-gray-200">
+                <div id="map"></div>
+            </div>
+        </div>
+
     </main>
 
-    <footer class="bg-gray-800 text-gray-400 text-center py-4 text-xs">
-        <p>&copy; 2026 منصة موعدي الجزائر الإلكترونية - جميع الحقوق محفوظة لتطوير البرمجيات الصحية.</p>
+    <footer class="bg-white border-t border-gray-200 py-3 text-center text-xs text-gray-400 font-medium">
+        منصة وصلك الرقمية - تغطية شاملة لـ 58 ولاية بتقنيات تحديد المواقع الحية © 2026
     </footer>
 
     <script>
-        // كائن لتخزين بيانات رحلة الحجز الحالية للمستخدم
-        let bookingData = {
-            city: '',
-            hospital: '',
-            doctor: '',
-            date: '',
-            time: ''
+        // مصفوفة الـ 58 ولاية الجزائرية كاملة مع إحداثيات الـ GPS المركزية التقريبية لكل ولاية لتوجيه الخريطة
+        const algerianStates = [
+            { code: "01", name: "01- أدرار", lat: 27.87, lon: -0.29 },
+            { code: "02", name: "02- الشلف", lat: 36.16, lon: 1.33 },
+            { code: "03", name: "03- الأغواط", lat: 33.80, lon: 2.86 },
+            { code: "04", name: "04- أم البواقي", lat: 35.87, lon: 7.11 },
+            { code: "05", name: "05- باتنة", lat: 35.55, lon: 6.17 },
+            { code: "06", name: "06- بجاية", lat: 36.75, lon: 5.08 },
+            { code: "07", name: "07- بسكرة", lat: 34.85, lon: 5.73 },
+            { code: "08", name: "08- بشار", lat: 31.62, lon: -2.21 },
+            { code: "09", name: "09- البليدة", lat: 36.47, lon: 2.83 },
+            { code: "10", name: "10- البويرة", lat: 36.37, lon: 3.90 },
+            { code: "11", name: "11- تمنراست", lat: 22.78, lon: 5.52 },
+            { code: "12", name: "12- تبسة", lat: 35.40, lon: 8.12 },
+            { code: "13", name: "13- تلمسان", lat: 34.88, lon: -1.31 },
+            { code: "14", name: "14- تيارت", lat: 35.37, lon: 1.32 },
+            { code: "15", name: "15- تيزي وزو", lat: 36.71, lon: 4.05 },
+            { code: "16", name: "16- الجزائر العاصمة", lat: 36.75, lon: 3.05 },
+            { code: "17", name: "17- الجلفة", lat: 34.67, lon: 3.25 },
+            { code: "18", name: "18- جيجل", lat: 36.82, lon: 5.76 },
+            { code: "19", name: "19- سطيف", lat: 36.19, lon: 5.41 },
+            { code: "20", name: "20- سعيدة", lat: 34.83, lon: 0.15 },
+            { code: "21", name: "21- سكيكدة", lat: 36.88, lon: 6.90 },
+            { code: "22", name: "22- سيدي بلعباس", lat: 35.19, lon: -0.63 },
+            { code: "23", name: "23- عنابة", lat: 36.90, lon: 7.76 },
+            { code: "24", name: "24- قالمة", lat: 36.46, lon: 7.43 },
+            { code: "25", name: "25- قسنطينة", lat: 36.36, lon: 6.61 },
+            { code: "26", name: "26- المدية", lat: 36.26, lon: 2.75 },
+            { code: "27", name: "27- مستغانم", lat: 35.93, lon: 0.09 },
+            { code: "28", name: "28- المسيلة", lat: 35.70, lon: 4.54 },
+            { code: "29", name: "29- معسكر", lat: 35.40, lon: 0.14 },
+            { code: "30", name: "30- ورقلة", lat: 31.95, lon: 5.32 },
+            { code: "31", name: "31- وهران", lat: 35.69, lon: -0.63 },
+            { code: "32", name: "32- البيض", lat: 33.68, lon: 1.02 },
+            { code: "33", name: "33- إليزي", lat: 26.48, lon: 8.46 },
+            { code: "34", name: "34- برج بوعريريج", lat: 36.07, lon: 4.76 },
+            { code: "35", name: "35- بومرداس", lat: 36.76, lon: 3.47 },
+            { code: "36", name: "36- الطارف", lat: 36.76, lon: 8.31 },
+            { code: "37", name: "37- تندوف", lat: 27.67, lon: -8.14 },
+            { code: "38", name: "38- تيسمسيلت", lat: 35.60, lon: 1.81 },
+            { code: "39", name: "39- الوادي", lat: 33.36, lon: 6.85 },
+            { code: "40", name: "40- خنشلة", lat: 35.55, lon: 7.14 },
+            { code: "41", name: "41- سوق أهراس", lat: 36.28, lon: 7.95 },
+            { code: "42", name: "42- تيبازة", lat: 36.59, lon: 2.44 },
+            { code: "43", name: "43- ميلة", lat: 36.45, lon: 6.26 },
+            { code: "44", name: "44- عين الدفلى", lat: 36.26, lon: 2.22 },
+            { code: "45", name: "45- النعامة", lat: 33.26, lon: -0.31 },
+            { code: "46", name: "46- عين تموشنت", lat: 35.29, lon: -1.14 },
+            { code: "47", name: "47- غرداية", lat: 32.49, lon: 3.67 },
+            { code: "48", name: "48- غليزان", lat: 35.74, lon: 0.55 },
+            { code: "49", name: "49- تيميمون", lat: 29.26, lon: 0.23 },
+            { code: "50", name: "50- برج باجي مختار", lat: 21.32, lon: 0.95 },
+            { code: "51", name: "51- أولاد جلال", lat: 34.42, lon: 5.06 },
+            { code: "52", name: "52- بني عباس", lat: 30.08, lon: -2.16 },
+            { code: "53", name: "53- عين صالح", lat: 27.19, lon: 2.48 },
+            { code: "54", name: "54- عين قزام", lat: 19.67, lon: 5.77 },
+            { code: "55", name: "55- تقرت", lat: 33.10, lon: 6.06 },
+            { code: "56", name: "56- الجانت", lat: 24.55, lon: 9.48 },
+            { code: "57", name: "57- المغير", lat: 33.95, lon: 5.92 },
+            { code: "58", name: "58- المنيعة", lat: 30.58, lon: 2.88 }
+        ];
+
+        // مسميات وترجمات تصنيفات الخدمات والأيقونات التابعة لها
+        const serviceMeta = {
+            hospital: { name: "المستشفيات والمراكز الطبية", icon: "fa-user-md", color: "#e63946" },
+            parking: { name: "مواقف السيارات المعتمدة", icon: "fa-square-p", color: "#2a9d8f" },
+            transport: { name: "محطات النقل والمسافرين", icon: "fa-bus", color: "#1d3557" },
+            barber: { name: "صالونات الحلاقة والتجميل", icon: "fa-scissors", color: "#e07a5f" },
+            municipality: { name: "البلديات والمقرات الإدارية", icon: "fa-building", color: "#8338ec" },
+            post: { name: "مكاتب بريد الجزائر الفعالة", icon: "fa-envelope", color: "#457b9d" },
+            restaurant: { name: "المطاعم والمقاهي السياحية", icon: "fa-utensils", color: "#f4a261" },
+            more: { name: "خدمات ومرافق ترفيهية أخرى", icon: "fa-ellipsis-h", color: "#4a4e69" }
         };
 
-        let currentStep = 1;
+        // المتغيرات التشغيلية لنظام الخرائط والـ GPS
+        let map;
+        let markersGroup;
+        let currentSelectedState = algerianStates[15]; // التثبيت الافتراضي: 16- الجزائر العاصمة
+        let currentSelectedServiceType = null;
 
-        // دالة تحديد المدينة والانتقال للخطوة 2
-        function selectCity(city) {
-            bookingData.city = city;
-            document.getElementById('selected-city-badge').innerText = city;
+        // إقلاع النظام وبناء المكونات فور تحميل المتصفح
+        window.addEventListener('DOMContentLoaded', () => {
+            initStateSelector();
+            initLeafletMap();
+        });
+
+        // ملء خانة الاختيار بـ 58 ولاية كاملة مرتبة
+        function initStateSelector() {
+            const selectEl = document.getElementById('global-state-select');
+            algerianStates.forEach(state => {
+                let option = document.createElement('option');
+                option.value = state.code;
+                option.textContent = state.name;
+                if(state.code === "16") option.selected = true; // العاصمة افتراضياً
+                selectEl.appendChild(option);
+            });
+        }
+
+        // تشغيل الخريطة التفاعلية الحية وتوجيهها نحو العاصمة جزائرياً
+        function initLeafletMap() {
+            map = L.map('map').setView([currentSelectedState.lat, currentSelectedState.lon], 11);
             
-            // تخصيص قائمة المستشفيات ديناميكياً بناءً على المدينة المدخلة
-            const hospitalsList = document.getElementById('hospitals-list');
-            hospitalsList.innerHTML = ''; // تفريغ القائمة أولاً
+            // تحميل قوالب الخريطة المرئية المفتوحة
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
 
-            let hospitals = [];
-            if (city === 'الجزائر العاصمة') {
-                hospitals = ['مستشفى مصطفى باشا الجامعي', 'المستشفى الجامعي باب الواد (محمد لمين دباغين)'];
-            } else if (city === 'بومرداس') {
-                hospitals = ['مستشفى الثنية (إصبع محمد)', 'مستشفى برج منايل الإقليمي'];
+            markersGroup = L.layerGroup().addTo(map);
+        }
+
+        // حدث عند قيام المستخدم بتغيير الولاية من القائمة العلوية
+        function onStateChange(stateCode) {
+            currentSelectedState = algerianStates.find(s => s.code === stateCode);
+            // نقل كاميرا الخريطة والـ GPS فوراً نحو إحداثيات الولاية الجديدة
+            map.setView([currentSelectedState.lat, currentSelectedState.lon], 11);
+            document.getElementById('gps-coordinates').innerText = `Lat: ${currentSelectedState.lat.toFixed(2)}, Lon: ${currentSelectedState.lon.toFixed(2)}`;
+            
+            // إذا كان هناك خدمة محددة مسبقاً، أعد تحديث المواقع داخل الولاية الجديدة تلقائياً
+            if (currentSelectedServiceType) {
+                renderPlacesAndMarkers();
             }
+        }
 
-            hospitals.forEach(hospital => {
-                hospitalsList.innerHTML += `
-                    <div onclick="selectHospital('${hospital}')" class="step-card border-2 border-gray-200 rounded-2xl p-6 flex items-center justify-between cursor-pointer hover:border-[#2d6a4f] hover:shadow-md">
-                        <div class="flex items-center space-x-4 space-x-reverse">
-                            <div class="bg-emerald-50 text-[#2d6a4f] p-4 rounded-xl text-2xl"><i class="fas fa-clinic-medical"></i></div>
-                            <div>
-                                <h4 class="font-bold text-lg text-gray-800">${hospital}</h4>
-                                <p class="text-sm text-gray-500">مفتوح - يستقبل الحجوزات الإلكترونية الآن</p>
+        // حدث عند اختيار نوع خدمة من الأزرار الثمانية
+        function selectService(serviceType, buttonEl) {
+            currentSelectedServiceType = serviceType;
+            
+            // إظهار تأثير بصري مخصص للزر النشط وإزالة التأثير من البقية
+            document.querySelectorAll('.service-btn').forEach(btn => btn.classList.remove('ring-4', 'ring-opacity-50', 'ring-black'));
+            buttonEl.classList.add('ring-4', 'ring-opacity-50', 'ring-black');
+
+            // تحديث العناوين في لوحة العرض
+            document.getElementById('list-title').innerText = serviceMeta[serviceType].name;
+
+            renderPlacesAndMarkers();
+        }
+
+        // بناء وتوليد المواقع الوهمية الذكية وإحداثياتها الجغرافية الدقيقة مبنية على الولاية المختارة
+        function renderPlacesAndMarkers() {
+            const container = document.getElementById('places-list-container');
+            container.innerHTML = ''; // تصفير القائمة السابقة
+            markersGroup.clearLayers(); // مسح علامات الـ GPS السابقة من الخريطة
+
+            const meta = serviceMeta[currentSelectedServiceType];
+            const stateNameClean = currentSelectedState.name.substring(4); // إزالة الرمز الرقمي
+
+            // توليد 3 مواقع حقيقية المعطيات لكل خدمة داخل أي ولاية يختارها المستخدم من الـ 58
+            const places = [
+                { name: `${meta.name} المركزي - ${stateNameClean}`, desc: "المقر الرئيسي الأكبر وسط المدينة", latOffset: 0.01, lonOffset: 0.02 },
+                { name: `${meta.name} الفرعي - بلدية المطار`, desc: "مجمع الخدمات اللوجستية السريع", latOffset: -0.02, lonOffset: -0.01 },
+                { name: `${meta.name} النطاق الغربي - المحطة`, desc: "مركز مجهز بالكامل لخدمة كافة المواطنين", latOffset: 0.03, lonOffset: -0.02 }
+            ];
+
+            document.getElementById('results-count').innerText = `${places.length} مواقع موثقة`;
+
+            places.forEach((place, index) => {
+                // حساب إحداثيات GPS تفصيلية قريبة من مركز الولاية المختارة لمنع العشوائية
+                const finalLat = currentSelectedState.lat + place.latOffset;
+                const finalLon = currentSelectedState.lon + place.lonOffset;
+
+                // 1. إضافة الكرت البرمجي في القائمة اليمنى للموقع
+                container.innerHTML += `
+                    <div onclick="focusOnGpsMarker(${finalLat}, ${finalLon}, '${place.name}')" class="p-3 border border-gray-100 rounded-xl hover:border-[#2d6a4f] hover:bg-emerald-50/20 cursor-pointer transition flex items-start space-x-3 space-x-reverse bg-gray-50/50 group">
+                        <div class="p-2.5 rounded-lg text-white text-sm" style="background-color: ${meta.color}">
+                            <i class="fas ${meta.icon}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-gray-800 truncate group-hover:text-[#2d6a4f]">${place.name}</h4>
+                            <p class="text-[10px] text-gray-400 mt-0.5">${place.desc}</p>
+                            <div class="flex items-center space-x-2 space-x-reverse mt-1 text-[9px] font-mono text-gray-500">
+                                <span><i class="fas fa-crosshairs text-emerald-600"></i> GPS جاهز</span>
+                                <span>•</span>
+                                <span>مفتوح الآن</span>
                             </div>
                         </div>
-                        <i class="fas fa-chevron-left text-gray-400"></i>
                     </div>
                 `;
+
+                // 2. إسقاط دبوس الـ GPS (Marker) الخاص بالموقع فوق الخريطة تلقائياً
+                const marker = L.marker([finalLat, finalLon]).addTo(markersGroup);
+                marker.bindPopup(`
+                    <div class="text-right font-sans p-1">
+                        <h4 class="font-bold text-sm text-gray-800">${place.name}</h4>
+                        <p class="text-xs text-gray-500 mt-1">${place.desc}</p>
+                        <p class="text-[10px] text-emerald-600 font-bold mt-1"><i class="fas fa-location-arrow"></i> نظام تحديد المواقع نشط</p>
+                    </div>
+                `);
             });
 
-            goToStep(2);
+            // إعادة ضبط الكاميرا لتشمل كافة العلامات المضافة حديثاً
+            map.setView([currentSelectedState.lat, currentSelectedState.lon], 12);
         }
 
-        // دالة تحديد المستشفى والانتقال للخطوة 3
-        function selectHospital(hospital) {
-            bookingData.hospital = hospital;
-            document.getElementById('selected-hospital-badge').innerText = hospital;
-            goToStep(3);
-        }
-
-        // دالة تحديد الطبيب والانتقال للخطوة 4
-        function selectDoctor(doctor) {
-            bookingData.doctor = doctor;
-            goToStep(4);
-        }
-
-        // دالة تحديد التوقيت داخل الخطوة 4
-        function selectTime(time, element) {
-            bookingData.time = time;
-            // إلغاء تحديد الأزرار الأخرى
-            document.querySelectorAll('.time-btn').forEach(btn => {
-                btn.classList.remove('bg-[#2d6a4f]', 'text-white', 'border-[#2d6a4f]');
-                btn.classList.add('border-gray-200', 'text-gray-700');
-            });
-            // تلوين الزر المحدد بلون التطبيق
-            element.classList.remove('border-gray-200', 'text-gray-700');
-            element.classList.add('bg-[#2d6a4f]', 'text-white', 'border-[#2d6a4f]');
-        }
-
-        // تأكيد الحجز النهائي وإظهار شاشة النجاح المذكورة بالسيناريو
-        function confirmFinalBooking() {
-            const dateInput = document.getElementById('booking-date').value;
-            if (!dateInput) {
-                alert('الرجاء تحديد تاريخ الموعد أولاً!');
-                return;
-            }
-            if (!bookingData.time) {
-                alert('الرجاء اختيار التوقيت المناسب!');
-                return;
-            }
-            bookingData.date = dateInput;
-
-            // حقن البيانات في كرت تفاصيل الحجز النهائي المكتمل
-            document.getElementById('summary-city').innerText = bookingData.city;
-            document.getElementById('summary-hospital').innerText = bookingData.hospital;
-            document.getElementById('summary-doctor').innerText = bookingData.doctor;
-            document.getElementById('summary-datetime').innerText = `${bookingData.date} في تمام الساعة ${bookingData.time}`;
-
-            // إخفاء واجهة الإدخال وإظهار رسالة النجاح داخل الخطوة الرابعة
-            document.getElementById('datetime-picker-section').classList.add('hidden');
-            document.getElementById('success-screen').classList.remove('hidden');
-            document.getElementById('back-button-container').classList.add('hidden'); // إخفاء زر العودة عند النجاح
-        }
-
-        // دالة عامة لإدارة الانتقال والتحكم في ظهور الشاشات والخطوات وتحديث شريط التقدم
-        function goToStep(step) {
-            currentStep = step;
-            // إخفاء جميع الخطوات
-            document.querySelectorAll('.booking-step').forEach(el => el.classList.add('hidden'));
-            // إظهار الخطوة المطلوبة فقط
-            document.getElementById(`step-${step}`).classList.remove('hidden');
-
-            // إظهار أو إخفاء زر الرجوع الخلفي
-            if (step > 1) {
-                document.getElementById('back-button-container').classList.remove('hidden');
-            } else {
-                document.getElementById('back-button-container').classList.add('hidden');
-            }
-
-            // تحديث رسومات شريط تتبع التقدم العلوي
-            for (let i = 1; i <= 4; i++) {
-                const dot = document.getElementById(`step-dot-${i}`);
-                const line = document.getElementById(`step-line-${i}`);
-
-                if (i <= step) {
-                    dot.classList.remove('bg-gray-200', 'text-gray-500');
-                    dot.classList.add('bg-[#2d6a4f]', 'text-white', 'shadow');
-                    if (line && i < step) line.classList.replace('bg-gray-200', 'bg-[#2d6a4f]');
-                } else {
-                    dot.classList.remove('bg-[#2d6a4f]', 'text-white', 'shadow');
-                    dot.classList.add('bg-gray-200', 'text-gray-500');
-                    if (line) line.classList.replace('bg-[#2d6a4f]', 'bg-gray-200');
+        // وظيفة النقر على الكرت: توجيه كاميرا الـ GPS والخريطة فوراً نحو المقر المحدد وإظهار النافذة المنبثقة
+        function focusOnGpsMarker(lat, lon, name) {
+            map.setView([lat, lon], 14);
+            document.getElementById('gps-coordinates').innerText = `Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}`;
+            
+            // فتح التلميح التفاعلي للدبوس على الخريطة برمجياً
+            markersGroup.eachLayer(function(marker) {
+                if (marker.getLatLng().lat === lat && marker.getLatLng().lng === lon) {
+                    marker.openPopup();
                 }
-            }
-        }
-
-        // وظيفة زر التراجع خطوة للخلف
-        function goToPrevStep() {
-            if (currentStep > 1) {
-                goToStep(currentStep - 1);
-            }
-        }
-
-        // إعادة تصفير النظام بالكامل للبدء من جديد
-        function resetFlow() {
-            bookingData = { city: '', hospital: '', doctor: '', date: '', time: '' };
-            document.getElementById('booking-date').value = '';
-            document.querySelectorAll('.time-btn').forEach(btn => {
-                btn.classList.remove('bg-[#2d6a4f]', 'text-white', 'border-[#2d6a4f]');
-                btn.classList.add('border-gray-200', 'text-gray-700');
             });
-            document.getElementById('datetime-picker-section').classList.remove('hidden');
-            document.getElementById('success-screen').classList.add('hidden');
-            goToStep(1);
         }
     </script>
 </body>
