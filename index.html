@@ -39,13 +39,7 @@
             70% { box-shadow: 0 0 0 14px rgba(29,78,216,0); }
             100% { box-shadow: 0 0 0 0 rgba(29,78,216,0); }
         }
-        /* تذكرة */
-        .ticket-hole {
-            width: 20px; height: 20px; border-radius: 50%;
-            background: #f4f6f9; border: 2px dashed #e5e7eb;
-        }
         .ticket-dots { border-top: 2px dashed #e5e7eb; }
-        /* Badge رقم الدور */
         .turn-badge {
             background: linear-gradient(135deg, #102a6b, #1d4ed8);
             color: white; border-radius: 50%;
@@ -56,26 +50,121 @@
             box-shadow: 0 4px 15px rgba(16,42,107,0.4);
             animation: pulseMarker 2s infinite;
         }
-        /* Service card hover */
         .service-card { transition: transform 0.15s, box-shadow 0.15s; }
         .service-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        /* Step fade */
         .flow-step-view { animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-
-        /* Progress line */
         .step-line { height: 3px; flex:1; border-radius:4px; transition: background 0.4s; }
-
-        /* Input focus */
-        input:focus, select:focus { outline: none; border-color: #102a6b !important; box-shadow: 0 0 0 3px rgba(16,42,107,0.1); }
-
-        /* Appointment slot */
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #102a6b !important; box-shadow: 0 0 0 3px rgba(16,42,107,0.1); }
         .slot-btn { transition: all 0.15s; }
         .slot-btn.selected { background: #102a6b !important; color: white !important; border-color: #102a6b !important; }
         .slot-btn:hover:not(.selected) { border-color: #102a6b; color: #102a6b; }
 
+        /* ===== أزرار التنقل السفلية ===== */
+        .nav-btns-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+            justify-content: space-between;
+        }
+        .btn-prev {
+            flex: 1;
+            background: #f1f5f9;
+            color: #102a6b;
+            border: 2px solid #cbd5e1;
+            font-weight: 900;
+            padding: 12px 0;
+            border-radius: 14px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-prev:hover { background: #e2e8f0; border-color: #102a6b; }
+        .btn-next {
+            flex: 2;
+            background: #102a6b;
+            color: white;
+            font-weight: 900;
+            padding: 12px 0;
+            border-radius: 14px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+            box-shadow: 0 4px 12px rgba(16,42,107,0.25);
+        }
+        .btn-next:hover { background: #1d4ed8; }
+        .btn-next.orange { background: #f57c00; box-shadow: 0 4px 12px rgba(245,124,0,0.3); }
+        .btn-next.orange:hover { background: #e06900; }
+
+        /* بطاقة الخدمة المختارة في الخطوة 3 */
+        .booking-summary-card {
+            background: linear-gradient(135deg, #102a6b 0%, #1d4ed8 100%);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 8px;
+        }
+        .booking-field {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+        }
+        .booking-field label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.65);
+            display: block;
+            margin-bottom: 2px;
+        }
+        .booking-field .field-value {
+            font-size: 13px;
+            font-weight: 900;
+            color: white;
+        }
+        .booking-field input, .booking-field select {
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            width: 100%;
+        }
+        .booking-field input::placeholder { color: rgba(255,255,255,0.4); }
+        .booking-field select option { background: #102a6b; color: white; }
+        .booking-field input:focus, .booking-field select:focus {
+            outline: none;
+            border-color: transparent !important;
+            box-shadow: none !important;
+        }
+
+        /* GPS indicator in step 3 */
+        .gps-box {
+            background: rgba(16,185,129,0.15);
+            border: 1px solid rgba(16,185,129,0.4);
+            border-radius: 10px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #d1fae5;
+            margin-bottom: 8px;
+        }
+
         @media print {
-            header, footer, #back-flow-btn, .no-print { display: none !important; }
+            header, footer, .nav-btns-bar, .no-print { display: none !important; }
             .print-ticket { box-shadow: none !important; }
         }
     </style>
@@ -114,33 +203,31 @@
     </header>
 
     <main class="max-w-6xl w-full mx-auto px-3 py-5 flex-1 flex flex-col justify-center items-center">
-        <div class="w-full bg-white rounded-3xl p-5 shadow-sm border border-gray-100 min-h-[550px] flex flex-col justify-between relative">
-
-            <button id="back-flow-btn" onclick="triggerPrevStep()" class="absolute top-5 left-5 text-xs font-bold text-gray-400 hover:text-blue-900 hidden items-center space-x-1 space-x-reverse transition z-20">
-                <i class="fas fa-arrow-right"></i> <span>رجوع</span>
-            </button>
+        <div class="w-full bg-white rounded-3xl p-5 shadow-sm border border-gray-100 min-h-[550px] flex flex-col relative">
 
             <!-- =========================================
-                 الخطوة 1: البطاقة البيومترية (بدون تغيير)
+                 الخطوة 1: البطاقة البيومترية
             ========================================= -->
-            <div id="step-view-1" class="flow-step-view space-y-4 max-w-md mx-auto w-full text-center py-6">
+            <div id="step-view-1" class="flow-step-view space-y-4 max-w-md mx-auto w-full text-center py-6 flex-1 flex flex-col justify-center">
                 <div class="w-16 h-16 bg-blue-50 text-blue-900 rounded-2xl flex items-center justify-center text-2xl mx-auto border border-blue-100"><i class="fas fa-id-card"></i></div>
                 <h2 class="text-xl font-black text-gray-800">التعرف البيومتري الذكي</h2>
                 <p class="text-xs text-gray-400">أدخل اسمك الكامل ليتم التحقق منك وتحديد موقعك الجغرافي تلقائياً</p>
                 <input type="text" id="user-card-name" placeholder="الاسم الكامل..." class="w-full border border-gray-200 rounded-xl p-3.5 text-sm font-bold text-center text-gray-700 shadow-sm">
-
                 <div id="gps-status-box" class="bg-blue-50 border border-blue-100 rounded-xl p-3 text-xs font-bold text-blue-900 flex items-center justify-center gap-2">
                     <span class="gps-active-dot"></span>
                     <span id="gps-status-text">جاري تحديد موقعك الجغرافي عبر GPS...</span>
                 </div>
-
-                <button onclick="submitLoginStep()" class="w-full text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm" style="background-color:#102a6b;">
-                    تحقق من البطاقة والموقع الجغرافي <i class="fas fa-location-arrow mr-1"></i>
-                </button>
+                <!-- أزرار التنقل -->
+                <div class="nav-btns-bar">
+                    <button class="btn-next" onclick="submitLoginStep()">
+                        <i class="fas fa-location-arrow"></i> تحقق والمتابعة
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- =========================================
-                 الخطوة 2: اختيار الولاية + بيانات إضافية
+                 الخطوة 2: اختيار الولاية + بيانات
             ========================================= -->
             <div id="step-view-2" class="flow-step-view hidden space-y-4 max-w-lg mx-auto w-full py-4">
                 <div class="text-center space-y-1">
@@ -148,8 +235,6 @@
                     <h2 class="text-xl font-black text-gray-800">تسجيل بيانات المستخدم والولاية</h2>
                     <p class="text-xs text-gray-400">أكمل بياناتك الشخصية واختر ولايتك من بين الـ 58 ولاية الجزائرية</p>
                 </div>
-
-                <!-- بيانات شخصية إضافية -->
                 <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 space-y-3">
                     <p class="text-xs font-black text-blue-900 flex items-center gap-2"><i class="fas fa-user-circle"></i> البيانات الشخصية</p>
                     <div class="grid grid-cols-2 gap-2">
@@ -181,26 +266,30 @@
                         <input type="text" id="user-national-id" placeholder="رقم البطاقة الوطنية..." class="w-full border border-gray-200 rounded-lg p-2.5 text-xs font-bold bg-white" dir="ltr">
                     </div>
                 </div>
-
-                <!-- اختيار الولاية -->
                 <div class="space-y-2">
                     <p class="text-xs font-black text-gray-700 flex items-center gap-2"><i class="fas fa-map-marker-alt text-orange-500"></i> اختر ولايتك</p>
                     <input type="text" id="state-search-input" oninput="filterStates()" placeholder="🔍 ابحث عن ولايتك..." class="w-full border border-gray-200 rounded-xl p-3 text-sm font-bold text-center shadow-sm">
                     <div id="states-grid" class="grid grid-cols-1 gap-2 max-h-[220px] overflow-y-auto custom-scrollbar pr-1"></div>
                 </div>
-
-                <button onclick="submitStateStep()" class="w-full text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm" style="background-color:#102a6b;">
-                    تأكيد البيانات والانتقال لاختيار الخدمة <i class="fas fa-arrow-left mr-1"></i>
-                </button>
+                <!-- أزرار التنقل -->
+                <div class="nav-btns-bar">
+                    <button class="btn-prev" onclick="switchFlowToStep(1)">
+                        <i class="fas fa-arrow-right"></i> رجوع
+                    </button>
+                    <button class="btn-next" onclick="submitStateStep()">
+                        <i class="fas fa-check"></i> تأكيد والمتابعة
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- =========================================
-                 الخطوة 3: اختيار نوع الخدمة + تحديد الموعد
+                 الخطوة 3: اختيار نوع الخدمة + نموذج الحجز
             ========================================= -->
             <div id="step-view-3" class="flow-step-view hidden space-y-4 py-4">
                 <div class="text-center space-y-1">
                     <h2 class="text-xl font-black text-gray-800">اختر القطاع ونوع الخدمة المطلوبة</h2>
-                    <p class="text-xs text-gray-400">حدد المجال ثم نوع الخدمة وتاريخ الموعد المرغوب</p>
+                    <p class="text-xs text-gray-400">حدد القطاع ثم أكمل بيانات الحجز</p>
                 </div>
 
                 <!-- بطاقات الخدمات -->
@@ -231,48 +320,90 @@
                     </button>
                 </div>
 
-                <!-- تفاصيل الخدمة + موعد (يظهر بعد الاختيار) -->
-                <div id="service-details-panel" class="hidden max-w-4xl mx-auto w-full space-y-3">
-                    <div class="bg-blue-900 text-white rounded-2xl p-4 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <p class="text-xs font-black text-orange-400"><i class="fas fa-concierge-bell ml-1"></i> تفاصيل الخدمة المختارة</p>
-                            <span id="selected-service-badge" class="bg-white text-blue-900 text-[10px] font-black px-2 py-0.5 rounded-full"></span>
+                <!-- ===== نموذج الحجز (يظهر بعد اختيار الخدمة) ===== -->
+                <div id="service-details-panel" class="hidden max-w-4xl mx-auto w-full">
+                    
+                    <!-- بطاقة الحجز الزرقاء (كما في الصورة) -->
+                    <div class="booking-summary-card">
+                        
+                        <!-- رأس البطاقة: اسم الخدمة -->
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-xs font-black text-orange-300 flex items-center gap-2">
+                                <i class="fas fa-concierge-bell"></i> نموذج الحجز الفوري
+                            </p>
+                            <span id="selected-service-badge" class="bg-orange-400 text-white text-[10px] font-black px-3 py-1 rounded-full"></span>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div>
-                                <label class="text-[10px] text-blue-200 block mb-1">نوع الخدمة المحددة</label>
-                                <select id="service-subtype" class="w-full bg-blue-800 text-white border border-blue-700 rounded-lg p-2 text-xs font-bold">
-                                    <option value="">-- اختر نوع الخدمة --</option>
-                                </select>
+                        <!-- صف 1: اسم المستخدم + الولاية (معلومات محفوظة من الخطوة السابقة) -->
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <div class="booking-field">
+                                <label><i class="fas fa-user ml-1"></i> اسم المستخدم</label>
+                                <div class="field-value" id="svc-display-name">--</div>
                             </div>
-                            <div>
-                                <label class="text-[10px] text-blue-200 block mb-1">تاريخ الموعد المطلوب</label>
-                                <input type="date" id="appointment-date" class="w-full bg-blue-800 text-white border border-blue-700 rounded-lg p-2 text-xs font-bold" dir="ltr">
+                            <div class="booking-field">
+                                <label><i class="fas fa-map-marker-alt ml-1"></i> الولاية</label>
+                                <div class="field-value" id="svc-display-state">--</div>
                             </div>
+                        </div>
+
+                        <!-- صف 2: نوع الخدمة الفرعية -->
+                        <div class="booking-field mb-2">
+                            <label><i class="fas fa-list ml-1"></i> نوع الخدمة المطلوبة</label>
+                            <select id="service-subtype" style="background:transparent;border:none;color:white;font-family:'Cairo',sans-serif;font-weight:700;font-size:12px;width:100%;">
+                                <option value="" style="background:#102a6b;">-- اختر نوع الخدمة --</option>
+                            </select>
+                        </div>
+
+                        <!-- صف 3: تاريخ الموعد -->
+                        <div class="booking-field mb-2">
+                            <label><i class="fas fa-calendar ml-1"></i> تاريخ الموعد المطلوب</label>
+                            <input type="date" id="appointment-date" style="background:transparent;border:none;color:white;font-family:'Cairo',sans-serif;font-weight:700;font-size:12px;width:100%;" dir="ltr">
+                        </div>
+
+                        <!-- GPS / MPS indicator -->
+                        <div class="gps-box">
+                            <span class="gps-active-dot"></span>
+                            <span id="svc-gps-text">📍 GPS نشط • يتم تحديد موقعك للتوجيه التلقائي</span>
+                            <span id="svc-gps-coords" class="text-[9px] opacity-60 mr-auto" dir="ltr"></span>
                         </div>
 
                         <!-- أوقات الحجز المتاحة -->
-                        <div>
-                            <label class="text-[10px] text-blue-200 block mb-2">اختر وقت الموعد المتاح</label>
+                        <div class="mb-2">
+                            <label class="text-[10px] text-blue-200 block mb-2">
+                                <i class="fas fa-clock ml-1"></i> اختر وقت الموعد المتاح
+                            </label>
                             <div id="time-slots-grid" class="grid grid-cols-4 gap-1.5"></div>
                         </div>
 
                         <!-- ملاحظات -->
-                        <div>
-                            <label class="text-[10px] text-blue-200 block mb-1">ملاحظات إضافية (اختياري)</label>
-                            <textarea id="booking-notes" rows="2" placeholder="أي معلومات إضافية تريد إضافتها..." class="w-full bg-blue-800 text-white border border-blue-700 rounded-lg p-2 text-xs font-bold resize-none"></textarea>
+                        <div class="booking-field">
+                            <label><i class="fas fa-sticky-note ml-1"></i> ملاحظات إضافية (اختياري)</label>
+                            <textarea id="booking-notes" rows="2" placeholder="أي معلومات إضافية..." style="background:transparent;border:none;color:white;font-family:'Cairo',sans-serif;font-weight:700;font-size:11px;width:100%;resize:none;"></textarea>
                         </div>
                     </div>
 
-                    <button onclick="submitServiceStep()" class="w-full text-white font-bold py-3 rounded-xl shadow text-sm flex items-center justify-center gap-2" style="background-color:#f57c00;">
-                        <i class="fas fa-map-marked-alt"></i> تأكيد الخدمة والانتقال للحجز الفوري
+                    <!-- أزرار التنقل -->
+                    <div class="nav-btns-bar">
+                        <button class="btn-prev" onclick="switchFlowToStep(2)">
+                            <i class="fas fa-arrow-right"></i> رجوع
+                        </button>
+                        <button class="btn-next orange" onclick="submitServiceStep()">
+                            <i class="fas fa-map-marked-alt"></i> تأكيد الحجز والمتابعة
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- أزرار تنقل قبل اختيار الخدمة -->
+                <div id="step3-nav-before" class="nav-btns-bar max-w-4xl mx-auto w-full">
+                    <button class="btn-prev" onclick="switchFlowToStep(2)">
+                        <i class="fas fa-arrow-right"></i> رجوع للولاية
                     </button>
                 </div>
             </div>
 
             <!-- =========================================
-                 الخطوة 4: الحجز الفوري (كانت الملاحة)
+                 الخطوة 4: الحجز الفوري + الخريطة
             ========================================= -->
             <div id="step-view-4" class="flow-step-view hidden grid grid-cols-1 lg:grid-cols-12 gap-5 py-2">
                 <!-- لوحة التحكم -->
@@ -287,7 +418,6 @@
                                 </h3>
                                 <span id="distance-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-white text-blue-900">جاري الحساب...</span>
                             </div>
-
                             <div>
                                 <div class="flex justify-between text-[9px] text-blue-200 mb-1">
                                     <span>بعيد جداً</span><span>قريب جداً</span>
@@ -296,7 +426,6 @@
                                     <div id="proximity-bar" class="proximity-bar-inner h-3 rounded-full bg-red-500" style="width:0%"></div>
                                 </div>
                             </div>
-
                             <div class="grid grid-cols-3 gap-2 pt-2 border-t border-blue-800 text-center">
                                 <div>
                                     <span class="text-[9px] text-blue-200 block">المسافة</span>
@@ -311,7 +440,6 @@
                                     <span id="lbl-remaining" class="text-sm font-black">--</span>
                                 </div>
                             </div>
-
                             <div id="proximity-indicator" class="text-center py-1 rounded-xl text-xs font-black hidden">
                                 <i class="fas fa-bell mr-1"></i> <span id="proximity-text"></span>
                             </div>
@@ -349,7 +477,7 @@
                                         <i class="fas fa-circle text-white text-[7px]"></i>
                                     </div>
                                     <input type="text" id="travel-from" placeholder="من: نقطة الانطلاق..." class="flex-1 border border-gray-200 rounded-lg p-2 text-xs font-bold bg-white">
-                                    <button onclick="useMyLocationAsFrom()" title="استخدم موقعي" class="w-7 h-7 rounded-lg bg-blue-900 text-white flex items-center justify-center flex-shrink-0 hover:bg-blue-800 transition">
+                                    <button onclick="useMyLocationAsFrom()" class="w-7 h-7 rounded-lg bg-blue-900 text-white flex items-center justify-center flex-shrink-0 hover:bg-blue-800 transition">
                                         <i class="fas fa-location-arrow text-[10px]"></i>
                                     </button>
                                 </div>
@@ -358,7 +486,7 @@
                                         <i class="fas fa-map-marker-alt text-white text-[9px]"></i>
                                     </div>
                                     <input type="text" id="travel-to" placeholder="إلى: الوجهة المقصودة..." class="flex-1 border border-gray-200 rounded-lg p-2 text-xs font-bold bg-white">
-                                    <button onclick="useSelectedPlaceAsTo()" title="استخدم المنشأة المختارة" class="w-7 h-7 rounded-lg bg-orange-500 text-white flex items-center justify-center flex-shrink-0 hover:bg-orange-600 transition">
+                                    <button onclick="useSelectedPlaceAsTo()" class="w-7 h-7 rounded-lg bg-orange-500 text-white flex items-center justify-center flex-shrink-0 hover:bg-orange-600 transition">
                                         <i class="fas fa-building text-[10px]"></i>
                                     </button>
                                 </div>
@@ -376,9 +504,7 @@
 
                         <!-- تتبع الحافلة -->
                         <div class="bg-orange-50 p-3 rounded-xl border border-orange-200 space-y-2">
-                            <p class="text-[11px] font-bold text-orange-800">
-                                <i class="fas fa-bus-alt ml-1"></i> نظام تتبع الحافلة الحي
-                            </p>
+                            <p class="text-[11px] font-bold text-orange-800"><i class="fas fa-bus-alt ml-1"></i> نظام تتبع الحافلة الحي</p>
                             <button id="simulate-nav-btn" onclick="startBusSimulation()" class="w-full bg-orange-500 text-white text-xs font-bold py-2.5 rounded-lg shadow hover:bg-orange-600 transition flex items-center justify-center gap-2">
                                 <i class="fas fa-play"></i> <span>ابدأ ركوب الحافلة (تتبع مساري الآن)</span>
                             </button>
@@ -397,9 +523,16 @@
                         </div>
                     </div>
 
-                    <button onclick="executeFinalFlow()" class="w-full text-white font-bold py-3 rounded-xl shadow text-xs flex items-center justify-center gap-2" style="background-color:#102a6b;">
-                        <i class="fas fa-calendar-check"></i> <span>تأكيد الحجز الفوري وإصدار التذكرة</span>
-                    </button>
+                    <!-- أزرار التنقل -->
+                    <div class="nav-btns-bar">
+                        <button class="btn-prev" onclick="goBackFromStep4()">
+                            <i class="fas fa-arrow-right"></i> رجوع
+                        </button>
+                        <button class="btn-next" onclick="executeFinalFlow()">
+                            <i class="fas fa-calendar-check"></i> تأكيد وإصدار التذكرة
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- الخريطة التفاعلية -->
@@ -407,19 +540,16 @@
                     <div id="map" style="height:100%;min-height:370px;border-radius:1.2rem;"></div>
                     <div class="absolute bottom-4 left-4 bg-white rounded-xl shadow-md px-3 py-2 text-xs font-bold z-20 border border-gray-100 flex items-center gap-2">
                         <div class="user-pulse-marker"></div>
-                        <span id="my-location-label" class="text-blue-900">موقعك الحالي</span>
+                        <span class="text-blue-900">موقعك الحالي</span>
                     </div>
                 </div>
             </div>
 
             <!-- =========================================
-                 الخطوة 5: تذكرة الحجز الفوري (موسعة)
+                 الخطوة 5: تذكرة الحجز الفوري
             ========================================= -->
             <div id="step-view-5" class="flow-step-view hidden max-w-md mx-auto w-full py-4 text-center space-y-4">
-
-                <!-- التذكرة -->
                 <div class="bg-white border-2 border-dashed border-gray-200 rounded-3xl shadow-lg overflow-hidden print-ticket">
-                    <!-- رأس التذكرة -->
                     <div class="bg-gradient-to-l from-blue-900 to-blue-800 text-white px-5 py-4">
                         <div class="flex justify-between items-center">
                             <div class="text-right">
@@ -432,8 +562,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- الحالة + رقم الدور -->
                     <div class="flex items-center justify-between px-5 py-3 bg-emerald-50 border-b border-emerald-100">
                         <span class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-bold border border-emerald-200 flex items-center gap-1">
                             <i class="fas fa-check-circle"></i> تم تأكيد الحجز الفوري
@@ -443,16 +571,12 @@
                             <span class="text-xl font-black leading-none" id="ticket-turn-number">--</span>
                         </div>
                     </div>
-
-                    <!-- بيانات الحجز الرئيسية -->
                     <div class="px-5 py-4 space-y-3">
                         <div class="text-right border-b border-gray-100 pb-3">
                             <h3 class="text-base font-black text-blue-900" id="ticket-place-name">اسم المنشأة</h3>
                             <p class="text-[11px] text-gray-500 mt-0.5" id="ticket-user-owner">صاحب الحجز: ---</p>
                             <p class="text-[10px] text-gray-400 mt-0.5" id="ticket-user-phone-lbl">الهاتف: ---</p>
                         </div>
-
-                        <!-- شبكة البيانات -->
                         <div class="grid grid-cols-2 gap-2 text-right text-xs">
                             <div class="bg-gray-50 rounded-xl p-2.5 border border-gray-100">
                                 <span class="text-[10px] text-gray-400 block"><i class="fas fa-map-marker-alt text-orange-400 ml-1"></i>الولاية</span>
@@ -479,29 +603,19 @@
                                 <span class="font-bold text-gray-700 text-[11px]" id="ticket-time-lbl">--</span>
                             </div>
                         </div>
-
-                        <!-- نوع الخدمة المحددة -->
                         <div class="bg-blue-50 rounded-xl p-2.5 border border-blue-100 text-right">
                             <span class="text-[10px] text-blue-400 block mb-0.5">نوع الخدمة المحددة</span>
                             <span class="font-bold text-blue-900 text-xs" id="ticket-subtype-lbl">--</span>
                         </div>
-
-                        <!-- ملاحظات -->
                         <div id="ticket-notes-wrap" class="hidden bg-yellow-50 rounded-xl p-2.5 border border-yellow-100 text-right">
                             <span class="text-[10px] text-yellow-600 block mb-0.5"><i class="fas fa-sticky-note ml-1"></i>ملاحظات</span>
                             <span class="font-bold text-gray-700 text-[11px]" id="ticket-notes-lbl">--</span>
                         </div>
-
-                        <!-- فاصل QR -->
                         <div class="ticket-dots w-full my-1"></div>
-
-                        <!-- QR Code -->
                         <div class="flex flex-col items-center justify-center py-2 space-y-2">
                             <div id="qrcode-container" class="p-2 border border-gray-200 rounded-xl bg-white shadow-sm"></div>
                             <span class="text-[9px] text-gray-400 font-bold">امسح الرمز عند الوصول لتسجيل حضورك</span>
                         </div>
-
-                        <!-- تذييل التذكرة -->
                         <div class="bg-gray-50 rounded-xl p-2 text-center border border-gray-100">
                             <p class="text-[9px] text-gray-400">تاريخ الإصدار: <span id="ticket-issue-date" class="font-bold text-gray-600"></span></p>
                             <p class="text-[9px] text-gray-400 mt-0.5">هذه التذكرة صالحة للاستخدام مرة واحدة فقط</p>
@@ -510,12 +624,12 @@
                 </div>
 
                 <!-- أزرار الإجراءات -->
-                <div class="grid grid-cols-2 gap-2 no-print">
-                    <button onclick="printTicket()" class="text-blue-900 font-bold py-2.5 rounded-xl text-xs border-2 border-blue-900 hover:bg-blue-50 transition flex items-center justify-center gap-1">
-                        <i class="fas fa-print"></i> طباعة التذكرة
+                <div class="nav-btns-bar no-print">
+                    <button onclick="printTicket()" class="btn-prev" style="border-color:#102a6b;color:#102a6b;">
+                        <i class="fas fa-print"></i> طباعة
                     </button>
-                    <button onclick="resetFlowToDefault()" class="text-white font-bold py-2.5 rounded-xl shadow text-xs flex items-center justify-center gap-1" style="background-color:#f57c00;">
-                        <i class="fas fa-redo"></i> حجز مسار آخر
+                    <button onclick="resetFlowToDefault()" class="btn-next orange">
+                        <i class="fas fa-redo"></i> حجز جديد
                     </button>
                 </div>
             </div>
@@ -603,7 +717,6 @@
         more:         "مرافق أخرى"
     };
 
-    // أنواع الخدمات الفرعية لكل قطاع
     const serviceSubtypes = {
         transport:    ["حجز تذكرة حافلة", "استفسار عن مواعيد", "شكوى أو اقتراح", "بطاقة النقل الذكية"],
         parking:      ["حجز مكان موقف", "تجديد الاشتراك", "الاعتراض على مخالفة", "معلومات الأسعار"],
@@ -615,7 +728,6 @@
         more:         ["خدمة أخرى 1", "خدمة أخرى 2", "خدمة أخرى 3"]
     };
 
-    // أوقات المواعيد المتاحة
     const timeSlots = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "14:00", "14:30", "15:00", "15:30"];
 
     // =====================================================
@@ -632,12 +744,10 @@
         state: algerianStates[15],
         serviceType: '', serviceSubtype: '',
         appointmentDate: '', appointmentTime: '',
-        bookingNotes: '',
-        selectedPlaceName: '',
+        bookingNotes: '', selectedPlaceName: '',
         userLat: 36.752, userLon: 3.048,
         targetLat: null, targetLon: null,
-        totalDistance: 0, durationMinutes: 0,
-        turnNumber: 0
+        totalDistance: 0, durationMinutes: 0, turnNumber: 0
     };
 
     let mapInstance = null, mapMarkersLayer = null, routePolyline = null;
@@ -650,7 +760,6 @@
     window.addEventListener('DOMContentLoaded', () => {
         renderStatesGrid();
         initGPS();
-        // تعيين تاريخ اليوم كحد أدنى
         const today = new Date().toISOString().split('T')[0];
         const dateInput = document.getElementById('appointment-date');
         if (dateInput) { dateInput.min = today; dateInput.value = today; }
@@ -711,8 +820,10 @@
             pos => {
                 sessionData.userLat = pos.coords.latitude;
                 sessionData.userLon = pos.coords.longitude;
-                document.getElementById('gps-status-text').innerText = `✅ تم تحديد موقعك: ${pos.coords.latitude.toFixed(4)}°N, ${pos.coords.longitude.toFixed(4)}°E (دقة: ${Math.round(pos.coords.accuracy)}م)`;
+                document.getElementById('gps-status-text').innerText = `✅ تم تحديد موقعك: ${pos.coords.latitude.toFixed(4)}°N, ${pos.coords.longitude.toFixed(4)}°E`;
                 document.getElementById('gps-status-box').className = 'bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs font-bold text-emerald-800 flex items-center justify-center gap-2';
+                const coordsEl = document.getElementById('svc-gps-coords');
+                if (coordsEl) coordsEl.innerText = `${pos.coords.latitude.toFixed(4)}°N ${pos.coords.longitude.toFixed(4)}°E`;
             },
             err => {
                 document.getElementById('gps-status-text').innerText = `⚠️ تعذر الوصول للـ GPS. سيتم استخدام إحداثيات الولاية.`;
@@ -742,7 +853,7 @@
     }
 
     // =====================================================
-    // الخطوة 1: تسجيل الدخول
+    // الخطوة 1
     // =====================================================
     function submitLoginStep() {
         const name = document.getElementById('user-card-name').value.trim();
@@ -753,7 +864,6 @@
             return;
         }
         sessionData.username = name;
-        // تعبئة حقل الاسم في الخطوة 2 تلقائياً
         const parts = name.split(' ');
         document.getElementById('user-firstname').value = parts[0] || '';
         document.getElementById('user-lastname').value = parts.slice(1).join(' ') || '';
@@ -761,7 +871,7 @@
     }
 
     // =====================================================
-    // الخطوة 2: تأكيد الولاية والبيانات
+    // الخطوة 2
     // =====================================================
     function submitStateStep() {
         const phone = document.getElementById('user-phone').value.trim();
@@ -791,7 +901,7 @@
     // =====================================================
     function selectService(key) {
         selectedServiceKey = key;
-        // إعادة تلوين كل الأزرار
+
         document.querySelectorAll('.svc-btn').forEach(btn => {
             btn.style.opacity = '0.5';
             btn.style.transform = 'scale(0.96)';
@@ -799,16 +909,27 @@
         const activeBtn = document.getElementById(`svc-${key}`);
         if (activeBtn) { activeBtn.style.opacity = '1'; activeBtn.style.transform = 'scale(1.04)'; }
 
-        // إظهار لوحة التفاصيل
+        // إظهار لوحة الحجز
         document.getElementById('service-details-panel').classList.remove('hidden');
+        document.getElementById('step3-nav-before').classList.add('hidden');
         document.getElementById('selected-service-badge').innerText = servicesDictionary[key];
+
+        // عرض اسم المستخدم والولاية في البطاقة
+        const fullName = `${sessionData.firstname} ${sessionData.lastname}`.trim() || sessionData.username;
+        document.getElementById('svc-display-name').innerText = fullName || '--';
+        document.getElementById('svc-display-state').innerText = sessionData.state.name.replace(/^\d+ - /, '') || '--';
+
+        // GPS coords
+        const coordsEl = document.getElementById('svc-gps-coords');
+        if (coordsEl) coordsEl.innerText = `${sessionData.userLat.toFixed(4)}°N ${sessionData.userLon.toFixed(4)}°E`;
 
         // تعبئة الخدمات الفرعية
         const subSelect = document.getElementById('service-subtype');
-        subSelect.innerHTML = '<option value="">-- اختر نوع الخدمة --</option>';
+        subSelect.innerHTML = '<option value="" style="background:#102a6b;">-- اختر نوع الخدمة --</option>';
         (serviceSubtypes[key] || []).forEach(sub => {
             const opt = document.createElement('option');
             opt.value = sub; opt.text = sub;
+            opt.style.background = '#102a6b';
             subSelect.appendChild(opt);
         });
 
@@ -822,11 +943,14 @@
         selectedTimeSlot = null;
         timeSlots.forEach(slot => {
             const btn = document.createElement('button');
-            btn.className = 'slot-btn border-2 border-gray-200 rounded-lg py-1.5 text-[10px] font-bold text-gray-600 hover:border-blue-900 transition bg-white';
+            btn.className = 'slot-btn rounded-lg py-1.5 text-[10px] font-bold transition';
+            btn.style.cssText = 'background:rgba(255,255,255,0.12);color:white;border:1px solid rgba(255,255,255,0.25);';
             btn.innerText = slot;
             btn.onclick = () => {
-                document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
+                document.querySelectorAll('.slot-btn').forEach(b => {
+                    b.style.cssText = 'background:rgba(255,255,255,0.12);color:white;border:1px solid rgba(255,255,255,0.25);';
+                });
+                btn.style.cssText = 'background:#f57c00;color:white;border:1px solid #f57c00;font-weight:900;';
                 selectedTimeSlot = slot;
             };
             grid.appendChild(btn);
@@ -851,13 +975,13 @@
         if (!mapInstance) {
             mapInstance = L.map('map');
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© FAWRI | الحجز الفوري', maxZoom: 18
+                attribution: '© FAWRI', maxZoom: 18
             }).addTo(mapInstance);
             mapMarkersLayer = L.layerGroup().addTo(mapInstance);
         }
 
-        // تحديث ملخص البيانات في الخطوة 4
-        document.getElementById('sum-username').innerText = `${sessionData.firstname} ${sessionData.lastname}` || sessionData.username;
+        const fullName = `${sessionData.firstname} ${sessionData.lastname}`.trim() || sessionData.username;
+        document.getElementById('sum-username').innerText = fullName;
         document.getElementById('sum-state').innerText    = sessionData.state.name.replace(/^\d+ - /, '');
         document.getElementById('sum-service').innerText  = servicesDictionary[selectedServiceKey];
         document.getElementById('sum-datetime').innerText = `${sessionData.appointmentDate} | ${sessionData.appointmentTime}`;
@@ -901,7 +1025,6 @@
 
         const userIcon = L.divIcon({ html: `<div class="user-pulse-marker"></div>`, className: '', iconSize: [22, 22], iconAnchor: [11, 11] });
         userLocationMarker = L.marker([baseLat, baseLon], { icon: userIcon }).addTo(mapMarkersLayer).bindPopup('<b>📍 موقعك الحالي</b>').openPopup();
-
         selectAndRouteToPlace(baseLat + branchPlaces[0].latOff, baseLon + branchPlaces[0].lonOff, branchPlaces[0].name, 0);
     }
 
@@ -915,42 +1038,33 @@
         if (!targetLat || !targetLon) return;
         const distKm = haversineKm(userLat, userLon, targetLat, targetLon);
         const durationMin = Math.max(1, Math.round((distKm / 40) * 60) + 2);
-
         document.getElementById('lbl-live-distance').innerText = `${distKm.toFixed(2)} كم`;
         document.getElementById('lbl-live-duration').innerText = `${durationMin} دق`;
         document.getElementById('lbl-remaining').innerText = distKm < 0.1 ? 'وصلت!' : `${distKm.toFixed(2)} كم`;
         sessionData.totalDistance = distKm; sessionData.durationMinutes = durationMin;
-
         const pct = Math.max(0, Math.min(100, (1 - distKm / 10) * 100));
         const bar = document.getElementById('proximity-bar');
         bar.style.width = pct + '%';
         bar.style.backgroundColor = distKm<=0.3 ? '#10b981' : distKm<=1.0 ? '#f59e0b' : '#ef4444';
-
         const badge = document.getElementById('distance-status-badge');
         const indicator = document.getElementById('proximity-indicator');
-        const proximityText = document.getElementById('proximity-text');
         indicator.classList.remove('hidden');
-
         if (distKm <= 0.3) {
-            badge.innerText = '✅ وصلت تقريباً!';
-            badge.style.cssText = 'background:#10b981;color:white;';
+            badge.innerText = '✅ وصلت تقريباً!'; badge.style.cssText = 'background:#10b981;color:white;';
             indicator.style.cssText = 'background:#d1fae5;color:#065f46;';
-            proximityText.innerText = '🎉 أنت على بُعد خطوات من وجهتك!';
+            document.getElementById('proximity-text').innerText = '🎉 أنت على بُعد خطوات من وجهتك!';
         } else if (distKm <= 1.0) {
-            badge.innerText = '🚶 قريب (مشياً)';
-            badge.style.cssText = 'background:#f59e0b;color:white;';
+            badge.innerText = '🚶 قريب (مشياً)'; badge.style.cssText = 'background:#f59e0b;color:white;';
             indicator.style.cssText = 'background:#fef3c7;color:#92400e;';
-            proximityText.innerText = `⚡ أنت قريب جداً! ${(distKm*1000).toFixed(0)}م فقط`;
+            document.getElementById('proximity-text').innerText = `⚡ أنت قريب جداً! ${(distKm*1000).toFixed(0)}م فقط`;
         } else if (distKm <= 3.0) {
-            badge.innerText = '🚌 يُنصح بالحافلة';
-            badge.style.cssText = 'background:#3b82f6;color:white;';
+            badge.innerText = '🚌 يُنصح بالحافلة'; badge.style.cssText = 'background:#3b82f6;color:white;';
             indicator.style.cssText = 'background:#eff6ff;color:#1e40af;';
-            proximityText.innerText = `🚌 ${distKm.toFixed(1)} كم • تقدر تركب الحافلة`;
+            document.getElementById('proximity-text').innerText = `🚌 ${distKm.toFixed(1)} كم • تقدر تركب الحافلة`;
         } else {
-            badge.innerText = '🚌 يجب ركوب الحافلة';
-            badge.style.cssText = 'background:#ef4444;color:white;';
+            badge.innerText = '🚌 يجب ركوب الحافلة'; badge.style.cssText = 'background:#ef4444;color:white;';
             indicator.style.cssText = 'background:#fef2f2;color:#991b1b;';
-            proximityText.innerText = `📍 ${distKm.toFixed(1)} كم • ركوب الحافلة ضروري`;
+            document.getElementById('proximity-text').innerText = `📍 ${distKm.toFixed(1)} كم • ركوب الحافلة ضروري`;
         }
     }
 
@@ -976,19 +1090,16 @@
         document.getElementById('stop-nav-btn').classList.remove('hidden');
         document.getElementById('stop-nav-btn').classList.add('flex');
         document.getElementById('nav-progress-wrap').classList.remove('hidden');
-
         const startLat = sessionData.userLat, startLon = sessionData.userLon;
         let steps = 0, totalSteps = 30;
-
         function updateNavText(ratio, remaining) {
             const el = document.getElementById('nav-instruction-text');
             document.getElementById('nav-progress-bar').style.width = (ratio*100)+'%';
-            if (ratio < 0.33) { el.innerText = `🚌 الحافلة تسير... المسافة: ${remaining.toFixed(2)} كم`; el.style.color='#1d4ed8'; }
+            if (ratio < 0.33) { el.innerText = `🚌 الحافلة تسير... ${remaining.toFixed(2)} كم`; el.style.color='#1d4ed8'; }
             else if (ratio < 0.66) { el.innerText = `🛣️ منتصف الطريق! ${remaining.toFixed(2)} كم`; el.style.color='#f57c00'; }
-            else if (ratio < 0.95) { el.innerText = `⚡ اقتربت! ${(remaining*1000).toFixed(0)} متر متبقياً`; el.style.color='#059669'; }
-            else { el.innerText = `🎉 وصلت! أكد حجزك الفوري الآن`; el.style.color='#059669'; }
+            else if (ratio < 0.95) { el.innerText = `⚡ اقتربت! ${(remaining*1000).toFixed(0)} متر`; el.style.color='#059669'; }
+            else { el.innerText = `🎉 وصلت! أكد حجزك الآن`; el.style.color='#059669'; }
         }
-
         simulatedBusInterval = setInterval(() => {
             steps++;
             const ratio = steps / totalSteps;
@@ -1038,18 +1149,22 @@
         } else { box.classList.add('hidden'); }
     }
 
+    function goBackFromStep4() {
+        stopRealTimeGPS();
+        stopBusSimulation();
+        switchFlowToStep(3);
+    }
+
     // =====================================================
     // إصدار التذكرة
     // =====================================================
     function executeFinalFlow() {
         if (simulatedBusInterval) clearInterval(simulatedBusInterval);
         stopRealTimeGPS();
-
         const fullName = `${sessionData.firstname} ${sessionData.lastname}`.trim() || sessionData.username;
         const randomId = Math.floor(100000 + Math.random() * 900000);
         const now = new Date();
         const issueDate = now.toLocaleDateString('ar-DZ') + ' ' + now.toLocaleTimeString('ar-DZ');
-
         document.getElementById('ticket-place-name').innerText   = sessionData.selectedPlaceName || 'لم يتم الاختيار';
         document.getElementById('ticket-user-owner').innerText   = `صاحب الحجز: ${fullName}`;
         document.getElementById('ticket-user-phone-lbl').innerText = `الهاتف: ${sessionData.phone || '--'}`;
@@ -1063,21 +1178,16 @@
         document.getElementById('ticket-serial').innerText       = `FAWRI-${randomId}`;
         document.getElementById('ticket-turn-number').innerText  = sessionData.turnNumber;
         document.getElementById('ticket-issue-date').innerText   = issueDate;
-
-        // ملاحظات
         const notesWrap = document.getElementById('ticket-notes-wrap');
         if (sessionData.bookingNotes) {
             notesWrap.classList.remove('hidden');
             document.getElementById('ticket-notes-lbl').innerText = sessionData.bookingNotes;
         } else { notesWrap.classList.add('hidden'); }
-
-        // QR Code
         document.getElementById('qrcode-container').innerHTML = '';
         new QRCode(document.getElementById('qrcode-container'), {
             text: `FAWRI|${randomId}|${fullName}|${sessionData.phone}|${sessionData.selectedPlaceName}|${sessionData.state.name}|${sessionData.appointmentDate}|${sessionData.appointmentTime}|TURN:${sessionData.turnNumber}`,
             width: 110, height: 110, colorDark: "#102a6b", colorLight: "#ffffff"
         });
-
         switchFlowToStep(5);
     }
 
@@ -1091,9 +1201,6 @@
         document.querySelectorAll('.flow-step-view').forEach(v => v.classList.add('hidden'));
         document.getElementById(`step-view-${targetStep}`).classList.remove('hidden');
 
-        const backBtn = document.getElementById('back-flow-btn');
-        (targetStep > 1 && targetStep < 5) ? backBtn.classList.replace('hidden','flex') : backBtn.classList.replace('flex','hidden');
-
         for (let i = 1; i <= 5; i++) {
             const ind = document.getElementById(`ind-${i}`);
             const line = document.getElementById(`line-${i}`);
@@ -1101,15 +1208,21 @@
             if (line) line.style.background = i < targetStep ? '#102a6b' : '#e5e7eb';
         }
 
-        if (targetStep === 4 && mapInstance) setTimeout(() => mapInstance.invalidateSize(), 200);
-    }
-
-    function triggerPrevStep() {
-        if (currentFlowStep > 1 && currentFlowStep < 5) {
-            if (currentFlowStep === 4) { stopRealTimeGPS(); stopBusSimulation(); }
-            if (currentFlowStep === 3) { selectedServiceKey = null; document.querySelectorAll('.svc-btn').forEach(b=>{ b.style.opacity='1'; b.style.transform='scale(1)'; }); document.getElementById('service-details-panel').classList.add('hidden'); }
-            switchFlowToStep(currentFlowStep - 1);
+        // إذا رجعنا للخطوة 3، أعد إظهار زر الرجوع قبل اختيار الخدمة إن لزم
+        if (targetStep === 3) {
+            if (!selectedServiceKey) {
+                document.getElementById('service-details-panel').classList.add('hidden');
+                document.getElementById('step3-nav-before').classList.remove('hidden');
+            } else {
+                document.getElementById('service-details-panel').classList.remove('hidden');
+                document.getElementById('step3-nav-before').classList.add('hidden');
+            }
         }
+
+        if (targetStep === 4 && mapInstance) setTimeout(() => mapInstance.invalidateSize(), 200);
+
+        // scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function resetFlowToDefault() {
@@ -1121,13 +1234,17 @@
         document.getElementById('nav-progress-wrap').classList.add('hidden');
         document.getElementById('simulate-nav-btn').classList.remove('hidden');
         document.getElementById('service-details-panel').classList.add('hidden');
+        document.getElementById('step3-nav-before').classList.remove('hidden');
         document.querySelectorAll('.svc-btn').forEach(b=>{ b.style.opacity='1'; b.style.transform='scale(1)'; });
         selectedStateCode = '16';
         sessionData = { username:'', firstname:'', lastname:'', phone:'', email:'', address:'', nationalId:'', state:algerianStates[15], serviceType:'', serviceSubtype:'', appointmentDate:'', appointmentTime:'', bookingNotes:'', selectedPlaceName:'', userLat:36.752, userLon:3.048, targetLat:null, targetLon:null, totalDistance:0, durationMinutes:0, turnNumber:0 };
         renderStatesGrid();
         initGPS();
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('appointment-date').value = today;
         switchFlowToStep(1);
     }
     </script>
 </body>
 </html>
+
