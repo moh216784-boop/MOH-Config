@@ -353,8 +353,49 @@
     </main>
 
     <footer class="bg-white border-t border-gray-200 py-3 text-center text-xs text-gray-400 font-medium">
-        منظومة فوري الذكية للحجز الفوري وتتبع الحافلات العمومية © 2026 | 58 ولاية جزائرية
+        <p>منظومة فوري الذكية للحجز الفوري وتتبع الحافلات العمومية © 2026 | 58 ولاية جزائرية</p>
+        <!-- زر سري للأدمن - اضغط 5 مرات على النص للدخول -->
+        <p id="admin-tap-zone" class="mt-1 text-[10px] text-gray-300 select-none cursor-default"
+           onclick="handleAdminTap()">
+            v1.0 FAWRI
+        </p>
     </footer>
+
+    <!-- نافذة دخول الأدمن السريع -->
+    <div id="quick-admin-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-6 w-[90%] max-w-sm space-y-4 shadow-xl">
+            <div class="flex justify-between items-center">
+                <h3 class="font-black text-blue-900"><i class="fas fa-lock ml-1"></i> دخول المسؤول</h3>
+                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-gray-700"><i class="fas fa-times"></i></button>
+            </div>
+            <select id="quick-service" class="w-full border-2 border-gray-200 rounded-xl p-3 text-sm font-bold outline-none focus:border-blue-900">
+                <option value="">-- اختر خدمتك --</option>
+                <option value="hospital">🏥 المستشفيات والعيادات</option>
+                <option value="barber">✂️ صالونات الحلاقة</option>
+                <option value="transport">🚌 النقل والحافلات</option>
+                <option value="parking">🅿️ مواقف السيارات</option>
+                <option value="post">📮 بريد الجزائر</option>
+                <option value="municipality">🏛️ البلديات</option>
+                <option value="restaurant">🍽️ المطاعم</option>
+                <option value="more">📋 مرافق أخرى</option>
+                <option value="ALL">⭐ مدير عام</option>
+            </select>
+            <div class="relative">
+                <input type="password" id="quick-password" placeholder="كلمة السر..."
+                    class="w-full border-2 border-gray-200 rounded-xl p-3 text-sm font-bold outline-none focus:border-blue-900"
+                    onkeydown="if(event.key==='Enter') goToAdmin()">
+                <button onclick="toggleQuickPass()" class="absolute left-3 top-3 text-gray-400">
+                    <i class="fas fa-eye" id="quick-eye"></i>
+                </button>
+            </div>
+            <div id="quick-error" class="hidden text-xs font-bold text-red-500 text-center">❌ كلمة السر غير صحيحة</div>
+            <button onclick="goToAdmin()"
+                class="w-full text-white font-black py-3 rounded-xl text-sm"
+                style="background:#102a6b;">
+                <i class="fas fa-sign-in-alt ml-1"></i> دخول للوحة التحكم
+            </button>
+        </div>
+    </div>
 
     <script>
     // =====================================================
@@ -837,6 +878,51 @@
 
     function printTicket(){ window.print(); }
 
+    // ===== نظام دخول الأدمن السري =====
+    const adminPasswords = {
+        'hospital':'doctor2026','barber':'barber2026','transport':'bus2026',
+        'parking':'parking2026','post':'post2026','municipality':'baladia2026',
+        'restaurant':'resto2026','more':'more2026','ALL':'fawri@admin2026'
+    };
+    let adminTapCount = 0, adminTapTimer = null;
+
+    function handleAdminTap() {
+        adminTapCount++;
+        if(adminTapTimer) clearTimeout(adminTapTimer);
+        adminTapTimer = setTimeout(()=>{ adminTapCount=0; }, 2000);
+        if(adminTapCount >= 5) {
+            adminTapCount = 0;
+            document.getElementById('quick-admin-modal').classList.remove('hidden');
+        }
+    }
+
+    function closeAdminModal() {
+        document.getElementById('quick-admin-modal').classList.add('hidden');
+        document.getElementById('quick-password').value='';
+        document.getElementById('quick-error').classList.add('hidden');
+    }
+
+    function toggleQuickPass() {
+        const inp=document.getElementById('quick-password');
+        const ico=document.getElementById('quick-eye');
+        if(inp.type==='password'){ inp.type='text'; ico.className='fas fa-eye-slash'; }
+        else{ inp.type='password'; ico.className='fas fa-eye'; }
+    }
+
+    function goToAdmin() {
+        const service  = document.getElementById('quick-service').value;
+        const password = document.getElementById('quick-password').value;
+        const errorEl  = document.getElementById('quick-error');
+        if(!service || password !== adminPasswords[service]) {
+            errorEl.classList.remove('hidden');
+            setTimeout(()=>errorEl.classList.add('hidden'), 2000);
+            return;
+        }
+        // احفظ الجلسة وانتقل للأدمن
+        sessionStorage.setItem('fawri_admin', service);
+        window.location.href = 'admin.html';
+    }
+
     function switchFlowToStep(targetStep) {
         currentFlowStep=targetStep;
         document.querySelectorAll('.flow-step-view').forEach(v=>v.classList.add('hidden'));
@@ -875,3 +961,4 @@
     </script>
 </body>
 </html>
+
