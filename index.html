@@ -623,16 +623,16 @@
     }
 
     function submitStateStep() {
-        const phone=document.getElementById('user-phone').value.trim();
-        if(!phone){ document.getElementById('user-phone').classList.add('shake-anim'); setTimeout(()=>document.getElementById('user-phone').classList.remove('shake-anim'),500); alert('يرجى إدخال رقم الهاتف.'); return; }
-        sessionData.state=algerianStates.find(s=>s.code===selectedStateCode)||algerianStates[15];
-        sessionData.firstname=document.getElementById('user-firstname').value.trim();
-        sessionData.lastname=document.getElementById('user-lastname').value.trim();
-        sessionData.phone=phone;
-        sessionData.email=document.getElementById('user-email').value.trim();
-        sessionData.address=document.getElementById('user-address').value.trim();
-        sessionData.nationalId=document.getElementById('user-national-id').value.trim();
-        if(Math.abs(sessionData.userLat-36.752)<0.01&&Math.abs(sessionData.userLon-3.048)<0.01){ sessionData.userLat=sessionData.state.lat; sessionData.userLon=sessionData.state.lon; }
+        // الاسم واللقب محفوظان من الخطوة 1
+        sessionData.state = algerianStates.find(s=>s.code===selectedStateCode) || algerianStates[15];
+        const fn = document.getElementById('user-firstname').value.trim();
+        const ln = document.getElementById('user-lastname').value.trim();
+        if(fn) sessionData.firstname = fn;
+        if(ln) sessionData.lastname  = ln;
+        if(Math.abs(sessionData.userLat-36.752)<0.01 && Math.abs(sessionData.userLon-3.048)<0.01){
+            sessionData.userLat = sessionData.state.lat;
+            sessionData.userLon = sessionData.state.lon;
+        }
         saveUserToStorage();
         switchFlowToStep(3);
     }
@@ -875,4 +875,3 @@
     </script>
 </body>
 </html>
-
