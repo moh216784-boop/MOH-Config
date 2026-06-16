@@ -29,30 +29,69 @@
         }
         .turn-circle.done { background:linear-gradient(135deg,#059669,#10b981); }
         .turn-circle.canceled { background:linear-gradient(135deg,#dc2626,#ef4444); }
-
-        /* Language Switcher */
-        .lang-btn {
-            padding: 4px 10px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 700;
-            border: 1.5px solid #e2e8f0;
-            background: white;
-            color: #475569;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .lang-btn.active {
-            background: #102a6b;
-            color: white;
-            border-color: #102a6b;
-        }
-        .lang-btn:hover:not(.active) {
-            background: #f1f5f9;
-        }
+        /* شاشة الدخول */
+        .login-screen { position:fixed; inset:0; background:#f0f4ff; z-index:9999; display:flex; align-items:center; justify-content:center; }
+        .login-box { background:white; border-radius:24px; padding:32px 24px; width:90%; max-width:380px; box-shadow:0 10px 40px rgba(16,42,107,0.15); border:1px solid #e2e8f0; }
+        .shake { animation: shakeL 0.4s; }
+        @keyframes shakeL { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
     </style>
 </head>
 <body class="min-h-screen">
+
+<!-- ===== شاشة الدخول ===== -->
+<div id="login-screen" class="login-screen">
+    <div class="login-box text-center space-y-5">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto" style="background:#102a6b;color:white;">
+            <i class="fas fa-lock"></i>
+        </div>
+        <div>
+            <h2 class="text-xl font-black" style="color:#102a6b;">لوحة تحكم فوري</h2>
+            <p class="text-xs text-gray-400 mt-1">للمسؤولين فقط — أدخل بياناتك للدخول</p>
+        </div>
+
+        <!-- اختيار نوع الخدمة -->
+        <div class="text-right space-y-1">
+            <label class="text-xs font-bold text-gray-600">نوع الخدمة التي تديرها</label>
+            <select id="login-service" class="w-full border-2 border-gray-200 rounded-xl p-3 text-sm font-bold focus:border-blue-900 outline-none">
+                <option value="">-- اختر خدمتك --</option>
+                <option value="hospital">🏥 المستشفيات والعيادات</option>
+                <option value="barber">✂️ صالونات الحلاقة</option>
+                <option value="transport">🚌 النقل والحافلات</option>
+                <option value="parking">🅿️ مواقف السيارات</option>
+                <option value="post">📮 بريد الجزائر</option>
+                <option value="municipality">🏛️ البلديات</option>
+                <option value="restaurant">🍽️ المطاعم</option>
+                <option value="more">📋 مرافق أخرى</option>
+                <option value="ALL">⭐ مدير عام (كل الخدمات)</option>
+            </select>
+        </div>
+
+        <!-- كلمة السر -->
+        <div class="text-right space-y-1">
+            <label class="text-xs font-bold text-gray-600">كلمة السر</label>
+            <div class="relative">
+                <input type="password" id="login-password" placeholder="أدخل كلمة السر..."
+                    class="w-full border-2 border-gray-200 rounded-xl p-3 text-sm font-bold focus:border-blue-900 outline-none"
+                    onkeydown="if(event.key==='Enter') doLogin()">
+                <button onclick="togglePass()" class="absolute left-3 top-3 text-gray-400 hover:text-gray-700">
+                    <i class="fas fa-eye" id="eye-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="login-error" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 text-xs font-bold text-red-600">
+            ❌ كلمة السر أو نوع الخدمة غير صحيح
+        </div>
+
+        <button onclick="doLogin()"
+            class="w-full text-white font-black py-3.5 rounded-xl text-sm transition"
+            style="background:#102a6b;">
+            <i class="fas fa-sign-in-alt ml-1"></i> دخول
+        </button>
+
+        <p class="text-[10px] text-gray-300">فوري FAWRI © 2026</p>
+    </div>
+</div>
 
 <!-- ===== الهيدر ===== -->
 <header class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
@@ -60,21 +99,17 @@
         <div>
             <h1 class="text-lg font-black" style="color:#102a6b;">
                 فوري <span style="color:#f57c00;">FAWRI</span>
-                <span class="text-sm font-bold text-gray-400 mr-2" data-i18n="dashboard">• لوحة التحكم</span>
+                <span class="text-sm font-bold text-gray-400 mr-2">• لوحة التحكم</span>
             </h1>
-            <p class="text-[10px] text-gray-400 font-bold" data-i18n="subtitle">قائمة الحجوزات المباشرة</p>
+            <p class="text-[10px] text-gray-400 font-bold">قائمة الحجوزات المباشرة</p>
         </div>
         <div class="flex items-center gap-2">
-            <!-- Language Switcher -->
-            <div class="flex items-center gap-1 ml-2">
-                <button class="lang-btn active" onclick="setLang('ar')">ع</button>
-                <button class="lang-btn" onclick="setLang('en')">EN</button>
-                <button class="lang-btn" onclick="setLang('fr')">FR</button>
-                <button class="lang-btn" onclick="setLang('tz')">ⵣ</button>
-            </div>
             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span class="text-xs font-bold text-green-600" data-i18n="live">مباشر</span>
+            <span class="text-xs font-bold text-green-600">مباشر</span>
         </div>
+        <button onclick="doLogout()" class="text-xs font-bold text-red-500 bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl hover:bg-red-100 transition">
+            <i class="fas fa-sign-out-alt ml-1"></i> خروج
+        </button>
     </div>
 </header>
 
@@ -82,25 +117,25 @@
 
     <!-- ===== فلاتر ===== -->
     <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-3">
-        <p class="text-xs font-black text-gray-700"><i class="fas fa-filter text-blue-900 ml-1"></i> <span data-i18n="filterTitle">فلترة الحجوزات</span></p>
+        <p class="text-xs font-black text-gray-700"><i class="fas fa-filter text-blue-900 ml-1"></i> فلترة الحجوزات</p>
         <div class="grid grid-cols-2 gap-2">
             <div>
-                <label class="text-[10px] font-bold text-gray-500 block mb-1" data-i18n="serviceType">نوع الخدمة</label>
+                <label class="text-[10px] font-bold text-gray-500 block mb-1">نوع الخدمة</label>
                 <select id="filter-service" onchange="loadBookings()"
                     class="w-full border border-gray-200 rounded-xl p-2.5 text-xs font-bold bg-white">
-                    <option value="" data-i18n="allServices">كل الخدمات</option>
-                    <option value="transport" data-i18n="svc_transport">النقل والحافلات</option>
-                    <option value="parking" data-i18n="svc_parking">مواقف السيارات</option>
-                    <option value="hospital" data-i18n="svc_hospital">المستشفيات</option>
-                    <option value="post" data-i18n="svc_post">بريد الجزائر</option>
-                    <option value="municipality" data-i18n="svc_municipality">البلديات</option>
-                    <option value="barber" data-i18n="svc_barber">صالونات الحلاقة</option>
-                    <option value="restaurant" data-i18n="svc_restaurant">المطاعم</option>
-                    <option value="more" data-i18n="svc_more">مرافق أخرى</option>
+                    <option value="">كل الخدمات</option>
+                    <option value="transport">النقل والحافلات</option>
+                    <option value="parking">مواقف السيارات</option>
+                    <option value="hospital">المستشفيات</option>
+                    <option value="post">بريد الجزائر</option>
+                    <option value="municipality">البلديات</option>
+                    <option value="barber">صالونات الحلاقة</option>
+                    <option value="restaurant">المطاعم</option>
+                    <option value="more">مرافق أخرى</option>
                 </select>
             </div>
             <div>
-                <label class="text-[10px] font-bold text-gray-500 block mb-1" data-i18n="date">التاريخ</label>
+                <label class="text-[10px] font-bold text-gray-500 block mb-1">التاريخ</label>
                 <input type="date" id="filter-date" onchange="loadBookings()"
                     class="w-full border border-gray-200 rounded-xl p-2.5 text-xs font-bold bg-white">
             </div>
@@ -111,15 +146,15 @@
     <div class="grid grid-cols-3 gap-3">
         <div class="bg-blue-900 text-white rounded-2xl p-3 text-center shadow">
             <div class="text-2xl font-black" id="stat-total">0</div>
-            <div class="text-[10px] font-bold text-blue-200" data-i18n="statTotal">إجمالي الحجوزات</div>
+            <div class="text-[10px] font-bold text-blue-200">إجمالي الحجوزات</div>
         </div>
         <div class="bg-amber-500 text-white rounded-2xl p-3 text-center shadow">
             <div class="text-2xl font-black" id="stat-waiting">0</div>
-            <div class="text-[10px] font-bold text-amber-100" data-i18n="statWaiting">في الانتظار</div>
+            <div class="text-[10px] font-bold text-amber-100">في الانتظار</div>
         </div>
         <div class="bg-emerald-500 text-white rounded-2xl p-3 text-center shadow">
             <div class="text-2xl font-black" id="stat-done">0</div>
-            <div class="text-[10px] font-bold text-emerald-100" data-i18n="statDone">تم خدمتهم</div>
+            <div class="text-[10px] font-bold text-emerald-100">تم خدمتهم</div>
         </div>
     </div>
 
@@ -127,25 +162,25 @@
     <div>
         <div class="flex justify-between items-center mb-3">
             <p class="text-sm font-black text-gray-800">
-                <i class="fas fa-list-ol text-blue-900 ml-1"></i> <span data-i18n="listTitle">قائمة الزبائن بالترتيب</span>
+                <i class="fas fa-list-ol text-blue-900 ml-1"></i> قائمة الزبائن بالترتيب
             </p>
             <button onclick="loadBookings()"
                 class="text-xs font-bold text-blue-900 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-xl hover:bg-blue-100 transition">
-                <i class="fas fa-sync-alt ml-1"></i> <span data-i18n="refresh">تحديث</span>
+                <i class="fas fa-sync-alt ml-1"></i> تحديث
             </button>
         </div>
 
         <!-- تحميل -->
         <div id="loading-state" class="text-center py-10 text-gray-400">
             <i class="fas fa-circle-notch fa-spin text-2xl text-blue-900 mb-2"></i>
-            <p class="text-xs font-bold" data-i18n="loading">جاري تحميل الحجوزات...</p>
+            <p class="text-xs font-bold">جاري تحميل الحجوزات...</p>
         </div>
 
         <!-- فارغ -->
         <div id="empty-state" class="hidden text-center py-10 text-gray-400">
             <i class="fas fa-calendar-times text-4xl text-gray-200 mb-3"></i>
-            <p class="text-sm font-bold text-gray-400" data-i18n="emptyTitle">لا توجد حجوزات بعد</p>
-            <p class="text-xs text-gray-300" data-i18n="emptySubtitle">سيظهر الزبائن هنا عند حجزهم</p>
+            <p class="text-sm font-bold text-gray-400">لا توجد حجوزات بعد</p>
+            <p class="text-xs text-gray-300">سيظهر الزبائن هنا عند حجزهم</p>
         </div>
 
         <!-- القائمة -->
@@ -154,189 +189,88 @@
 </main>
 
 <script>
-// ===== Translations =====
-const translations = {
-    ar: {
-        dir: 'rtl',
-        lang: 'ar',
-        dashboard: '• لوحة التحكم',
-        subtitle: 'قائمة الحجوزات المباشرة',
-        live: 'مباشر',
-        filterTitle: 'فلترة الحجوزات',
-        serviceType: 'نوع الخدمة',
-        allServices: 'كل الخدمات',
-        svc_transport: 'النقل والحافلات',
-        svc_parking: 'مواقف السيارات',
-        svc_hospital: 'المستشفيات',
-        svc_post: 'بريد الجزائر',
-        svc_municipality: 'البلديات',
-        svc_barber: 'صالونات الحلاقة',
-        svc_restaurant: 'المطاعم',
-        svc_more: 'مرافق أخرى',
-        date: 'التاريخ',
-        statTotal: 'إجمالي الحجوزات',
-        statWaiting: 'في الانتظار',
-        statDone: 'تم خدمتهم',
-        listTitle: 'قائمة الزبائن بالترتيب',
-        refresh: 'تحديث',
-        loading: 'جاري تحميل الحجوزات...',
-        emptyTitle: 'لا توجد حجوزات بعد',
-        emptySubtitle: 'سيظهر الزبائن هنا عند حجزهم',
-        badgeWaiting: '⏳ في الانتظار',
-        badgeDone: '✅ تم',
-        badgeCanceled: '❌ ملغى',
-        btnDone: 'تم الخدمة',
-        btnCancel: 'إلغاء',
-        btnUndo: 'إعادة للانتظار',
-        noPlace: 'لم يحدد المنشأة',
-        noPhone: 'رقم الهاتف غير متوفر',
-        updateError: 'خطأ في التحديث: ',
-    },
-    en: {
-        dir: 'ltr',
-        lang: 'en',
-        dashboard: '• Dashboard',
-        subtitle: 'Live Bookings List',
-        live: 'Live',
-        filterTitle: 'Filter Bookings',
-        serviceType: 'Service Type',
-        allServices: 'All Services',
-        svc_transport: 'Transport & Buses',
-        svc_parking: 'Parking Lots',
-        svc_hospital: 'Hospitals',
-        svc_post: 'Algeria Post',
-        svc_municipality: 'Municipalities',
-        svc_barber: 'Barbershops',
-        svc_restaurant: 'Restaurants',
-        svc_more: 'Other Facilities',
-        date: 'Date',
-        statTotal: 'Total Bookings',
-        statWaiting: 'Waiting',
-        statDone: 'Served',
-        listTitle: 'Clients Queue',
-        refresh: 'Refresh',
-        loading: 'Loading bookings...',
-        emptyTitle: 'No bookings yet',
-        emptySubtitle: 'Clients will appear here once they book',
-        badgeWaiting: '⏳ Waiting',
-        badgeDone: '✅ Done',
-        badgeCanceled: '❌ Canceled',
-        btnDone: 'Mark Served',
-        btnCancel: 'Cancel',
-        btnUndo: 'Return to Waiting',
-        noPlace: 'No facility specified',
-        noPhone: 'Phone number unavailable',
-        updateError: 'Update error: ',
-    },
-    fr: {
-        dir: 'ltr',
-        lang: 'fr',
-        dashboard: '• Tableau de bord',
-        subtitle: 'Liste des réservations en direct',
-        live: 'En direct',
-        filterTitle: 'Filtrer les réservations',
-        serviceType: 'Type de service',
-        allServices: 'Tous les services',
-        svc_transport: 'Transport & Bus',
-        svc_parking: 'Parkings',
-        svc_hospital: 'Hôpitaux',
-        svc_post: 'Poste Algérie',
-        svc_municipality: 'Communes',
-        svc_barber: 'Salons de coiffure',
-        svc_restaurant: 'Restaurants',
-        svc_more: 'Autres établissements',
-        date: 'Date',
-        statTotal: 'Total réservations',
-        statWaiting: 'En attente',
-        statDone: 'Servis',
-        listTitle: 'File d\'attente clients',
-        refresh: 'Actualiser',
-        loading: 'Chargement des réservations...',
-        emptyTitle: 'Aucune réservation pour l\'instant',
-        emptySubtitle: 'Les clients apparaîtront ici après réservation',
-        badgeWaiting: '⏳ En attente',
-        badgeDone: '✅ Terminé',
-        badgeCanceled: '❌ Annulé',
-        btnDone: 'Service effectué',
-        btnCancel: 'Annuler',
-        btnUndo: 'Remettre en attente',
-        noPlace: 'Établissement non précisé',
-        noPhone: 'Numéro de téléphone indisponible',
-        updateError: 'Erreur de mise à jour : ',
-    },
-    tz: {
-        dir: 'ltr',
-        lang: 'tz',
-        dashboard: '• Taburt n usenker',
-        subtitle: 'Tebḍa n yisenkirn s tufɣa',
-        live: 'Isɣar',
-        filterTitle: 'Sḍes isenkirn',
-        serviceType: 'Anaw n umeẓlu',
-        allServices: 'Meṛṛa imeẓla',
-        svc_transport: 'Aqeddac d ikarrusen',
-        svc_parking: 'Iɣerbazen n tkeṛṛust',
-        svc_hospital: 'Isbiṭaren',
-        svc_post: 'Lapusṭ n Lezzayer',
-        svc_municipality: 'Timurt n tbaladiyyin',
-        svc_barber: 'Ixxamen n tɣarmastin',
-        svc_restaurant: 'Irestan',
-        svc_more: 'Iɣerbazen nniḍen',
-        date: 'Azemz',
-        statTotal: 'Meṛṛa isenkirn',
-        statWaiting: 'Di tɣuri',
-        statDone: 'Xdemen',
-        listTitle: 'Tebḍa n ineflan s usudu',
-        refresh: 'Smezgi',
-        loading: 'Asali n isenkirn...',
-        emptyTitle: 'Ulac isenkirn akka',
-        emptySubtitle: 'Ineflan ad d-ffɣen da melmi ara snekren',
-        badgeWaiting: '⏳ Di tɣuri',
-        badgeDone: '✅ Yefra',
-        badgeCanceled: '❌ Yettwasel',
-        btnDone: 'Imeẓlu yefra',
-        btnCancel: 'Sel',
-        btnUndo: 'Ɛreḍ ɣer tɣuri',
-        noPlace: 'Ulac aɣerbaz yettwafernen',
-        noPhone: 'Unuɣer n tiliɣri ur yelli',
-        updateError: 'Tuccḍa deg usmezgi: ',
-    }
+// ===== كلمات السر لكل مدير =====
+// يمكنك تغييرها لاحقاً
+const adminPasswords = {
+    'hospital':     'doctor2026',
+    'barber':       'barber2026',
+    'transport':    'bus2026',
+    'parking':      'parking2026',
+    'post':         'post2026',
+    'municipality': 'baladia2026',
+    'restaurant':   'resto2026',
+    'more':         'more2026',
+    'ALL':          'fawri@admin2026'  // المدير العام
 };
 
-let currentLang = 'ar';
+let currentAdminService = '';
 
-function setLang(lang) {
-    currentLang = lang;
-    const t = translations[lang];
+function doLogin() {
+    const service  = document.getElementById('login-service').value;
+    const password = document.getElementById('login-password').value;
+    const errorEl  = document.getElementById('login-error');
 
-    // Update html dir + lang
-    document.documentElement.setAttribute('dir', t.dir);
-    document.documentElement.setAttribute('lang', t.lang);
+    if (!service) {
+        document.getElementById('login-service').classList.add('shake');
+        setTimeout(()=>document.getElementById('login-service').classList.remove('shake'), 500);
+        return;
+    }
 
-    // Update active button
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('onclick') === `setLang('${lang}')`) btn.classList.add('active');
-    });
-
-    // Update all data-i18n elements
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (t[key]) el.textContent = t[key];
-    });
-
-    // Update select options
-    document.querySelectorAll('select option[data-i18n]').forEach(opt => {
-        const key = opt.getAttribute('data-i18n');
-        if (t[key]) opt.textContent = t[key];
-    });
-
-    // Re-render bookings if loaded
-    const list = document.getElementById('bookings-list');
-    if (!list.classList.contains('hidden') && list.innerHTML !== '') {
-        // trigger re-render by reloading
+    const correct = adminPasswords[service];
+    if (password === correct) {
+        currentAdminService = service;
+        document.getElementById('login-screen').style.display = 'none';
+        sessionStorage.setItem('fawri_admin', service);
+        // تحديد الفلتر تلقائياً
+        if (service !== 'ALL') {
+            document.getElementById('filter-service').value = service;
+        }
         loadBookings();
+    } else {
+        errorEl.classList.remove('hidden');
+        document.getElementById('login-password').classList.add('shake');
+        setTimeout(()=>{
+            document.getElementById('login-password').classList.remove('shake');
+            errorEl.classList.add('hidden');
+        }, 2000);
+        document.getElementById('login-password').value = '';
     }
 }
+
+function doLogout() {
+    sessionStorage.removeItem('fawri_admin');
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('login-password').value = '';
+    document.getElementById('login-service').value = '';
+    currentAdminService = '';
+}
+
+function togglePass() {
+    const inp = document.getElementById('login-password');
+    const ico = document.getElementById('eye-icon');
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        ico.className = 'fas fa-eye-slash';
+    } else {
+        inp.type = 'password';
+        ico.className = 'fas fa-eye';
+    }
+}
+
+// تحقق من الجلسة عند فتح الصفحة
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = sessionStorage.getItem('fawri_admin');
+    if (saved) {
+        currentAdminService = saved;
+        document.getElementById('login-screen').style.display = 'none';
+        if (saved !== 'ALL') {
+            document.getElementById('filter-service').value = saved;
+        }
+    }
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('filter-date').value = today;
+    if (currentAdminService) loadBookings();
+});
 
 // ===== Firebase =====
 const firebaseConfig = {
@@ -350,12 +284,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// ===== تعيين تاريخ اليوم =====
-window.addEventListener('DOMContentLoaded', () => {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('filter-date').value = today;
-    loadBookings();
-});
+// تم نقل DOMContentLoaded للأعلى مع نظام الدخول
 
 // ===== تحميل الحجوزات المباشر =====
 let unsubscribe = null;
@@ -395,7 +324,6 @@ function loadBookings() {
 
 // ===== عرض الحجوزات =====
 function renderBookings(bookings) {
-    const t = translations[currentLang];
     const list = document.getElementById('bookings-list');
     list.innerHTML = '';
 
@@ -408,9 +336,9 @@ function renderBookings(bookings) {
         if (status === 'done') done++;
 
         const statusLabel = {
-            waiting:  `<span class="badge-waiting text-[10px] font-black px-2 py-0.5 rounded-full">${t.badgeWaiting}</span>`,
-            done:     `<span class="badge-done text-[10px] font-black px-2 py-0.5 rounded-full">${t.badgeDone}</span>`,
-            canceled: `<span class="badge-canceled text-[10px] font-black px-2 py-0.5 rounded-full">${t.badgeCanceled}</span>`
+            waiting:  '<span class="badge-waiting text-[10px] font-black px-2 py-0.5 rounded-full">⏳ في الانتظار</span>',
+            done:     '<span class="badge-done text-[10px] font-black px-2 py-0.5 rounded-full">✅ تم</span>',
+            canceled: '<span class="badge-canceled text-[10px] font-black px-2 py-0.5 rounded-full">❌ ملغى</span>'
         }[status] || '';
 
         const turnClass = status === 'done' ? 'done' : status === 'canceled' ? 'canceled' : '';
@@ -435,7 +363,7 @@ function renderBookings(bookings) {
                         <span><i class="fas fa-map-marker-alt text-red-400 ml-1"></i>${(b.state || '--').replace(/^\d+ - /, '')}</span>
                     </div>
                     <p class="text-[10px] text-gray-400 mt-1">
-                        <i class="fas fa-building text-gray-300 ml-1"></i>${b.placeName || t.noPlace}
+                        <i class="fas fa-building text-gray-300 ml-1"></i>${b.placeName || 'لم يحدد المنشأة'}
                     </p>
                     <p class="text-[9px] text-gray-300 mt-0.5 font-mono">${b.ticketSerial || ''}</p>
                 </div>
@@ -446,11 +374,11 @@ function renderBookings(bookings) {
             <div class="flex gap-2 mt-3 pt-3 border-t border-gray-100">
                 <button onclick="updateStatus('${b.id}', 'done')"
                     class="flex-1 bg-emerald-500 text-white text-xs font-bold py-2 rounded-xl hover:bg-emerald-600 transition">
-                    <i class="fas fa-check ml-1"></i> ${t.btnDone}
+                    <i class="fas fa-check ml-1"></i> تم الخدمة
                 </button>
                 <button onclick="updateStatus('${b.id}', 'canceled')"
                     class="flex-1 bg-red-100 text-red-600 text-xs font-bold py-2 rounded-xl hover:bg-red-200 transition border border-red-200">
-                    <i class="fas fa-times ml-1"></i> ${t.btnCancel}
+                    <i class="fas fa-times ml-1"></i> إلغاء
                 </button>
                 <button onclick="callClient('${b.phone}')"
                     class="w-10 h-9 bg-blue-50 text-blue-900 rounded-xl hover:bg-blue-100 transition border border-blue-200 flex items-center justify-center flex-shrink-0">
@@ -461,7 +389,7 @@ function renderBookings(bookings) {
             <div class="mt-3 pt-3 border-t border-gray-100">
                 <button onclick="updateStatus('${b.id}', 'waiting')"
                     class="text-xs font-bold text-gray-400 hover:text-blue-900 transition">
-                    <i class="fas fa-undo ml-1"></i> ${t.btnUndo}
+                    <i class="fas fa-undo ml-1"></i> إعادة للانتظار
                 </button>
             </div>
             `}
@@ -474,24 +402,22 @@ function renderBookings(bookings) {
 
 // ===== تحديث حالة الحجز =====
 async function updateStatus(bookingId, newStatus) {
-    const t = translations[currentLang];
     try {
         await db.collection("bookings").doc(bookingId).update({
             status: newStatus,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
     } catch (err) {
-        alert(t.updateError + err.message);
+        alert('خطأ في التحديث: ' + err.message);
     }
 }
 
 // ===== الاتصال بالزبون =====
 function callClient(phone) {
-    const t = translations[currentLang];
     if (phone && phone !== '--') {
         window.location.href = `tel:${phone}`;
     } else {
-        alert(t.noPhone);
+        alert('رقم الهاتف غير متوفر');
     }
 }
 
@@ -504,3 +430,4 @@ function updateStats(total, waiting, done) {
 </script>
 </body>
 </html>
+
